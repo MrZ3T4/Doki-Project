@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_recents"
+        android:icon="@drawable/recents_switch"
+        android:title="@string/recents"
+        />
+
+    <item
+        android:id="@+id/menu_collections"
+        android:icon="@drawable/collections_switch"
+        android:title="@string/collections"
+        />
+
+    <item
+        android:id="@+id/menu_explore"
+        android:icon="@drawable/explore_switch"
+        android:title="@string/explore"
+        />
+
+    <item
+        android:id="@+id/menu_settings"
+        android:icon="@drawable/settings_switch"
+        android:title="@string/settings"
+        />
+
+</menu>

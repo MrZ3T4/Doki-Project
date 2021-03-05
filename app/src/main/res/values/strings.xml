@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Doki</string>
+
+    <string name="recents">Reciente</string>
+    <string name="collections">Coleccíon</string>
+    <string name="explore">Explorar</string>
+    <string name="settings">Más</string>
+
+    <string name="recents_toolbar">Recientes</string>
+    <string name="explore_toolbar">Directorio</string>
+    <string name="collections_toolbar">Elementos guardados</string>
+    <string name="settings_toolbar">Extensiones</string>
+
+    <string name="episode">Episodio </string>
+    <string name="dot">\u25A0</string>
+
+    <string name="information">Detalles sobre el anime</string>
+    <string name="download_episode">Descargar episodio (Proximamente)</string>
+    <string name="stream_episode">Iniciar streaming</string>
+
+    <string name="broadcast">En emisión</string>
+    <string name="calendar">Calendario</string>
+    <string name="season">Esta temporada</string>
+</resources>
