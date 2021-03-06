@@ -11,7 +11,7 @@
         android:orientation="vertical">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerview_season"
+            android:id="@+id/recyclerview_anime"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layoutAnimation="@anim/recyclerview_falldown"
@@ -21,7 +21,7 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         <ProgressBar
-            android:id="@+id/season_progressbar"
+            android:id="@+id/anime_progressbar"
             style="@style/Widget.AppCompat.ProgressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

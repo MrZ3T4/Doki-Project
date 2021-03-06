@@ -1,14 +1,11 @@
 package dev.mrz3t4.literatureclub.RecyclerView;
 
-public class Season {
+public class Anime {
 
-    public String title, img, url, date;
+    public String title, img, url, date, type;
 
-    public Season(String title, String img, String url, String date) {
-        this.title = title;
-        this.img = img;
-        this.url = url;
-        this.date = date;
+    public Anime() {
+
     }
 
     public String getTitle() {
@@ -41,5 +38,13 @@ public class Season {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

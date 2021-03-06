@@ -21,14 +21,14 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import dev.mrz3t4.literatureclub.R;
-import dev.mrz3t4.literatureclub.RecyclerView.Season;
-import dev.mrz3t4.literatureclub.RecyclerView.SeasonAdapter;
+import dev.mrz3t4.literatureclub.RecyclerView.Anime;
+import dev.mrz3t4.literatureclub.RecyclerView.AnimeAdapter;
 import dev.mrz3t4.literatureclub.Utils.Sort;
 import dev.mrz3t4.literatureclub.Utils.SpaceItemDecoration;
 
 public class SeasonFragment extends Fragment {
 
-    private ArrayList<Season> seasonArrayList = new ArrayList<>();;
+    private ArrayList<Anime> animeArrayList = new ArrayList<>();;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
 
@@ -42,10 +42,10 @@ public class SeasonFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.viewpager_season, container, false);
+        view = inflater.inflate(R.layout.fragment_viewpager_anime, container, false);
 
-        recyclerView = view.findViewById(R.id.recyclerview_season);
-        progressBar = view.findViewById(R.id.season_progressbar);
+        recyclerView = view.findViewById(R.id.recyclerview_anime);
+        progressBar = view.findViewById(R.id.anime_progressbar);
 
         run2();
 
@@ -63,12 +63,47 @@ public class SeasonFragment extends Fragment {
 
                         for (Element body : doc) {
 
+                            Anime anime = new Anime();
+
                             String title = body.select("h3").text();
                             String date = body.select("span[class=fecha]").text();
                             String img = body.select("img[class=img-fluid]").attr("src");
                             String url = body.select("a").attr("href");
 
-                            seasonArrayList.add(new Season(title, img, url, date));
+                            String type="";
+
+                            if (body.text().contains("Anime")){
+                                type = "Anime";
+                                anime.setType(type);
+                            } else if (body.text().contains("Pelicula")){
+                                type = "Pelicula";
+                                anime.setType(type);
+                            } else if (body.text().contains("Ova")) {
+                                type = "OVA";
+                                anime.setType(type);
+                            } else if (body.text().contains("Donghua")){
+                                type = "Donghua";
+                                anime.setType(type);
+                            } else if (body.text().contains("Corto")) {
+                                type = "Corto";
+                                anime.setType(type);
+                            } else if (body.text().contains("Especial")){
+                                type = "Especial";
+                                anime.setType(type);
+                            } else if (body.text().contains("Sin Censura")) {
+                                type = "Sin Censura";
+                                anime.setType(type);
+                            } else if (body.text().contains("Ona")) {
+                                type = "ONA";
+                                anime.setType(type);
+                            }
+
+                            anime.setTitle(title);
+                            anime.setImg(img);
+                            anime.setDate(date);
+                            anime.setUrl(url);
+
+                            animeArrayList.add(anime);
                         }
                         isValid = true;
                     } else { isValid = false; }
@@ -83,10 +118,10 @@ public class SeasonFragment extends Fragment {
                     uri = "https://monoschinos2.com/emision?page=" + count++;
                     run2();
                 } else {
-                    SeasonAdapter seasonAdapter = new SeasonAdapter(seasonArrayList, getContext());
+                    AnimeAdapter seasonAdapter = new AnimeAdapter(animeArrayList, getContext());
 
                     progressBar.setVisibility(View.GONE);
-                    sort.getArrayListByTitle(seasonArrayList);
+                    sort.getArrayListByTitle(animeArrayList);
 
                     recyclerView.setItemViewCacheSize(30);
                     recyclerView.setDrawingCacheEnabled(true);

@@ -14,4 +14,7 @@ public class Constants {
     public static String settings = GenericContext.getContext().getResources().getString(R.string.settings_toolbar);
 
     public static String episode = GenericContext.getContext().getResources().getString(R.string.episode);
+
+    public static String BASE_URL = "https://monoschinos2.com/animes";
+    public static String PAGE_URI = "?page=";
 }

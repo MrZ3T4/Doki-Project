@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Toast;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -63,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton fab;
     private MaterialTextView toolbarTitle;
 
+    Menu myMenu;
+
     private boolean connected;
 
     @Override
@@ -105,7 +108,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_toolbar, menu);
+
+        myMenu = menu;
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_filter:
+                Toast.makeText(this, "update clicked", Toast.LENGTH_SHORT).show();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void setupAppBarLayout() {
@@ -158,21 +175,31 @@ public class MainActivity extends AppCompatActivity {
                         changeFragment(recentsFragment, RecentsFragment.class.getSimpleName());
                         toolbarTitle.setText(recents);
                         toolbarTitle.startAnimation(animation);
+
+                        myMenu.findItem(R.id.menu_filter).setVisible(false);
+
                         break;
                     case R.id.menu_collections:
                         changeFragment(collectionsFragment, CollectionsFragment.class.getSimpleName());
                         toolbarTitle.setText(collections);
                         toolbarTitle.startAnimation(animation);
+
+                        myMenu.findItem(R.id.menu_filter).setVisible(false);
+
                         break;
                     case R.id.menu_explore:
                         changeFragment(exploreFragment, ExploreFragment.class.getSimpleName());
                         toolbarTitle.setText(explore);
                         toolbarTitle.startAnimation(animation);
+
+                        myMenu.findItem(R.id.menu_filter).setVisible(true);
+
                         break;
                     case R.id.menu_settings:
                         changeFragment(settingsFragment, SettingsFragment.class.getSimpleName());
                         toolbarTitle.setText(settings);
                         toolbarTitle.startAnimation(animation);
+                        myMenu.findItem(R.id.menu_filter).setVisible(false);
                         break;
 
                 }

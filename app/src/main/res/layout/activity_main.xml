@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
             android:layout_margin="@dimen/margin_10"
-            android:elevation="2dp"
+            android:elevation="0dp"
             android:background="@drawable/tolbar_corners"
             app:layout_scrollFlags="scroll|enterAlways|snap"
             app:menu="@menu/menu_toolbar">
