@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_cast"
-        android:icon="@drawable/cast_ic"
+        android:id="@+id/menu_force_update"
+        android:icon="@drawable/replay_ic"
         android:title="@string/recents"
         app:showAsAction="ifRoom"
         android:visible="false"

@@ -9,7 +9,9 @@ import android.widget.ProgressBar;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -23,6 +25,7 @@ import java.util.Objects;
 import dev.mrz3t4.literatureclub.R;
 import dev.mrz3t4.literatureclub.RecyclerView.Anime;
 import dev.mrz3t4.literatureclub.RecyclerView.AnimeAdapter;
+import dev.mrz3t4.literatureclub.Utils.PicassoOnScrollListener;
 import dev.mrz3t4.literatureclub.Utils.Sort;
 import dev.mrz3t4.literatureclub.Utils.SpaceItemDecoration;
 
@@ -42,9 +45,10 @@ public class SeasonFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_viewpager_anime, container, false);
+        view = inflater.inflate(R.layout.fragment_viewpager_anime_test, container, false);
 
         recyclerView = view.findViewById(R.id.recyclerview_anime);
+        recyclerView.addOnScrollListener(new PicassoOnScrollListener(getContext()));
         progressBar = view.findViewById(R.id.anime_progressbar);
 
         run2();
@@ -111,7 +115,7 @@ public class SeasonFragment extends Fragment {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Objects.requireNonNull(getActivity()).runOnUiThread(()->{
+            requireActivity().runOnUiThread(()->{
                 // OnPostExecute stuff here
 
                 if (isValid){
@@ -127,6 +131,7 @@ public class SeasonFragment extends Fragment {
                     recyclerView.setDrawingCacheEnabled(true);
                     recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
                     recyclerView.setHasFixedSize(true);
+
 
                     int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.spacing);
                     recyclerView.addItemDecoration(new SpaceItemDecoration(spacingInPixels));

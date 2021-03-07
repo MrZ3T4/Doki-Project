@@ -11,14 +11,20 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textview.MaterialTextView;
+import com.qtalk.recyclerviewfastscroller.RecyclerViewFastScroller;
+import com.squareup.picasso.Picasso;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
 import dev.mrz3t4.literatureclub.R;
+import dev.mrz3t4.literatureclub.Utils.PicassoOnScrollListener;
 
-public class AnimeAdapter extends RecyclerView.Adapter<AnimeAdapter.ViewHolder> {
+public class AnimeAdapter extends RecyclerView.Adapter<AnimeAdapter.ViewHolder> implements RecyclerViewFastScroller.OnPopupTextUpdate {
 
     private ArrayList<Anime> animeArrayList;
     private Context context;
@@ -46,6 +52,12 @@ public class AnimeAdapter extends RecyclerView.Adapter<AnimeAdapter.ViewHolder> 
         return animeArrayList.size();
     }
 
+    @NotNull
+    @Override
+    public CharSequence onChange(int pos) {
+        return animeArrayList.get(pos).getTitle().substring(0,1);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView coverImageView;
@@ -67,7 +79,11 @@ public class AnimeAdapter extends RecyclerView.Adapter<AnimeAdapter.ViewHolder> 
             titleTextView.setText(anime.getTitle());
             typeTextView.setText(anime.getType());
             dateTextView.setText(anime.getDate());
-            Glide.with(itemView).load(anime.getImg()).into(coverImageView);
+
+            Picasso.get()
+                    .load(anime.getImg())
+                    .tag(PicassoOnScrollListener.TAG)
+                    .into(coverImageView);
 
             cardView.setOnClickListener(v -> Toast.makeText(context, anime.getUrl(), Toast.LENGTH_SHORT).show());
 

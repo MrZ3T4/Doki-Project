@@ -1,32 +1,48 @@
 package dev.mrz3t4.literatureclub.UI;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Objects;
+import java.util.concurrent.TimeoutException;
 
 import dev.mrz3t4.literatureclub.R;
 import dev.mrz3t4.literatureclub.RecyclerView.AnimeAdapter;
 import dev.mrz3t4.literatureclub.RecyclerView.Anime;
+import dev.mrz3t4.literatureclub.Utils.PicassoOnScrollListener;
+import dev.mrz3t4.literatureclub.Utils.Sort;
 import dev.mrz3t4.literatureclub.Utils.SpaceItemDecoration;
 
 import static dev.mrz3t4.literatureclub.Utils.Constants.BASE_URL;
 import static dev.mrz3t4.literatureclub.Utils.Constants.PAGE_URI;
+import static dev.mrz3t4.literatureclub.Utils.Constants.collections;
 
 public class ExploreFragment extends Fragment {
 
@@ -35,22 +51,110 @@ public class ExploreFragment extends Fragment {
     private int count = 1;
 
     private RecyclerView recyclerView;
+    private TextView textView;
     private ProgressBar progressBar;
 
+    private boolean exists;
+
     private ArrayList<Anime> animeArrayList = new ArrayList<>();
+
+    private String animesJson;
+    String path = Environment.getExternalStorageDirectory() + "/Android/data/dev.mrz3t4.literatureclub/files";
+    File animeDirectory = new File(path, "directory.json");
+
+    private NotificationManager notificationManager;
+    private NotificationCompat.Builder updateDir;
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_viewpager_anime, container, false);
+        View view = inflater.inflate(R.layout.fragment_viewpager_anime_test, container, false);
 
+        textView = view.findViewById(R.id.anime_textView);
 
         recyclerView = view.findViewById(R.id.recyclerview_anime);
+        recyclerView.addOnScrollListener(new PicassoOnScrollListener(getContext()));
         progressBar = view.findViewById(R.id.anime_progressbar);
-        getDirectory();
+
+        if (exists = jsonExists()){
+            System.out.println("existe");
+            getDirectoryFromJson();
+        } else {
+            getDirectory();
+        }
 
 
         return view;
+    }
+
+    private void getDirectoryFromJson() {
+
+        try {
+            FileInputStream fileInputStream = new FileInputStream(animeDirectory);
+            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            animesJson = bufferedReader.readLine();
+
+            JSONArray jsonDirectory = new JSONArray(animesJson);
+
+            for (int pos = 0; pos <= jsonDirectory.length(); pos++){
+
+                Anime anime = new Anime();
+
+                JSONObject jsonObject = jsonDirectory.getJSONObject(pos);
+
+                String title = jsonObject.getString("Title");
+                String img = jsonObject.getString("Cover");
+                String date = jsonObject.getString("Date");
+                String type = jsonObject.getString("Type");
+                String url = jsonObject.getString("Link");
+
+
+                anime.setTitle(title);
+                anime.setImg(img);
+                anime.setType(type);
+                anime.setDate(date);
+                anime.setUrl(url);
+
+                animeArrayList.add(anime);
+                System.out.println(animeArrayList.get(pos).getTitle());
+            }
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        setRecyclerView(animeArrayList);
+
+
+    }
+
+    private void setRecyclerView(ArrayList<Anime> arrayList) {
+
+        progressBar.setVisibility(View.GONE);
+
+        AnimeAdapter exploreAdapter = new AnimeAdapter(arrayList, getContext());
+
+        recyclerView.setItemViewCacheSize(30);
+        recyclerView.setDrawingCacheEnabled(true);
+        recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+        recyclerView.setHasFixedSize(true);
+
+        int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.spacing);
+        recyclerView.addItemDecoration(new SpaceItemDecoration(spacingInPixels));
+
+
+        recyclerView.setAdapter(exploreAdapter);
+    }
+
+    private boolean jsonExists() {
+
+        if (animeDirectory.exists()){
+            return true;
+        }
+        return false;
     }
 
     private void getDirectory() {
@@ -61,11 +165,12 @@ public class ExploreFragment extends Fragment {
             FINAL_URL = BASE_URL + PAGE_URI + count;
         }
 
+        textView.setVisibility(View.VISIBLE);
+        textView.setText("Creando directorio... Pagina " + count);
+
         new Thread(() -> {
 
             try {
-
-
                 System.out.println(FINAL_URL);
 
                 Document document = Jsoup.connect(FINAL_URL).userAgent("Mozilla").get();
@@ -135,27 +240,21 @@ public class ExploreFragment extends Fragment {
                 e.printStackTrace();
             }
 
-            Objects.requireNonNull(getActivity()).runOnUiThread(()-> {
+            requireActivity().runOnUiThread(()-> {
                 if (isValid) {
                     count++;
                     getDirectory();
                 } else {
+
                     System.out.println("Finish...");
 
-                    progressBar.setVisibility(View.GONE);
+                    textView.setVisibility(View.GONE);
 
-                    AnimeAdapter exploreAdapter = new AnimeAdapter(animeArrayList, getContext());
+                    Sort sort = new Sort();
+                    sort.getArrayListByTitle(animeArrayList);
 
-                    recyclerView.setItemViewCacheSize(30);
-                    recyclerView.setDrawingCacheEnabled(true);
-                    recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
-                    recyclerView.setHasFixedSize(true);
-
-                    int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.spacing);
-                    recyclerView.addItemDecoration(new SpaceItemDecoration(spacingInPixels));
-
-
-                    recyclerView.setAdapter(exploreAdapter);
+                    createJsonFile();
+                    setRecyclerView(animeArrayList);
 
                 }
             });
@@ -163,6 +262,25 @@ public class ExploreFragment extends Fragment {
         }).start();
 
 
+
+    }
+
+    private void createJsonFile() {
+
+        JSONArray jsonArray = new JSONArray();
+        for (int i=0; i < animeArrayList.size(); i++) {
+            jsonArray.put(animeArrayList.get(i).getJsonObject());
+        }
+        String jsonDirectory = jsonArray.toString();
+
+        try {
+            FileWriter writer = new FileWriter(animeDirectory);
+            writer.append(jsonDirectory);
+            writer.flush();
+            writer.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
 
     }
 

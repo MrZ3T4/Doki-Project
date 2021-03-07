@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -108,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_toolbar, menu);
-
         myMenu = menu;
         return true;
     }
@@ -177,6 +177,7 @@ public class MainActivity extends AppCompatActivity {
                         toolbarTitle.startAnimation(animation);
 
                         myMenu.findItem(R.id.menu_filter).setVisible(false);
+                        myMenu.findItem(R.id.menu_force_update).setVisible(false);
 
                         break;
                     case R.id.menu_collections:
@@ -185,6 +186,7 @@ public class MainActivity extends AppCompatActivity {
                         toolbarTitle.startAnimation(animation);
 
                         myMenu.findItem(R.id.menu_filter).setVisible(false);
+                        myMenu.findItem(R.id.menu_force_update).setVisible(false);
 
                         break;
                     case R.id.menu_explore:
@@ -193,6 +195,7 @@ public class MainActivity extends AppCompatActivity {
                         toolbarTitle.startAnimation(animation);
 
                         myMenu.findItem(R.id.menu_filter).setVisible(true);
+                        myMenu.findItem(R.id.menu_force_update).setVisible(true);
 
                         break;
                     case R.id.menu_settings:
@@ -200,6 +203,7 @@ public class MainActivity extends AppCompatActivity {
                         toolbarTitle.setText(settings);
                         toolbarTitle.startAnimation(animation);
                         myMenu.findItem(R.id.menu_filter).setVisible(false);
+                        myMenu.findItem(R.id.menu_force_update).setVisible(false);
                         break;
 
                 }
@@ -216,6 +220,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
     private void changeFragment(Fragment fragment, String tagFragmentName) {
+
+        Log.d("Transaction", "CAAAAMBIOO!");
 
         FragmentManager mFragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
