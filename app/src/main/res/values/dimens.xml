@@ -4,6 +4,6 @@
     <dimen name="toolbar_size">50dp</dimen>
     <dimen name="margin_10">10dp</dimen>
     <dimen name="dimen_24">24dp</dimen>
-    <dimen name="spacing">2dp</dimen>
+    <dimen name="spacing">3dp</dimen>
 
 </resources>

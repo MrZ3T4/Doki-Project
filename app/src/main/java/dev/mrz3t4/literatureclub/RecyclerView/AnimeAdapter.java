@@ -70,7 +70,6 @@ public class AnimeAdapter extends RecyclerView.Adapter<AnimeAdapter.ViewHolder> 
             cardView = itemView.findViewById(R.id.anime_cardview);
             coverImageView = itemView.findViewById(R.id.anime_cover);
             titleTextView = itemView.findViewById(R.id.anime_title);
-            dateTextView = itemView.findViewById(R.id.anime_date);
             typeTextView = itemView.findViewById(R.id.anime_type);
 
         }
@@ -78,7 +77,6 @@ public class AnimeAdapter extends RecyclerView.Adapter<AnimeAdapter.ViewHolder> 
         void bindData(final Anime anime){
             titleTextView.setText(anime.getTitle());
             typeTextView.setText(anime.getType());
-            dateTextView.setText(anime.getDate());
 
             Picasso.get()
                     .load(anime.getImg())

@@ -1,8 +1,5 @@
 package dev.mrz3t4.literatureclub.UI;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.LayoutInflater;
@@ -13,7 +10,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,18 +27,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.concurrent.TimeoutException;
 
 import dev.mrz3t4.literatureclub.R;
 import dev.mrz3t4.literatureclub.RecyclerView.AnimeAdapter;
 import dev.mrz3t4.literatureclub.RecyclerView.Anime;
 import dev.mrz3t4.literatureclub.Utils.PicassoOnScrollListener;
 import dev.mrz3t4.literatureclub.Utils.Sort;
-import dev.mrz3t4.literatureclub.Utils.SpaceItemDecoration;
 
 import static dev.mrz3t4.literatureclub.Utils.Constants.BASE_URL;
 import static dev.mrz3t4.literatureclub.Utils.Constants.PAGE_URI;
-import static dev.mrz3t4.literatureclub.Utils.Constants.collections;
 
 public class ExploreFragment extends Fragment {
 
@@ -62,14 +55,11 @@ public class ExploreFragment extends Fragment {
     String path = Environment.getExternalStorageDirectory() + "/Android/data/dev.mrz3t4.literatureclub/files";
     File animeDirectory = new File(path, "directory.json");
 
-    private NotificationManager notificationManager;
-    private NotificationCompat.Builder updateDir;
-
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_viewpager_anime_test, container, false);
+        View view = inflater.inflate(R.layout.fragment_viewpager_anime, container, false);
 
         textView = view.findViewById(R.id.anime_textView);
 
@@ -141,10 +131,6 @@ public class ExploreFragment extends Fragment {
         recyclerView.setDrawingCacheEnabled(true);
         recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         recyclerView.setHasFixedSize(true);
-
-        int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.spacing);
-        recyclerView.addItemDecoration(new SpaceItemDecoration(spacingInPixels));
-
 
         recyclerView.setAdapter(exploreAdapter);
     }

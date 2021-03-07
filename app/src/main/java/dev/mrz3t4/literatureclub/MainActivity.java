@@ -1,7 +1,6 @@
 package dev.mrz3t4.literatureclub;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -14,7 +13,6 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,12 +26,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.io.IOException;
 import java.util.Objects;
 
 import dev.mrz3t4.literatureclub.UI.CollectionsFragment;
@@ -41,8 +33,6 @@ import dev.mrz3t4.literatureclub.UI.ExploreFragment;
 import dev.mrz3t4.literatureclub.UI.RecentsFragment;
 import dev.mrz3t4.literatureclub.UI.SettingsFragment;
 
-import static dev.mrz3t4.literatureclub.Utils.Constants.broadcast;
-import static dev.mrz3t4.literatureclub.Utils.Constants.calendar;
 import static dev.mrz3t4.literatureclub.Utils.Constants.collections;
 import static dev.mrz3t4.literatureclub.Utils.Constants.explore;
 import static dev.mrz3t4.literatureclub.Utils.Constants.recents;
@@ -54,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
     private final CollectionsFragment collectionsFragment = new CollectionsFragment();
     private final ExploreFragment exploreFragment = new ExploreFragment();
     private final SettingsFragment settingsFragment= new SettingsFragment();
+
+    Fragment active = recentsFragment;
+    FragmentManager fm = getSupportFragmentManager();
 
     private BottomNavigationView navigationView;
     private AppBarLayout appBarLayout;
@@ -79,6 +72,12 @@ public class MainActivity extends AppCompatActivity {
             setContentView(R.layout.activity_main);
 
             if (savedInstanceState == null) {
+
+               /* fm.beginTransaction().add(R.id.fragment_container, settingsFragment, "4").hide(settingsFragment).commit();
+                fm.beginTransaction().add(R.id.fragment_container, exploreFragment, "3").hide(exploreFragment).commit();
+                fm.beginTransaction().add(R.id.fragment_container, collectionsFragment, "2").hide(collectionsFragment).commit();
+                fm.beginTransaction().add(R.id.fragment_container, recentsFragment, "1").commit();
+*/
                 changeFragment(recentsFragment, RecentsFragment.class.getSimpleName());
             }
             setupBottomNavigationBar();
@@ -173,6 +172,9 @@ public class MainActivity extends AppCompatActivity {
 
                     case R.id.menu_recents:
                         changeFragment(recentsFragment, RecentsFragment.class.getSimpleName());
+                        //fm.beginTransaction().hide(active).setCustomAnimations(R.anim.slide_up, R.anim.alpha).show(recentsFragment).commit();
+                        //active = recentsFragment;
+
                         toolbarTitle.setText(recents);
                         toolbarTitle.startAnimation(animation);
 
@@ -182,6 +184,9 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.menu_collections:
                         changeFragment(collectionsFragment, CollectionsFragment.class.getSimpleName());
+                        //fm.beginTransaction().hide(active).setCustomAnimations(R.anim.slide_up, R.anim.alpha).show(collectionsFragment).commit();
+                        //active = collectionsFragment;
+
                         toolbarTitle.setText(collections);
                         toolbarTitle.startAnimation(animation);
 
@@ -191,6 +196,8 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.menu_explore:
                         changeFragment(exploreFragment, ExploreFragment.class.getSimpleName());
+                        //fm.beginTransaction().hide(active).setCustomAnimations(R.anim.slide_up, R.anim.alpha).show(exploreFragment).commit();
+                        //active = exploreFragment;
                         toolbarTitle.setText(explore);
                         toolbarTitle.startAnimation(animation);
 
@@ -200,6 +207,8 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.menu_settings:
                         changeFragment(settingsFragment, SettingsFragment.class.getSimpleName());
+                       // fm.beginTransaction().hide(active).setCustomAnimations(R.anim.slide_up, R.anim.alpha).show(settingsFragment).commit();
+                      //  active = settingsFragment;
                         toolbarTitle.setText(settings);
                         toolbarTitle.startAnimation(animation);
                         myMenu.findItem(R.id.menu_filter).setVisible(false);
@@ -221,8 +230,6 @@ public class MainActivity extends AppCompatActivity {
     }
     private void changeFragment(Fragment fragment, String tagFragmentName) {
 
-        Log.d("Transaction", "CAAAAMBIOO!");
-
         FragmentManager mFragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
 
@@ -235,14 +242,17 @@ public class MainActivity extends AppCompatActivity {
         if (fragmentTemp == null) {
             fragmentTemp = fragment;
             fragmentTransaction
-                    .setCustomAnimations(R.anim.slide_up, R.anim.alpha)
+                    //.setCustomAnimations(R.anim.slide_up, R.anim.alpha)
                     .add(R.id.fragment_container, fragmentTemp, tagFragmentName);
         } else {
-            fragmentTransaction.setCustomAnimations(R.anim.slide_up, R.anim.alpha).show(fragmentTemp);
+            fragmentTransaction
+                    .setCustomAnimations(R.anim.slide_up, R.anim.slide_down)
+                    .show(fragmentTemp);
         }
 
         fragmentTransaction.setPrimaryNavigationFragment(fragmentTemp);
         fragmentTransaction.setReorderingAllowed(true);
         fragmentTransaction.commitNowAllowingStateLoss();
+
     }
 }
