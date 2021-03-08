@@ -8,11 +8,13 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +28,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
 
+import java.io.File;
 import java.util.Objects;
 
 import dev.mrz3t4.literatureclub.UI.CollectionsFragment;
@@ -45,9 +48,6 @@ public class MainActivity extends AppCompatActivity {
     private final ExploreFragment exploreFragment = new ExploreFragment();
     private final SettingsFragment settingsFragment= new SettingsFragment();
 
-    Fragment active = recentsFragment;
-    FragmentManager fm = getSupportFragmentManager();
-
     private BottomNavigationView navigationView;
     private AppBarLayout appBarLayout;
     private ShapeableImageView toolbarImageView;
@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     Menu myMenu;
 
     private boolean connected;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,11 +118,20 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.menu_filter:
                 Toast.makeText(this, "update clicked", Toast.LENGTH_SHORT).show();
-                return true;
+                break;
+            case R.id.menu_force_update:
+
+                Intent intent = new Intent("FORCE_RELOAD");
+                intent.putExtra("RELOAD", true);
+                sendBroadcast(intent);
+
+                break;
 
             default:
                 return super.onOptionsItemSelected(item);
+
         }
+        return true;
     }
 
     private void setupAppBarLayout() {
@@ -178,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
                         toolbarTitle.setText(recents);
                         toolbarTitle.startAnimation(animation);
 
+                        myMenu.findItem(R.id.menu_donate).setVisible(false);
                         myMenu.findItem(R.id.menu_filter).setVisible(false);
                         myMenu.findItem(R.id.menu_force_update).setVisible(false);
 
@@ -192,6 +203,7 @@ public class MainActivity extends AppCompatActivity {
 
                         myMenu.findItem(R.id.menu_filter).setVisible(false);
                         myMenu.findItem(R.id.menu_force_update).setVisible(false);
+                        myMenu.findItem(R.id.menu_donate).setVisible(false);
 
                         break;
                     case R.id.menu_explore:
@@ -203,6 +215,7 @@ public class MainActivity extends AppCompatActivity {
 
                         myMenu.findItem(R.id.menu_filter).setVisible(true);
                         myMenu.findItem(R.id.menu_force_update).setVisible(true);
+                        myMenu.findItem(R.id.menu_donate).setVisible(false);
 
                         break;
                     case R.id.menu_settings:
@@ -211,8 +224,11 @@ public class MainActivity extends AppCompatActivity {
                       //  active = settingsFragment;
                         toolbarTitle.setText(settings);
                         toolbarTitle.startAnimation(animation);
+
                         myMenu.findItem(R.id.menu_filter).setVisible(false);
                         myMenu.findItem(R.id.menu_force_update).setVisible(false);
+                        myMenu.findItem(R.id.menu_donate).setVisible(true);
+
                         break;
 
                 }

@@ -1,12 +1,18 @@
 package dev.mrz3t4.literatureclub.UI;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,11 +37,13 @@ import java.util.ArrayList;
 import dev.mrz3t4.literatureclub.R;
 import dev.mrz3t4.literatureclub.RecyclerView.AnimeAdapter;
 import dev.mrz3t4.literatureclub.RecyclerView.Anime;
+import dev.mrz3t4.literatureclub.RecyclerView.Broadcast;
 import dev.mrz3t4.literatureclub.Utils.PicassoOnScrollListener;
 import dev.mrz3t4.literatureclub.Utils.Sort;
 
 import static dev.mrz3t4.literatureclub.Utils.Constants.BASE_URL;
 import static dev.mrz3t4.literatureclub.Utils.Constants.PAGE_URI;
+import static dev.mrz3t4.literatureclub.Utils.Constants.broadcast;
 
 public class ExploreFragment extends Fragment {
 
@@ -55,11 +63,15 @@ public class ExploreFragment extends Fragment {
     String path = Environment.getExternalStorageDirectory() + "/Android/data/dev.mrz3t4.literatureclub/files";
     File animeDirectory = new File(path, "directory.json");
 
+    AnimeAdapter exploreAdapter;
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_viewpager_anime, container, false);
+
+
 
         textView = view.findViewById(R.id.anime_textView);
 
@@ -74,9 +86,40 @@ public class ExploreFragment extends Fragment {
             getDirectory();
         }
 
+        IntentFilter filter = new IntentFilter("FORCE_RELOAD");
+        getActivity().registerReceiver(receiver, filter);
 
         return view;
     }
+
+    BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            boolean reload = intent.getBooleanExtra("RELOAD", false);
+
+            if (reload){
+                if (animeDirectory.exists()){
+
+                    Toast.makeText(getContext(), "Actualizando directorio, espere un momento.", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.VISIBLE);
+                    textView.setVisibility(View.VISIBLE);
+
+                    count = 1;
+
+                    getDirectory();
+
+                    animeDirectory.delete();
+                    animeArrayList.clear();
+                    exploreAdapter.notifyDataSetChanged();
+                } else {
+                    Toast.makeText(getContext(), "No se puede actualizar el directorio mientras se está creando.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+
+        }
+    };
 
     private void getDirectoryFromJson() {
 
@@ -115,7 +158,6 @@ public class ExploreFragment extends Fragment {
         } catch (Exception e){
             e.printStackTrace();
         }
-
         setRecyclerView(animeArrayList);
 
 
@@ -125,7 +167,7 @@ public class ExploreFragment extends Fragment {
 
         progressBar.setVisibility(View.GONE);
 
-        AnimeAdapter exploreAdapter = new AnimeAdapter(arrayList, getContext());
+        exploreAdapter = new AnimeAdapter(arrayList, getContext());
 
         recyclerView.setItemViewCacheSize(30);
         recyclerView.setDrawingCacheEnabled(true);
