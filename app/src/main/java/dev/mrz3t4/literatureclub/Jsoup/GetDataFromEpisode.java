@@ -2,7 +2,10 @@ package dev.mrz3t4.literatureclub.Jsoup;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.widget.Toast;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -22,39 +25,55 @@ public class GetDataFromEpisode {
     private String firstOptFinal;
     private String animeInfo;
 
+    private String finalURI;
+
     public void getLinks(String url, Context context, int mode) {
 
-        new Thread(() -> {
-            try {
-                Document document = Jsoup.connect(url).userAgent("Mozilla").get();
-                Elements doc = document.select("div[class=TPlayer mt-3 mb-3]");
 
-                animeInfo = formatInfo(url);
+        if (mode == 2){
+                Intent intent2 = new Intent("Information");
+                intent2.putExtra("url", url);
+                LocalBroadcastManager.getInstance(context).sendBroadcast(intent2);
+        } else {
 
-                firstOptFinal = doc.select("iframe[class=embed-responsive-item]").attr("src");
-                links = pullLinks(doc.text(), firstOptFinal);
+            new Thread(() -> {
+                try {
+                    Document document = Jsoup.connect(url).userAgent("Mozilla").get();
+                    Elements doc = document.select("div[class=TPlayer mt-3 mb-3]");
 
-                System.out.println(animeInfo);
+                    animeInfo = formatInfo(url);
+
+                    firstOptFinal = doc.select("iframe[class=embed-responsive-item]").attr("src");
+                    links = pullLinks(doc.text(), firstOptFinal);
+
+                    System.out.println(animeInfo);
 
 
-                for (int i = 0; i < links.size(); i++) {
-                    System.out.println("URL: " + links.get(i));
+                    for (int i = 0; i < links.size(); i++) {
+                        System.out.println("URL: " + links.get(i));
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+                ((Activity) context).runOnUiThread(() -> {
+                    // OnPostExecute stuff here
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            ((Activity)context).runOnUiThread(()->{
-                // OnPostExecute stuff here
 
-                if (mode==1) {
-                    Toast.makeText(GenericContext.getContext(), links.get(0), Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(GenericContext.getContext(), animeInfo, Toast.LENGTH_SHORT).show();
-                }
+                    switch (mode) {
 
-            });
-        }).start();
+                        case 1:
+                            finalURI = links.get(0);
+                            break;
+                        case 0:
+                            Intent intent = new Intent("Information");
+                            intent.putExtra("url", animeInfo);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                    }
+
+                });
+            }).start();
+        }
     }
 
     public ArrayList<String> pullLinks(String text, String firstURL) {

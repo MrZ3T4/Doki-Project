@@ -1,12 +1,18 @@
 package dev.mrz3t4.literatureclub.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -76,12 +82,15 @@ public class BroadcastAdapter extends RecyclerView.Adapter<BroadcastAdapter.View
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     View view = li.inflate(R.layout.bottomsheet_broadcast, null);
 
                     BottomSheetDialog dialog = new BottomSheetDialog(context);
                     dialog.setContentView(view);
                     dialog.show();
+
+                    GetDataFromEpisode getVideoURL = new GetDataFromEpisode();
 
                     MaterialCardView stream, information;
 
@@ -92,16 +101,14 @@ public class BroadcastAdapter extends RecyclerView.Adapter<BroadcastAdapter.View
                     information.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            GetDataFromEpisode getVideoURL = new GetDataFromEpisode();
-                            getVideoURL.getLinks(broadcast.url, context,0);
+                            getVideoURL.getLinks(broadcast.url, context, 0);
+                            dialog.dismiss();
                         }
                     });
 
                     stream.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            GetDataFromEpisode getVideoURL = new GetDataFromEpisode();
-                            getVideoURL.getLinks(broadcast.url, context,1);
                         }
                     });
 

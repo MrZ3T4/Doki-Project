@@ -6,15 +6,20 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -73,22 +78,38 @@ public class MainActivity extends AppCompatActivity {
             setContentView(R.layout.activity_main);
 
             if (savedInstanceState == null) {
-
-               /* fm.beginTransaction().add(R.id.fragment_container, settingsFragment, "4").hide(settingsFragment).commit();
-                fm.beginTransaction().add(R.id.fragment_container, exploreFragment, "3").hide(exploreFragment).commit();
-                fm.beginTransaction().add(R.id.fragment_container, collectionsFragment, "2").hide(collectionsFragment).commit();
-                fm.beginTransaction().add(R.id.fragment_container, recentsFragment, "1").commit();
-*/
                 changeFragment(recentsFragment, RecentsFragment.class.getSimpleName());
             }
             setupBottomNavigationBar();
             setupAppBarLayout();
             setupFAB();
+            LocalBroadcastManager.getInstance(this).registerReceiver(informationReceiver,
+                    new IntentFilter("Information"));
+
         } else {
             Intent intent = new Intent(MainActivity.this, Downloads.class);
             startActivity(intent);
             setContentView(R.layout.section_downloads);
         }
+
+    }
+
+    private BroadcastReceiver informationReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String URL = intent.getStringExtra("url");
+                goToAnimeInformation(URL);
+        }
+    };
+
+    private void goToAnimeInformation(String URI) {
+
+        Intent goToInformation = new Intent(MainActivity.this, ActivityAnimeInformation.class);
+        Bundle b = new Bundle();
+        b.putString("url", URI);
+
+        goToInformation.putExtras(b);
+        startActivity(goToInformation);
 
     }
 
@@ -153,6 +174,16 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupFAB(){
         fab = findViewById(R.id.fab_search);
+        fab.setOnClickListener(v -> {
+            Vibrator vi = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+// Vibrate for 500 milliseconds
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vi.vibrate(VibrationEffect.createOneShot(10, VibrationEffect.DEFAULT_AMPLITUDE));
+            } else {
+                //deprecated in API 26
+                vi.vibrate(10);
+            }
+        });
 
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override

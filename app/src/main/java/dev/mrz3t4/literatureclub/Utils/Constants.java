@@ -7,6 +7,8 @@ public class Constants {
     public static String broadcast = GenericContext.getContext().getResources().getString(R.string.broadcast);
     public static String calendar = GenericContext.getContext().getResources().getString(R.string.calendar);
     public static String season = GenericContext.getContext().getResources().getString(R.string.season);
+    public static String information = GenericContext.getContext().getResources().getString(R.string.anime_data);
+    public static String episodes = GenericContext.getContext().getResources().getString(R.string.episodes);
 
     public static String recents = GenericContext.getContext().getResources().getString(R.string.recents_toolbar);
     public static String collections = GenericContext.getContext().getResources().getString(R.string.collections_toolbar);

@@ -14,6 +14,8 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import dev.mrz3t4.literatureclub.R;
+import dev.mrz3t4.literatureclub.ViewPager.BroadcastFragment;
+import dev.mrz3t4.literatureclub.ViewPager.SeasonFragment;
 
 import static dev.mrz3t4.literatureclub.Utils.Constants.broadcast;
 import static dev.mrz3t4.literatureclub.Utils.Constants.calendar;
@@ -23,6 +25,9 @@ public class RecentsFragment extends Fragment {
 
     private ViewPager2 viewPager;
     private TabLayout tabLayout;
+
+    private Fragment broadcastFragment = new BroadcastFragment();
+    private Fragment seasonFragment = new SeasonFragment();
 
     private AnimeViewPager animeViewPager = new AnimeViewPager();
 
@@ -34,7 +39,7 @@ public class RecentsFragment extends Fragment {
         tabLayout = view.findViewById(R.id.tablayout);
         viewPager = view.findViewById(R.id.viewpager);
 
-        animeViewPager.setupViewPager(viewPager, getChildFragmentManager(), getLifecycle());
+        animeViewPager.setupViewPager(viewPager, broadcastFragment, seasonFragment, getChildFragmentManager(), getLifecycle());
 
         new TabLayoutMediator(tabLayout, viewPager,
                 (tab, position) -> {

@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
+import dev.mrz3t4.literatureclub.Jsoup.GetDataFromEpisode;
 import dev.mrz3t4.literatureclub.R;
 import dev.mrz3t4.literatureclub.Utils.PicassoOnScrollListener;
 
@@ -55,7 +56,7 @@ public class AnimeAdapter extends RecyclerView.Adapter<AnimeAdapter.ViewHolder> 
     @NotNull
     @Override
     public CharSequence onChange(int pos) {
-        return animeArrayList.get(pos).getTitle().substring(0,1);
+        return animeArrayList.get(pos).getTitle().substring(0,2);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -83,7 +84,12 @@ public class AnimeAdapter extends RecyclerView.Adapter<AnimeAdapter.ViewHolder> 
                     .tag(PicassoOnScrollListener.TAG)
                     .into(coverImageView);
 
-            cardView.setOnClickListener(v -> Toast.makeText(context, anime.getUrl(), Toast.LENGTH_SHORT).show());
+            cardView.setOnClickListener(v -> {
+
+                GetDataFromEpisode getDataFromEpisode = new GetDataFromEpisode();
+                getDataFromEpisode.getLinks(anime.url, context, 2);
+
+            });
 
 
         }

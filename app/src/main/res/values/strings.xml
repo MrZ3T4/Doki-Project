@@ -6,6 +6,9 @@
     <string name="explore">Explorar</string>
     <string name="settings">Más</string>
 
+    <string name="anime_data">Información</string>
+    <string name="episodes">Episodios</string>
+
     <string name="recents_toolbar">Recientes</string>
     <string name="explore_toolbar">Directorio</string>
     <string name="collections_toolbar">Elementos guardados</string>
