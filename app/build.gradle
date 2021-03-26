@@ -35,10 +35,24 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'org.jetbrains:annotations:15.0'
+    implementation 'androidx.browser:browser:1.3.0'
     testImplementation 'junit:junit:4.+'
 
     implementation 'org.jsoup:jsoup:1.13.1'
     implementation 'com.quiph.ui:recyclerviewfastscroller:1.0.0'
+
+
+    implementation 'com.squareup.retrofit2:retrofit:2.6.1' // Retrofit
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.1' // Gson
+    implementation 'com.karumi:dexter:5.0.0' // Dexter
+
+
+    implementation 'com.jakewharton:butterknife:10.2.0' // ButterKnife
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.0' // ButterKnife
+
+    implementation 'saschpe.android:customtabs:2.0.0' // Custom Tabs
+
+    implementation 'at.blogc:expandabletextview:1.0.5' // Expandable TextView
 
     implementation 'com.squareup.picasso:picasso:2.71828'
 

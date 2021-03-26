@@ -42,10 +42,19 @@ import dev.mrz3t4.literatureclub.RecyclerView.Anime;
 import dev.mrz3t4.literatureclub.RecyclerView.AnimeAdapter;
 import dev.mrz3t4.literatureclub.RecyclerView.Episode;
 import dev.mrz3t4.literatureclub.RecyclerView.GenderAdapter;
+import dev.mrz3t4.literatureclub.Retrofit.InterfaceMAL;
+import dev.mrz3t4.literatureclub.Retrofit.MalID;
+import dev.mrz3t4.literatureclub.Retrofit.ResultID;
 import dev.mrz3t4.literatureclub.UI.AnimeEpisodesFragment;
 import dev.mrz3t4.literatureclub.UI.AnimeInformationFragment;
 import dev.mrz3t4.literatureclub.UI.AnimeViewPager;
 import dev.mrz3t4.literatureclub.Utils.PicassoBlurImage;
+import dev.mrz3t4.literatureclub.ViewPager.InformationFragment;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import static dev.mrz3t4.literatureclub.Utils.Constants.broadcast;
 import static dev.mrz3t4.literatureclub.Utils.Constants.episodes;
@@ -69,6 +78,26 @@ public class ActivityAnimeInformation extends AppCompatActivity {
     private CoordinatorLayout coordinatorLayout;
     private ProgressBar progressBar;
 
+    private String titulo;
+    private String poster;
+    private String tipo;
+    private String estado;
+    private String estado_finalizado;
+    private String sinopsis;
+    private String emitido;
+    private String BASE_URL;
+    private String TITULO;
+    private String ID;
+    private String SCORE;
+    private String RATED;
+    private String EPISODES;
+    private String TITULO_ORIGINAL;
+    private String SINONIMOS;
+    private String URL_MAL;
+
+    Boolean isReadyRetrofit = false;
+
+    Intent intent = new Intent("data");
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -98,6 +127,9 @@ public class ActivityAnimeInformation extends AppCompatActivity {
 
         tabLayout = findViewById(R.id.information_tabLayout);
         viewPager = findViewById(R.id.information_viewPager);
+
+        viewPager.requestDisallowInterceptTouchEvent(true);
+
         setTabs();
 
         getData();
@@ -106,10 +138,17 @@ public class ActivityAnimeInformation extends AppCompatActivity {
 
     }
 
+    public void nestedScrollViewPagerOn(){
+      viewPager.setUserInputEnabled(true);
+    }
+    public void nestedScrollViewPagerOff(){
+        viewPager.setUserInputEnabled(false);
+    }
+
     private void setTabs() {
         AnimeViewPager animeViewPager = new AnimeViewPager();
 
-        AnimeInformationFragment animeInformationFragment = new AnimeInformationFragment();
+        InformationFragment animeInformationFragment = new InformationFragment();
         AnimeEpisodesFragment animeEpisodesFragment = new AnimeEpisodesFragment();
 
         animeViewPager.setupViewPager(viewPager, animeInformationFragment, animeEpisodesFragment, getSupportFragmentManager() , getLifecycle());
@@ -186,9 +225,6 @@ public class ActivityAnimeInformation extends AppCompatActivity {
                     episodes.putExtra("title", stitle);
                     LocalBroadcastManager.getInstance(this).sendBroadcast(episodes);
 
-                    progressBar.setVisibility(View.GONE);
-                    coordinatorLayout.animate().alpha(1f).setDuration(300).start();
-
                     date.setText(sdate);
                     category.setText(scategory);
                     if (scategory.equalsIgnoreCase("Anime")){
@@ -219,10 +255,85 @@ public class ActivityAnimeInformation extends AppCompatActivity {
                     });
                     Picasso.get().load(scover).into(cover);
                     title.setText(stitle);
-//                    description.setText(sdescription);
+                    intent.putExtra("sinopsis",sdescription);
+                    intent.putExtra("titulo", stitle);
+                    getMAL(stitle);
                     status.setText(sstatus);
                 });
             }).start();
 
     }
+
+    private void retrofitIsReady(){
+
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        progressBar.setVisibility(View.GONE);
+        coordinatorLayout.animate().alpha(1f).setDuration(300).start();
+        isReadyRetrofit = true; }
+
+    private void getMAL(String titulo){
+
+        String JIKANURL = "https://api.jikan.moe/v3/";
+
+        String ANIME_URL = JIKANURL.concat("search/anime?q=")
+                .concat(titulo.replaceAll(" ", "%20")).concat("&limit=1");
+
+        System.out.println("MAL_ID: "+ ANIME_URL);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(JIKANURL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        InterfaceMAL interfaceMAL = retrofit.create(InterfaceMAL.class);
+
+        interfaceMAL.getID(ANIME_URL).enqueue(new Callback<MalID>() {
+            @Override
+            public void onResponse(Call<MalID> call, Response<MalID> response) {
+
+
+                if (response.isSuccessful()){
+
+                    System.out.println("MAL_ID RESPONSE: " + response.code());
+
+                    List<ResultID> malIDList = response.body().getResults();
+
+                    for (ResultID result : malIDList){
+
+                        int id = result.getMalId();
+                        int episodes = result.getEpisodes();
+                        double score = result.getScore();
+
+                        SCORE = String.valueOf(score);
+                        ID = String.valueOf(id);
+                        RATED = result.getRated();
+                        EPISODES = String.valueOf(episodes);
+                        URL_MAL = result.getUrl();
+
+
+                        intent.putExtra("fecha", SCORE);
+
+                        retrofitIsReady();
+
+                    }
+
+
+                    intent.putExtra("ID", ID);
+                    intent.putExtra("RATED", RATED);
+                    intent.putExtra("EPISODES", EPISODES);
+                    // intent.putExtra("ORIGINAL", TITULO_ORIGINAL);
+                    intent.putExtra("MAL", URL_MAL);
+
+
+                }
+
+            }
+            @Override
+            public void onFailure(Call<MalID> call, Throwable t) { }
+        });
+
+    }
+
+
+
 }
