@@ -5,13 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textview.MaterialTextView;
 import com.qtalk.recyclerviewfastscroller.RecyclerViewFastScroller;
@@ -21,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-import dev.mrz3t4.literatureclub.Jsoup.GetDataFromEpisode;
+import dev.mrz3t4.literatureclub.Jsoup.GetLinksFromEpisode;
 import dev.mrz3t4.literatureclub.R;
 import dev.mrz3t4.literatureclub.Utils.PicassoOnScrollListener;
 
@@ -86,7 +83,7 @@ public class AnimeAdapter extends RecyclerView.Adapter<AnimeAdapter.ViewHolder> 
 
             cardView.setOnClickListener(v -> {
 
-                GetDataFromEpisode getDataFromEpisode = new GetDataFromEpisode();
+                GetLinksFromEpisode getDataFromEpisode = new GetLinksFromEpisode();
                 getDataFromEpisode.getLinks(anime.url, null, context, 2);
 
             });

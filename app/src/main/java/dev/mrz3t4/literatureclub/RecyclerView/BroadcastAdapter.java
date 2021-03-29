@@ -1,18 +1,12 @@
 package dev.mrz3t4.literatureclub.RecyclerView;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -23,7 +17,7 @@ import com.google.android.material.textview.MaterialTextView;
 
 import java.util.ArrayList;
 
-import dev.mrz3t4.literatureclub.Jsoup.GetDataFromEpisode;
+import dev.mrz3t4.literatureclub.Jsoup.GetLinksFromEpisode;
 import dev.mrz3t4.literatureclub.R;
 
 public class BroadcastAdapter extends RecyclerView.Adapter<BroadcastAdapter.ViewHolder> {
@@ -92,7 +86,7 @@ public class BroadcastAdapter extends RecyclerView.Adapter<BroadcastAdapter.View
                     dialog.setContentView(view);
                     dialog.show();
 
-                    GetDataFromEpisode getVideoURL = new GetDataFromEpisode();
+                    GetLinksFromEpisode getVideoURL = new GetLinksFromEpisode();
 
                     MaterialCardView stream, information;
 

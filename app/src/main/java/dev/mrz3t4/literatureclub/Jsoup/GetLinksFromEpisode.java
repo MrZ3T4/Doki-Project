@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 
 import dev.mrz3t4.literatureclub.Utils.GenericContext;
 
-public class GetDataFromEpisode {
+public class GetLinksFromEpisode {
 
 
     private ArrayList<String> links;

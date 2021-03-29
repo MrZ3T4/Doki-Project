@@ -1,5 +1,7 @@
 package dev.mrz3t4.literatureclub.Utils;
 
+import android.os.Environment;
+
 import dev.mrz3t4.literatureclub.R;
 
 public class Constants {
@@ -18,5 +20,6 @@ public class Constants {
     public static String episode = GenericContext.getContext().getResources().getString(R.string.episode);
 
     public static String BASE_URL = "https://monoschinos2.com/animes";
+    public static String EMISION_URL = "https://monoschinos2.com/emision";
     public static String PAGE_URI = "?page=";
 }
