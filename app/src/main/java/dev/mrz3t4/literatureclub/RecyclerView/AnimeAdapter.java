@@ -87,7 +87,7 @@ public class AnimeAdapter extends RecyclerView.Adapter<AnimeAdapter.ViewHolder> 
             cardView.setOnClickListener(v -> {
 
                 GetDataFromEpisode getDataFromEpisode = new GetDataFromEpisode();
-                getDataFromEpisode.getLinks(anime.url, context, 2);
+                getDataFromEpisode.getLinks(anime.url, null, context, 2);
 
             });
 

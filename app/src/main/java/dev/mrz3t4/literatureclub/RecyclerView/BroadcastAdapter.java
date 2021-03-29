@@ -83,6 +83,8 @@ public class BroadcastAdapter extends RecyclerView.Adapter<BroadcastAdapter.View
                 @Override
                 public void onClick(View v) {
 
+                    System.out.println("XDDDDDDDDDDDDDDDDDDDD"+broadcast.title);
+
                     LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     View view = li.inflate(R.layout.bottomsheet_broadcast, null);
 
@@ -101,7 +103,7 @@ public class BroadcastAdapter extends RecyclerView.Adapter<BroadcastAdapter.View
                     information.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            getVideoURL.getLinks(broadcast.url, context, 0);
+                            getVideoURL.getLinks(broadcast.url, broadcast.title, context, 0);
                             dialog.dismiss();
                         }
                     });

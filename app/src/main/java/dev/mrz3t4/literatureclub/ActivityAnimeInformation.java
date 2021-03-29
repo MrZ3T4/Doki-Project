@@ -2,11 +2,16 @@ package dev.mrz3t4.literatureclub;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -23,7 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.bumptech.glide.Glide;
+
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.squareup.picasso.Picasso;
@@ -36,6 +41,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.EventListener;
 import java.util.List;
 
 import dev.mrz3t4.literatureclub.RecyclerView.Anime;
@@ -108,6 +114,7 @@ public class ActivityAnimeInformation extends AppCompatActivity {
         Bundle b = getIntent().getExtras();
         if (!b.isEmpty()){
             URI = b.getString("url");
+            TITULO = b.getString("title");
         }
 
         progressBar = findViewById(R.id.information_progressBar);
@@ -134,7 +141,16 @@ public class ActivityAnimeInformation extends AppCompatActivity {
 
         getData();
 
-        toolbar_back.setOnClickListener(v -> finish());
+        toolbar_back.setOnClickListener(v -> {
+            Vibrator vi = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vi.vibrate(VibrationEffect.createOneShot(20, VibrationEffect.DEFAULT_AMPLITUDE));
+            } else {
+                //deprecated in API 26
+                vi.vibrate(20);
+            }
+            finish();
+        } );
 
     }
 
@@ -179,6 +195,10 @@ public class ActivityAnimeInformation extends AppCompatActivity {
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private void getData() {
+
+
+        System.out.println("XDDDDDDDDDDDDDDDDDDDD"+TITULO);
+        System.out.println("AAAAAAAAAAAAAAA"+URI);
 
             new Thread(() -> {
                 try {
@@ -227,12 +247,16 @@ public class ActivityAnimeInformation extends AppCompatActivity {
 
                     date.setText(sdate);
                     category.setText(scategory);
-                    if (scategory.equalsIgnoreCase("Anime")){
-                        categoryImgView.setImageDrawable(getDrawable(R.drawable.ic_tv));
-                    } else if (scategory.equalsIgnoreCase("Pelicula")){
-                        categoryImgView.setImageDrawable(getDrawable(R.drawable.ic_movie));
-                    } else {
-                        categoryImgView.setImageDrawable(getDrawable(R.drawable.ic_other));
+
+                    if (scategory != null){
+                        if (scategory.equalsIgnoreCase("Anime")){
+                            categoryImgView.setImageDrawable(getDrawable(R.drawable.ic_tv));
+                        } else if (scategory.equalsIgnoreCase("Pelicula")){
+                            categoryImgView.setImageDrawable(getDrawable(R.drawable.ic_movie));
+                        } else {
+                            categoryImgView.setImageDrawable(getDrawable(R.drawable.ic_other));
+                        }
+
                     }
 
                     GenderAdapter genderAdapter = new GenderAdapter(sgenders, this);
@@ -245,7 +269,6 @@ public class ActivityAnimeInformation extends AppCompatActivity {
                         }
                         @Override
                         public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-
                         }
 
                         @Override
@@ -257,7 +280,14 @@ public class ActivityAnimeInformation extends AppCompatActivity {
                     title.setText(stitle);
                     intent.putExtra("sinopsis",sdescription);
                     intent.putExtra("titulo", stitle);
+
+                    if (TITULO == null){
                     getMAL(stitle);
+                    } else {
+                        getMAL(TITULO);
+                    }
+
+
                     status.setText(sstatus);
                 });
             }).start();
@@ -274,6 +304,8 @@ public class ActivityAnimeInformation extends AppCompatActivity {
     private void getMAL(String titulo){
 
         String JIKANURL = "https://api.jikan.moe/v3/";
+
+            System.out.println("JIKAN: " + titulo);
 
         String ANIME_URL = JIKANURL.concat("search/anime?q=")
                 .concat(titulo.replaceAll(" ", "%20")).concat("&limit=1");

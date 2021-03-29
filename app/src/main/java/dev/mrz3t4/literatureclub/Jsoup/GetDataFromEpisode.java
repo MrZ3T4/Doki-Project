@@ -27,7 +27,7 @@ public class GetDataFromEpisode {
 
     private String finalURI;
 
-    public void getLinks(String url, Context context, int mode) {
+    public void getLinks(String url, String title, Context context, int mode) {
 
 
         if (mode == 2){
@@ -68,6 +68,7 @@ public class GetDataFromEpisode {
                         case 0:
                             Intent intent = new Intent("Information");
                             intent.putExtra("url", animeInfo);
+                            intent.putExtra("title", title);
                             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                     }
 
@@ -109,7 +110,7 @@ public class GetDataFromEpisode {
     }
 
     private String formatInfo(String urlStr){
-        return urlStr.replace("ver", "anime")
+        return urlStr.replaceFirst("ver", "anime")
                 .substring(0, urlStr.lastIndexOf("-"))
                 .replace("episod", "sub-espanol");
     }

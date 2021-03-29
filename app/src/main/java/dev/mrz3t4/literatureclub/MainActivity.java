@@ -98,15 +98,17 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String URL = intent.getStringExtra("url");
-                goToAnimeInformation(URL);
+            String TITLE = intent.getStringExtra("title");
+                goToAnimeInformation(URL, TITLE);
         }
     };
 
-    private void goToAnimeInformation(String URI) {
+    private void goToAnimeInformation(String URI, String title) {
 
         Intent goToInformation = new Intent(MainActivity.this, ActivityAnimeInformation.class);
         Bundle b = new Bundle();
         b.putString("url", URI);
+        b.putString("title", title);
 
         goToInformation.putExtras(b);
         startActivity(goToInformation);
@@ -185,14 +187,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                if (verticalOffset == 0) {
-                    fab.show();
-                } else {
-                    fab.hide();
-                }
+        appBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
+            if (verticalOffset == 0) {
+                fab.show();
+            } else {
+                fab.hide();
             }
         });
 
