@@ -72,23 +72,23 @@ public class AnimeAdapter extends RecyclerView.Adapter<AnimeAdapter.ViewHolder> 
         @Override
         protected FilterResults performFiltering(CharSequence charSequence) {
 
-            ArrayList<Anime> listaFiltrada = new ArrayList<>();
+            ArrayList<Anime> filterList = new ArrayList<>();
 
             if (charSequence == null || charSequence.length() == 0) {
-                listaFiltrada.addAll(fullArrayList);
+                filterList.addAll(fullArrayList);
             } else {
 
                 String filtro = charSequence.toString().toLowerCase().trim();
-                for (Anime directorio : fullArrayList) {
+                for (Anime anime : fullArrayList) {
 
-                    if (directorio.getTitle().toLowerCase().contains(filtro)) {
-                        listaFiltrada.add(directorio);
+                    if (anime.getTitle().toLowerCase().contains(filtro)) {
+                        filterList.add(anime);
                     }
 
                 }
             }
             FilterResults results = new FilterResults();
-            results.values = listaFiltrada;
+            results.values = filterList;
             return results;
         }
 

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.os.Environment;
 import android.speech.RecognizerIntent;
 import android.text.TextUtils;
 import android.util.TypedValue;
@@ -22,29 +21,25 @@ import androidx.annotation.ColorInt;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import dev.mrz3t4.literatureclub.Jsoup.GetAnime;
 import dev.mrz3t4.literatureclub.RecyclerView.Anime;
 import dev.mrz3t4.literatureclub.RecyclerView.AnimeAdapter;
 import dev.mrz3t4.literatureclub.Utils.GenericContext;
-import dev.mrz3t4.literatureclub.Utils.JsonUtils;
+import dev.mrz3t4.literatureclub.Utils.JsonTools;
 
 public class Buscador extends AppCompatActivity {
 
@@ -136,9 +131,9 @@ public class Buscador extends AppCompatActivity {
     }
 
     private void getJSON() {
-        JsonUtils jsonUtils = new JsonUtils();
+        JsonTools JSONTools = new JsonTools();
 
-        if (jsonUtils.jsonExists()) {
+        if (JSONTools.jsonExists()) {
             File directory = new File(GenericContext.getContext().getFilesDir(), "directory.json");
 
             try {

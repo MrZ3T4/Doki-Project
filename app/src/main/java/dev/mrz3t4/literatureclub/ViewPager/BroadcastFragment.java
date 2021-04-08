@@ -32,6 +32,8 @@ import dev.mrz3t4.literatureclub.Utils.Constants;
 import dev.mrz3t4.literatureclub.Utils.GenericContext;
 import dev.mrz3t4.literatureclub.Utils.Sort;
 
+import static dev.mrz3t4.literatureclub.Utils.Constants.BROADCAST_URL;
+
 public class BroadcastFragment extends Fragment {
 
     private ArrayList<Broadcast> broadcastArrayList;
@@ -48,16 +50,16 @@ public class BroadcastFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerview_broadcast);
         progressBar = view.findViewById(R.id.broadcast_progressbar);
 
-        run();
+        getBroadcast();
 
         return view;
     }
 
-    public void run() {
+    public void getBroadcast() {
 
         new Thread(() -> {
             try {
-                Document document = Jsoup.connect("https://monoschinos2.com/").userAgent("Mozilla").get();
+                Document document = Jsoup.connect(BROADCAST_URL).userAgent("Mozilla").get();
 
                 Elements doc = document.select("article[class=col-6 col-sm-4 col-md-3]");
 
@@ -75,9 +77,8 @@ public class BroadcastFragment extends Fragment {
                     broadcastArrayList.add(new Broadcast(title, episode,img,url,type));
                 }
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            } catch (IOException e) { e.printStackTrace(); }
+
             getActivity().runOnUiThread(()->{
                 // OnPostExecute stuff here
 

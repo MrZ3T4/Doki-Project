@@ -15,12 +15,12 @@ import java.util.ArrayList;
 import dev.mrz3t4.literatureclub.RecyclerView.Anime;
 
 
-public class JsonUtils {
+public class JsonTools {
 
 
     File directory = new File(GenericContext.getContext().getFilesDir(), "directory.json");
 
-    public void createJsonDirectory(ArrayList<Anime> animeArrayList) {
+    public void createJSONFileDirectory(ArrayList<Anime> animeArrayList) {
 
         JSONArray jsonArray = new JSONArray();
         for (int i=0; i < animeArrayList.size(); i++) {

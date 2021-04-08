@@ -1,20 +1,14 @@
 package dev.mrz3t4.literatureclub.Jsoup;
 
 import android.app.Activity;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.json.JSONArray;
@@ -31,12 +25,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import dev.mrz3t4.literatureclub.R;
 import dev.mrz3t4.literatureclub.RecyclerView.Anime;
 import dev.mrz3t4.literatureclub.RecyclerView.AnimeAdapter;
 import dev.mrz3t4.literatureclub.Utils.GenericContext;
-import dev.mrz3t4.literatureclub.Utils.JsonUtils;
-import dev.mrz3t4.literatureclub.Utils.NotificationBuilder;
+import dev.mrz3t4.literatureclub.Utils.JsonTools;
+import dev.mrz3t4.literatureclub.Utils.NotificationsBuilder;
 import dev.mrz3t4.literatureclub.Utils.Sort;
 
 import static dev.mrz3t4.literatureclub.Utils.Constants.BASE_URL;
@@ -45,19 +38,22 @@ import static dev.mrz3t4.literatureclub.Utils.Constants.PAGE_URI;
 
 public class GetAnime {
 
-    private int count = 1;
 
-    private boolean isValid;
+    private int PAGE_NUMBER = 1;
 
-    private String MODE_URL;
+    private boolean itsNotEmpty;
 
-    private ArrayList<Anime> animeArrayList = new ArrayList<>();
+    private String VARIABLE_URL;
 
-    private Activity activity;
-    private RecyclerView recyclerView;
-    private ProgressBar progressBar;
+    private final ArrayList<Anime> animeArrayList = new ArrayList<>();
 
-    private NotificationBuilder notificationBuilder = new NotificationBuilder();
+    private final Activity activity;
+    private final RecyclerView recyclerView;
+    private final ProgressBar progressBar;
+
+    private final NotificationsBuilder notificationsBuilder = new NotificationsBuilder();
+    private final JsonTools jsonTools = new JsonTools();
+    private final Sort sort = new Sort();
 
 
     public GetAnime(Activity activity, RecyclerView recyclerView, ProgressBar progressBar) {
@@ -67,31 +63,27 @@ public class GetAnime {
 
     }
 
-    public void getDirectory(int mode) {
+    public void getDirectoryFromWeb(int mode) {
 
-        if (isDirectory(mode)){
-            MODE_URL = BASE_URL;
-        } else {
-            MODE_URL = EMISION_URL;
-        }
-        if (count!=1) { MODE_URL = MODE_URL + PAGE_URI + count; }
+        if (isDirectory(mode)) { VARIABLE_URL = BASE_URL; }
+        else { VARIABLE_URL = EMISION_URL; }
+
+        if (PAGE_NUMBER!=1) { VARIABLE_URL = VARIABLE_URL + PAGE_URI + PAGE_NUMBER; }
 
         if (isDirectory(mode) ){
-            notificationBuilder.createNotification("Actualizando Directorio...", "Pagina ", count);
+            notificationsBuilder.createNotification("Actualizando Directorio...", "Pagina ", PAGE_NUMBER);
         }
 
-
-        new Thread(() -> {
+        new Thread(() -> { // Background
 
             try {
-                System.out.println(MODE_URL);
 
-                Document document = Jsoup.connect(MODE_URL).userAgent("Mozilla").get();
-                Elements doc = document.select("article[class=col-6 col-sm-4 col-lg-2 mb-5]");
+                Document document = Jsoup.connect(VARIABLE_URL).userAgent("Mozilla").get();
+                Elements elements = document.select("article[class=col-6 col-sm-4 col-lg-2 mb-5]");
 
-                if (!doc.text().isEmpty()) {
+                if (!elements.text().isEmpty()) {
 
-                    for (Element body : doc) {
+                    for (Element body : elements) {
 
                         Anime anime = new Anime();
 
@@ -100,83 +92,65 @@ public class GetAnime {
                         String img = body.select("img[class=img-fluid]").attr("src");
                         String url = body.select("a").attr("href");
 
-                        String type="";
-
-                        if (body.text().contains("Anime")){
-                            type = "Anime";
-                            anime.setType(type);
-                        } else if (body.text().contains("Pelicula")){
-                            type = "Pelicula";
-                            anime.setType(type);
-                        } else if (body.text().contains("Ova")) {
-                            type = "OVA";
-                            anime.setType(type);
-                        } else if (body.text().contains("Donghua")){
-                            type = "Donghua";
-                            anime.setType(type);
-                        } else if (body.text().contains("Corto")) {
-                            type = "Corto";
-                            anime.setType(type);
-                        } else if (body.text().contains("Especial")){
-                            type = "Especial";
-                            anime.setType(type);
-                        } else if (body.text().contains("Sin Censura")) {
-                            type = "Sin Censura";
-                            anime.setType(type);
-                        } else if (body.text().contains("Ona")) {
-                            type = "ONA";
-                            anime.setType(type);
-                        }
-
+                        String type = getType(body.text());
 
                         anime.setTitle(title);
                         anime.setImg(img);
                         anime.setDate(date);
                         anime.setUrl(url);
+                        anime.setType(type);
                         animeArrayList.add(anime);
 
                     }
-                    isValid = true;
+                    itsNotEmpty = true;
 
-                } else {
-                    isValid = false;
-                }
+                } else { itsNotEmpty = false; }
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            } catch (IOException e) { e.printStackTrace(); }
 
-            activity.runOnUiThread(()-> {
-                if (isValid) {
-                    count++;
-                    if (isDirectory(mode)){
-                        getDirectory(1); // For Directory
-                    } else {
-                        getDirectory(0); // For Season
-                    }
+            activity.runOnUiThread(()-> { // Do Next...
 
-                } else {
+                if (itsNotEmpty) { // Reload
 
-                    System.out.println("Done.");
+                    PAGE_NUMBER++;
+                    if (isDirectory(mode)){ getDirectoryFromWeb(1); } // Explore
+                    else { getDirectoryFromWeb(0); } // Season
+
+                } else { // Done.
 
                     if (isDirectory(mode)){
-                        JsonUtils jsonUtils = new JsonUtils();
-                        jsonUtils.createJsonDirectory(animeArrayList);
 
-                        notificationBuilder.cancelNotification(1);
-                        Toast.makeText(activity, "¡Directorio actualizado!", Toast.LENGTH_SHORT).show();
+                        jsonTools.createJSONFileDirectory(animeArrayList);
+                        notificationsBuilder.createToast("Directorio actualizado", Toast.LENGTH_SHORT);
+                        notificationsBuilder.cancelNotification(1);
+
                     }
 
-                    Sort sort = new Sort();
                     sort.getArrayListByTitle(animeArrayList);
-
-                    setRecyclerView(animeArrayList, activity);
-
+                    setRecyclerView(animeArrayList);
 
                 }
             });
 
         }).start();
+
+    }
+
+    private String getType(String type){
+
+        String RESULT;
+
+        if (type.contains("Anime")){ RESULT = "Anime"; }
+        else if (type.contains("Pelicula")){ RESULT = "Pelicula"; }
+        else if (type.contains("Ova")) { RESULT = "OVA"; }
+        else if (type.contains("Donghua")){ RESULT = "Donghua"; }
+        else if (type.contains("Corto")) { RESULT = "Corto"; }
+        else if (type.contains("Especial")){ RESULT = "Especial"; }
+        else if (type.contains("Sin Censura")) { RESULT = "Sin Censura"; }
+        else if (type.contains("Ona")) { RESULT = "ONA"; }
+        else { RESULT = "Desconocido"; }
+
+        return RESULT;
 
     }
 
@@ -206,7 +180,6 @@ public class GetAnime {
                 String type = jsonObject.getString("Type");
                 String url = jsonObject.getString("Link");
 
-
                 anime.setTitle(title);
                 anime.setImg(img);
                 anime.setType(type);
@@ -215,57 +188,46 @@ public class GetAnime {
 
                 animeArrayList.add(anime);
 
-                System.out.println(animeArrayList.get(pos).getTitle());
             }
 
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+        } catch (Exception e){ e.printStackTrace(); }
 
-        setRecyclerView(animeArrayList, activity);
+        setRecyclerView(animeArrayList);
+
     }
 
     public void reloadDirectory(){
 
-        File animeDirectory = new File(activity.getFilesDir(), "directory.json");
+        File directory = new File(activity.getFilesDir(), "directory.json");
 
-        if (animeDirectory.exists()){
+        if (directory.exists()){
 
-            Toast.makeText(activity, "Actualizando...", Toast.LENGTH_SHORT).show();
+            notificationsBuilder.createToast("Actualizando...", Toast.LENGTH_SHORT);
+            PAGE_NUMBER = 1;
 
-            count = 1;
+            getDirectoryFromWeb(1);
 
-            getDirectory(1);
-
-            animeDirectory.delete();
+            directory.delete();
             animeArrayList.clear();
         } else {
             Vibrator v = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
-            // Vibrate for 500 milliseconds
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 v.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
-            } else {
-
-                //deprecated in API 26
-                v.vibrate(100);
             }
-            Toast.makeText(activity, "No se puede actualizar el directorio mientras se está creando.", Toast.LENGTH_SHORT).show();
+            else { v.vibrate(100); }
+
+            notificationsBuilder.createToast("No se puede actualizar el directorio mientras se está obteniendo.", Toast.LENGTH_SHORT);
         }
     }
 
-    private boolean isDirectory(int mode){
-        if (mode == 1){ return true; }
-        else { return false; }
-    }
+    private boolean isDirectory(int mode){ return mode == 1; }
 
-    private void setRecyclerView(ArrayList<Anime> animeArrayList, Activity activity) {
+    private void setRecyclerView(ArrayList<Anime> animeArrayList) {
 
         AnimeAdapter animeAdapter = new AnimeAdapter(animeArrayList, activity);
 
-        if (progressBar != null) {
-            progressBar.setVisibility(View.GONE);
-        }
+        if (progressBar != null) { progressBar.setVisibility(View.GONE); }
 
         recyclerView.setItemViewCacheSize(30);
         recyclerView.setDrawingCacheEnabled(true);

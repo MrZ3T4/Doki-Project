@@ -46,7 +46,7 @@ public class SeasonFragment extends Fragment {
 
         GetAnime getAnime = new GetAnime(getActivity(), recyclerView, progressBar);
 
-        getAnime.getDirectory(0);
+        getAnime.getDirectoryFromWeb(0);
 
         return view;
     }

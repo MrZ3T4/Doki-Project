@@ -4,51 +4,22 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-
 import dev.mrz3t4.literatureclub.Jsoup.GetAnime;
 import dev.mrz3t4.literatureclub.R;
-import dev.mrz3t4.literatureclub.RecyclerView.AnimeAdapter;
-import dev.mrz3t4.literatureclub.RecyclerView.Anime;
-import dev.mrz3t4.literatureclub.RecyclerView.Broadcast;
-import dev.mrz3t4.literatureclub.Utils.JsonUtils;
+import dev.mrz3t4.literatureclub.Utils.JsonTools;
 import dev.mrz3t4.literatureclub.Utils.PicassoOnScrollListener;
-import dev.mrz3t4.literatureclub.Utils.Sort;
-
-import static dev.mrz3t4.literatureclub.Utils.Constants.BASE_URL;
-import static dev.mrz3t4.literatureclub.Utils.Constants.PAGE_URI;
-import static dev.mrz3t4.literatureclub.Utils.Constants.broadcast;
 
 public class ExploreFragment extends Fragment {
 
@@ -58,7 +29,7 @@ public class ExploreFragment extends Fragment {
 
 
     private GetAnime getAnime;
-    private JsonUtils jsonUtils = new JsonUtils();
+    private JsonTools JSONTools = new JsonTools();
 
 
     @Nullable
@@ -74,10 +45,10 @@ public class ExploreFragment extends Fragment {
 
         getAnime = new GetAnime(getActivity(), recyclerView, progressBar);
 
-        if (jsonUtils.jsonExists()){
+        if (JSONTools.jsonExists()){
             getAnime.getDirectoryFromJson();
         } else {
-            getAnime.getDirectory(1);
+            getAnime.getDirectoryFromWeb(1);
         }
 
         IntentFilter filter = new IntentFilter("FORCE_RELOAD");

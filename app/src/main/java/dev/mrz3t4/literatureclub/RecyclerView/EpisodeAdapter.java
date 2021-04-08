@@ -50,11 +50,9 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.MyViewHo
         holder.title.setText(episodeArrayList.get(position).getTitle());
 
         holder.cardView.setOnClickListener(v -> {
-            System.out.println("UUUUUUUU: "+episodeArrayList.get(position).getLink());
 
             GetEpisodeServer getEpisodeServer = new GetEpisodeServer(ctx, episodeArrayList.get(position).getLink());
             getEpisodeServer.getServers();
-
 
 
             /*Toast.makeText(ctx, "Preparando streaming...", Toast.LENGTH_SHORT).show();

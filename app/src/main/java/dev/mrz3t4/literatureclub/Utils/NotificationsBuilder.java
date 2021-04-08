@@ -4,13 +4,14 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
+import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import dev.mrz3t4.literatureclub.R;
 
-public class NotificationBuilder {
+public class NotificationsBuilder {
 
     private NotificationManagerCompat notificationManager = NotificationManagerCompat.from(GenericContext.getContext());
 
@@ -40,5 +41,10 @@ public class NotificationBuilder {
     public void cancelNotification(int id){
         notificationManager.cancel(id);
     }
+
+    public void createToast(String message, int duration){
+        Toast.makeText(GenericContext.getContext(), message, duration).show();
+    }
+
 
 }

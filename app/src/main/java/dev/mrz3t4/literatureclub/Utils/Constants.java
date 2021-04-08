@@ -21,5 +21,6 @@ public class Constants {
 
     public static String BASE_URL = "https://monoschinos2.com/animes";
     public static String EMISION_URL = "https://monoschinos2.com/emision";
+    public static String BROADCAST_URL = "https://monoschinos2.com/";
     public static String PAGE_URI = "?page=";
 }

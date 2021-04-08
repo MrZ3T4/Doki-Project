@@ -24,8 +24,8 @@ import saschpe.android.customtabs.WebViewFallback;
 
 public class GetEpisodeServer {
 
-    private Context context;
-    private String EPISODE_URL;
+    private final Context context;
+    private final String EPISODE_URL;
 
     private String firstLink;
 
@@ -37,6 +37,7 @@ public class GetEpisodeServer {
     public void getServers(){
 
         new Thread(() -> {
+
             try {
 
                 Document document = Jsoup.connect(EPISODE_URL).userAgent("Mozilla").get();
@@ -63,8 +64,6 @@ public class GetEpisodeServer {
             }
             ((Activity) context).runOnUiThread(() -> {
                 // OnPostExecute stuff here
-
-                Random randomGenerator = new Random();
 
                 CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder()
                         .addDefaultShareMenuItem()
