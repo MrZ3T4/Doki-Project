@@ -17,6 +17,7 @@ import com.google.android.material.textview.MaterialTextView;
 
 import java.util.ArrayList;
 
+import dev.mrz3t4.literatureclub.Jsoup.GetEpisodeServer;
 import dev.mrz3t4.literatureclub.Jsoup.GetLinksFromEpisode;
 import dev.mrz3t4.literatureclub.R;
 
@@ -105,6 +106,10 @@ public class BroadcastAdapter extends RecyclerView.Adapter<BroadcastAdapter.View
                     stream.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            GetEpisodeServer getEpisodeServer = new GetEpisodeServer(context, broadcast.url);
+                            getEpisodeServer.getServers();
+
+
                         }
                     });
 

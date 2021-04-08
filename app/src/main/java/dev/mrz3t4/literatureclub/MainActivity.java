@@ -177,6 +177,9 @@ public class MainActivity extends AppCompatActivity {
     private void setupFAB(){
         fab = findViewById(R.id.fab_search);
         fab.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, Buscador.class);
+            startActivity(intent);
+
             Vibrator vi = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 // Vibrate for 500 milliseconds
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

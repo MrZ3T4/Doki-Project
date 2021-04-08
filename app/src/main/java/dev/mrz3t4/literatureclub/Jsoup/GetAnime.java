@@ -263,7 +263,9 @@ public class GetAnime {
 
         AnimeAdapter animeAdapter = new AnimeAdapter(animeArrayList, activity);
 
-        progressBar.setVisibility(View.GONE);
+        if (progressBar != null) {
+            progressBar.setVisibility(View.GONE);
+        }
 
         recyclerView.setItemViewCacheSize(30);
         recyclerView.setDrawingCacheEnabled(true);

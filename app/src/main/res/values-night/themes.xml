@@ -11,5 +11,8 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorOnBackground</item>
         <item name="android:navigationBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+
+        <item name="colorOnSurface">@color/white</item>
+
     </style>
 </resources>

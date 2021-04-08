@@ -16,8 +16,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Doki">
-        <activity android:name=".Downloads"></activity>
-        <activity android:name=".ActivityAnimeInformation"></activity>
+        <activity android:name=".Downloads" />
+        <activity android:name=".ActivityAnimeInformation" />
+        <activity android:name=".Buscador"/>
         <activity android:name=".MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>

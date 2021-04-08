@@ -85,8 +85,10 @@ public class GetLinksFromEpisode {
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(text);
 
-        firstOptFinal = formatLink(firstURL);
-        links.add(firstOptFinal);
+        if (firstURL!=null) {
+            firstOptFinal = formatLink(firstURL);
+            links.add(firstOptFinal);
+        }
 
         while(m.find())
         {
