@@ -40,6 +40,7 @@
                 android:textSize="14sp"
                 android:layout_gravity="bottom"
                 android:lineSpacingExtra="2dp"
+                android:textColor="@color/white"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 android:fontFamily="@font/helvetica_neue_medium"
                 android:text="Titulo" />

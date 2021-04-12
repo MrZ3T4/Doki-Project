@@ -63,4 +63,17 @@
         <item name="android:fontFamily">@font/helvetica_neue_medium</item>
     </style>
 
+    <style name="MyTitle_ThemeOverlay.MaterialComponents.MaterialAlertDialog" parent="@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="materialAlertDialogTitleTextStyle">@style/MyTitle_MaterialAlertDialog.MaterialComponents.Title.Text</item>
+        <item name="colorAccent">?attr/colorPrimary</item>
+    </style>
+    <style name="MyTitle_MaterialAlertDialog.MaterialComponents.Title.Text" parent="@style/MaterialAlertDialog.MaterialComponents.Title.Text">
+        <item name="android:textAppearance">@style/MyTitle_TextAppearance.MaterialComponents.Subtitle1</item>
+    </style>
+    <style name="MyTitle_TextAppearance.MaterialComponents.Subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="fontFamily">@font/helvetica_neue_medium</item>
+        <item name="android:fontFamily">@font/helvetica_neue_medium</item>
+        <item name="android:textSize">20sp</item>
+</style>
+
 </resources>

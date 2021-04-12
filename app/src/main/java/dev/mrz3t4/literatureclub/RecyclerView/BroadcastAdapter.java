@@ -111,9 +111,7 @@ public class BroadcastAdapter extends RecyclerView.Adapter<BroadcastAdapter.View
                         public void onClick(View v) {
 
                             getVideoURL.getLinks(broadcast.url, broadcast.title, context, MODE_EPISODE);
-
-                            //  GetEpisodeServer getEpisodeServer = new GetEpisodeServer(context, broadcast.url);
-                          //  getEpisodeServer.getServers();
+                            dialog.dismiss();
 
                         }
                     });

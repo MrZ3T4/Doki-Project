@@ -23,6 +23,7 @@ import java.util.regex.Pattern;
 
 import dev.mrz3t4.literatureclub.R;
 import dev.mrz3t4.literatureclub.Utils.GenericContext;
+import dev.mrz3t4.literatureclub.Utils.NotificationsBuilder;
 import dev.mrz3t4.literatureclub.Utils.WebViewBuilder;
 import dev.mrz3t4.literatureclub.Utils.xGetterVideo;
 
@@ -94,11 +95,44 @@ public class GetLinksFromEpisode {
     @SuppressLint("UseCompatLoadingForDrawables")
     private void createDialog(ArrayList<String> servers_array, Context context) {
 
-        CharSequence[] servers = servers_array.toArray(new CharSequence[servers_array.size()]);
+        ArrayList<String> name_servers = new ArrayList<>();
 
-            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
+        String server;
 
-            builder.setTitle("ELIGE UN SERVIDOR")
+        System.out.println(servers_array.size());
+
+        for (int pos = 0; pos < servers_array.size(); pos++){
+            System.out.println("pos: " + pos + " server: " + servers_array.get(pos));
+            if (servers_array.get(pos).contains("fembed")){
+                server = "Fembed (Nativo)";
+            } else if (servers_array.get(pos).contains("ok.ru")){
+                server = "Okru (Nativo)";
+            } else if (servers_array.get(pos).contains("sendvid")){
+                server = "Sendvid (Nativo)";
+            } else if (servers_array.get(pos).contains("mp4upload")){
+                server = "Mp4Upload";
+            } else if (servers_array.get(pos).contains("uqload")){
+                server = "Mp4Upload";
+            } else if (servers_array.get(pos).contains("clip")){
+                server = "ClipWatching";
+            } else if (servers_array.get(pos).contains("streamtape")){
+                server = "Streamtape";
+            } else if (servers_array.get(pos).contains("videobin")){
+                server = "Videobin";
+            } else if (servers_array.get(pos).contains("mediafire")){
+                server = "Mediafire";
+            } else {
+                server = "Otro";
+            }
+
+            name_servers.add(server);
+        }
+
+        CharSequence[] servers = name_servers.toArray(new CharSequence[name_servers.size()]);
+
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context, R.style.MyTitle_ThemeOverlay_MaterialComponents_MaterialAlertDialog);
+
+            builder.setTitle("Elige un servidor")
                     .setBackground(context.getResources().getDrawable(R.drawable.corner_dialog, context.getTheme()))
                     .setSingleChoiceItems(servers, 0, new DialogInterface.OnClickListener() {
                         @Override
@@ -114,6 +148,9 @@ public class GetLinksFromEpisode {
                                 final_link = servers_array.get(0);
                             }
                             System.out.println("Stream server selected is: " + final_link);
+
+                            NotificationsBuilder notificationsBuilder = new NotificationsBuilder();
+                            notificationsBuilder.createToast("Preparando streaming...", Toast.LENGTH_SHORT);
 
                             xGetterVideo video = new xGetterVideo(final_link);
                             video.getXGetterUrl();

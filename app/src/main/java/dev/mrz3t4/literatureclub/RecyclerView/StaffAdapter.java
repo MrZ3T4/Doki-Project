@@ -24,6 +24,7 @@ import java.util.List;
 import dev.mrz3t4.literatureclub.R;
 import dev.mrz3t4.literatureclub.Retrofit.Character;
 import dev.mrz3t4.literatureclub.Retrofit.Seiyuu;
+import dev.mrz3t4.literatureclub.Utils.WebViewBuilder;
 import saschpe.android.customtabs.CustomTabsHelper;
 import saschpe.android.customtabs.WebViewFallback;
 
@@ -53,15 +54,9 @@ public class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.MyViewHolder
     public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
 
         holder.mStaff.setOnClickListener(view -> {
-            CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder()
-                    .addDefaultShareMenuItem()
-                    .setToolbarColor(ctx.getResources().getColor(R.color.black))
-                    .setShowTitle(true)
-                    .build();
-            CustomTabsHelper.addKeepAliveExtra(ctx, customTabsIntent.intent);
-            CustomTabsHelper.openCustomTab(ctx, customTabsIntent,
-                    Uri.parse(character.get(position).getUrl()),
-                    new WebViewFallback());
+
+            WebViewBuilder webViewBuilder = new WebViewBuilder();
+            webViewBuilder.webView(character.get(position).getUrl(), ctx);
         });
 
 
@@ -91,15 +86,10 @@ public class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.MyViewHolder
             holder.mNombreSeiyuu.setSelected(true);
             holder.mNombreSeiyuu.setText(seiyuus.get(position).getSeiyuu());
             holder.mNombreSeiyuu.setOnClickListener(view -> {
-                CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder()
-                        .addDefaultShareMenuItem()
-                        .setToolbarColor(ctx.getResources().getColor(R.color.black))
-                        .setShowTitle(true)
-                        .build();
-                CustomTabsHelper.addKeepAliveExtra(ctx, customTabsIntent.intent);
-                CustomTabsHelper.openCustomTab(ctx, customTabsIntent,
-                        Uri.parse(seiyuus.get(position).getSeiyuuUrl()),
-                        new WebViewFallback());
+
+                WebViewBuilder webViewBuilder = new WebViewBuilder();
+                webViewBuilder.webView(seiyuus.get(position).getSeiyuuUrl(), ctx);
+
             });
         } else { holder.mNombreSeiyuu.setVisibility(GONE);}
 
