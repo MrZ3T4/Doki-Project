@@ -9,6 +9,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
@@ -42,10 +43,14 @@ public class GetLinksFromEpisode {
                     Document document = Jsoup.connect(VARIABLE_URL).userAgent("Mozilla").get();
                     Elements doc = document.select("div[class=TPlayer mt-3 mb-3]");
 
-                    DETAILS_URL = getDetailsLink(VARIABLE_URL);
+                    //DETAILS_URL = getDetailsLink(VARIABLE_URL);
 
                     FIRST_SERVER = doc.select("iframe[class=embed-responsive-item]").attr("src");
                     links = pullLinks(doc.text(), FIRST_SERVER);
+
+                    Elements d = document.select("div[class=mt-1 mb-4]");
+
+                    DETAILS_URL = d.select("a[class=btnWeb green Current]").attr("href");
 
 
                     for (int i = 0; i < links.size(); i++) {
@@ -85,7 +90,7 @@ public class GetLinksFromEpisode {
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(text);
 
-        if (firstURL!=null) {
+        if (firstURL!=null && !firstURL.contains("monoschinos2")) {
             FIRST_SERVER = formatLink(firstURL);
             linksArrayList.add(FIRST_SERVER);
         }
@@ -98,14 +103,18 @@ public class GetLinksFromEpisode {
             { urlStr = urlStr.substring(1, urlStr.length() - 1); }
 
             String urlFinal = formatLink(urlStr);
-            linksArrayList.add(urlFinal);
+
+            if (!urlFinal.contains("monoschinos2")){
+                linksArrayList.add(urlFinal);
+            }
+
         }
 
         return linksArrayList;
     }
 
     private String formatLink(String urlStr) {
-        String rawUrl = urlStr.replace("%3A", ":").replace("%2F", "/");
+        String rawUrl = urlStr.replace("%3A", ":").replace("%2F", "/").replace(".html", "");
         return rawUrl.substring(rawUrl.lastIndexOf("http"), rawUrl.lastIndexOf("&"));
     }
 

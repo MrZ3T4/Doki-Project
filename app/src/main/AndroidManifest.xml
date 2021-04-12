@@ -18,7 +18,11 @@
         android:theme="@style/Theme.Doki">
         <activity android:name=".Downloads" />
         <activity android:name=".ActivityAnimeInformation" />
-        <activity android:name=".Buscador"/>
+        <activity android:name=".SearchActivity"/>
+        <activity android:name=".Reproductor"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
+            android:immersive="true"
+            android:screenOrientation="sensorLandscape" />
         <activity android:name=".MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>

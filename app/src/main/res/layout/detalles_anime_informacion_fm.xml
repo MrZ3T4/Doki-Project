@@ -34,7 +34,7 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/show_hide_more_btn"
                     style="@style/Widget.MaterialComponents.Button"
-                    app:backgroundTint="?attr/colorPrimaryVariant"
+                    app:backgroundTint="?attr/colorOnBackground"
                     android:textColor="?attr/colorControlNormal"
                     app:rippleColor="?attr/colorPrimary"
                     app:elevation="0dp"
@@ -243,6 +243,7 @@
             </androidx.cardview.widget.CardView>
 
             <ProgressBar
+                android:visibility="gone"
                 android:id="@+id/progressbar_MAL"
                 android:layout_gravity="center_horizontal"
                 android:layout_width="wrap_content"
@@ -263,10 +264,10 @@
                 android:fontFamily="@font/helvetica_neue_medium"/>
 
             <androidx.recyclerview.widget.RecyclerView
+                android:visibility="gone"
                 android:id="@+id/recyclerview_staff"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
                 android:padding="15dp" />
 
 

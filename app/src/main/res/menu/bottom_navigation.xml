@@ -11,6 +11,7 @@
         android:id="@+id/menu_collections"
         android:icon="@drawable/collections_switch"
         android:title="@string/collections"
+        android:enabled="false"
         />
 
     <item

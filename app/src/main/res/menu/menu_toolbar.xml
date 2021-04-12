@@ -11,14 +11,6 @@
         />
 
     <item
-        android:id="@+id/menu_filter"
-        android:icon="@drawable/filter_ic"
-        android:title="@string/recents"
-        app:showAsAction="ifRoom"
-        android:visible="false"
-        />
-
-    <item
         android:id="@+id/menu_donate"
         android:icon="@drawable/donate_ic"
         android:title="@string/recents"

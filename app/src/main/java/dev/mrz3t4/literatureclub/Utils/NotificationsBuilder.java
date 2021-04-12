@@ -24,7 +24,7 @@ public class NotificationsBuilder {
                 .setOngoing(true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            int importance = NotificationManager.IMPORTANCE_LOW;
             NotificationChannel channel = new NotificationChannel("DIRECTORY", "RELOAD", importance);
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this

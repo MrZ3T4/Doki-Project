@@ -41,7 +41,7 @@ import dev.mrz3t4.literatureclub.RecyclerView.AnimeAdapter;
 import dev.mrz3t4.literatureclub.Utils.GenericContext;
 import dev.mrz3t4.literatureclub.Utils.JsonTools;
 
-public class Buscador extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity {
 
     private AnimeAdapter directorioAdapter;
     private ArrayList<Anime> directorioArrayList = new ArrayList<>();

@@ -17,7 +17,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.view.Menu;
@@ -25,7 +24,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Toast;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -33,7 +31,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
 
-import java.io.File;
 import java.util.Objects;
 
 import dev.mrz3t4.literatureclub.UI.CollectionsFragment;
@@ -139,9 +136,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_filter:
-                Toast.makeText(this, "update clicked", Toast.LENGTH_SHORT).show();
-                break;
             case R.id.menu_force_update:
 
                 Intent intent = new Intent("FORCE_RELOAD");
@@ -177,17 +171,8 @@ public class MainActivity extends AppCompatActivity {
     private void setupFAB(){
         fab = findViewById(R.id.fab_search);
         fab.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, Buscador.class);
+            Intent intent = new Intent(MainActivity.this, SearchActivity.class);
             startActivity(intent);
-
-            Vibrator vi = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-// Vibrate for 500 milliseconds
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                vi.vibrate(VibrationEffect.createOneShot(10, VibrationEffect.DEFAULT_AMPLITUDE));
-            } else {
-                //deprecated in API 26
-                vi.vibrate(10);
-            }
         });
 
         appBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
@@ -222,7 +207,6 @@ public class MainActivity extends AppCompatActivity {
                         toolbarTitle.startAnimation(animation);
 
                         myMenu.findItem(R.id.menu_donate).setVisible(false);
-                        myMenu.findItem(R.id.menu_filter).setVisible(false);
                         myMenu.findItem(R.id.menu_force_update).setVisible(false);
 
                         break;
@@ -234,7 +218,6 @@ public class MainActivity extends AppCompatActivity {
                         toolbarTitle.setText(collections);
                         toolbarTitle.startAnimation(animation);
 
-                        myMenu.findItem(R.id.menu_filter).setVisible(false);
                         myMenu.findItem(R.id.menu_force_update).setVisible(false);
                         myMenu.findItem(R.id.menu_donate).setVisible(false);
 
@@ -246,7 +229,6 @@ public class MainActivity extends AppCompatActivity {
                         toolbarTitle.setText(explore);
                         toolbarTitle.startAnimation(animation);
 
-                        myMenu.findItem(R.id.menu_filter).setVisible(true);
                         myMenu.findItem(R.id.menu_force_update).setVisible(true);
                         myMenu.findItem(R.id.menu_donate).setVisible(false);
 
@@ -258,7 +240,6 @@ public class MainActivity extends AppCompatActivity {
                         toolbarTitle.setText(settings);
                         toolbarTitle.startAnimation(animation);
 
-                        myMenu.findItem(R.id.menu_filter).setVisible(false);
                         myMenu.findItem(R.id.menu_force_update).setVisible(false);
                         myMenu.findItem(R.id.menu_donate).setVisible(true);
 

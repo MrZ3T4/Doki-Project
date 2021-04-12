@@ -41,7 +41,6 @@ import dev.mrz3t4.literatureclub.Retrofit.InterfaceStaff;
 import dev.mrz3t4.literatureclub.Retrofit.Personas;
 import dev.mrz3t4.literatureclub.Retrofit.Seiyuu;
 import dev.mrz3t4.literatureclub.Retrofit.VoiceActor;
-import dev.mrz3t4.literatureclub.Utils.ExpandableCardView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -91,6 +90,8 @@ public class InformationFragment extends Fragment {
     private String URL_MAL;
 
     private Boolean isExpanded = false;
+
+    private Retrofit retrofit;
 
 
     @Override
@@ -193,7 +194,7 @@ public class InformationFragment extends Fragment {
                         Uri.parse(URL_MAL),
                         new WebViewFallback());});
 
-            if (sinopsis.length() > 260){
+            if (sinopsis != null && sinopsis.length() > 260){
                 btnShowHide.setVisibility(View.VISIBLE);
             } else {
                 btnShowHide.setVisibility(GONE);
@@ -215,7 +216,7 @@ public class InformationFragment extends Fragment {
 
         System.out.println("MAL_STAFF: " + ANIME_URL);
 
-        Retrofit retrofit = new Retrofit.Builder()
+        retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
@@ -226,7 +227,6 @@ public class InformationFragment extends Fragment {
             @Override
             public void onResponse(Call<Personas> call, Response<Personas> response) {
 
-                if (response.isSuccessful()){
 
                     System.out.println("MAL_STAFF RESPONSE: " + response.code());
 
@@ -236,6 +236,7 @@ public class InformationFragment extends Fragment {
                     } else {
                     tvActores.setVisibility(View.VISIBLE);
                     recyclerViewStaff.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(GONE);
                     }
 
                     List<Character> charactersList = response.body().getCharacters();
@@ -265,6 +266,8 @@ public class InformationFragment extends Fragment {
                                 imagen = voiceActors.get(0).getImageUrl();
                                 url = voiceActors.get(0).getUrl();
 
+                                System.out.println("AAA: " + url);
+
                                 seiyuu.setSeiyuu(voice);
                                 seiyuu.setSeiyuuImagen(imagen);
                                 seiyuu.setSeiyuuUrl(url);
@@ -274,14 +277,11 @@ public class InformationFragment extends Fragment {
 
                         }
 
-                        progressBar.setVisibility(GONE);
                         StaffAdapter staffAdapter = new StaffAdapter((ArrayList<Character>) charactersList, seiyuuArrayList, getActivity());
                         recyclerViewStaff.setAdapter(staffAdapter);
 
 
                 }
-
-            }
 
             @Override
             public void onFailure(Call<Personas> call, Throwable t) {
@@ -291,6 +291,11 @@ public class InformationFragment extends Fragment {
 
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+    }
 
     private void onClicks() {
 

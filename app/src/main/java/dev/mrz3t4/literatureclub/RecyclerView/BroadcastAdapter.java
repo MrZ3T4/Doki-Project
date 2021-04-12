@@ -1,10 +1,13 @@
 package dev.mrz3t4.literatureclub.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
 
@@ -20,6 +24,7 @@ import java.util.ArrayList;
 import dev.mrz3t4.literatureclub.Jsoup.GetEpisodeServer;
 import dev.mrz3t4.literatureclub.Jsoup.GetLinksFromEpisode;
 import dev.mrz3t4.literatureclub.R;
+import dev.mrz3t4.literatureclub.Utils.NotificationsBuilder;
 
 public class BroadcastAdapter extends RecyclerView.Adapter<BroadcastAdapter.ViewHolder> {
 
@@ -98,17 +103,18 @@ public class BroadcastAdapter extends RecyclerView.Adapter<BroadcastAdapter.View
                     information.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            System.out.println(broadcast.url);
                             getVideoURL.getLinks(broadcast.url, broadcast.title, context, 0);
                             dialog.dismiss();
                         }
                     });
 
                     stream.setOnClickListener(new View.OnClickListener() {
+                        @SuppressLint("UseCompatLoadingForDrawables")
                         @Override
                         public void onClick(View v) {
                             GetEpisodeServer getEpisodeServer = new GetEpisodeServer(context, broadcast.url);
                             getEpisodeServer.getServers();
-
 
                         }
                     });

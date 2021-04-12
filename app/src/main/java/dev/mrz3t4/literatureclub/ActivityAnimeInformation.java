@@ -2,9 +2,13 @@ package dev.mrz3t4.literatureclub;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,7 +20,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -29,6 +35,12 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.Request;
+import com.bumptech.glide.request.target.SizeReadyCallback;
+import com.bumptech.glide.request.transition.Transition;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.squareup.picasso.Picasso;
@@ -54,6 +66,7 @@ import dev.mrz3t4.literatureclub.Retrofit.ResultID;
 import dev.mrz3t4.literatureclub.UI.AnimeEpisodesFragment;
 import dev.mrz3t4.literatureclub.UI.AnimeInformationFragment;
 import dev.mrz3t4.literatureclub.UI.AnimeViewPager;
+import dev.mrz3t4.literatureclub.Utils.NotificationsBuilder;
 import dev.mrz3t4.literatureclub.Utils.PicassoBlurImage;
 import dev.mrz3t4.literatureclub.ViewPager.InformationFragment;
 import retrofit2.Call;
@@ -98,8 +111,11 @@ public class ActivityAnimeInformation extends AppCompatActivity {
     private String RATED;
     private String EPISODES;
     private String TITULO_ORIGINAL;
-    private String SINONIMOS;
+    private String COVER;
     private String URL_MAL;
+
+    private FloatingActionButton fab;
+    private AppBarLayout appBarLayout;
 
     Boolean isReadyRetrofit = false;
 
@@ -117,8 +133,12 @@ public class ActivityAnimeInformation extends AppCompatActivity {
             TITULO = b.getString("title");
         }
 
+        fab = findViewById(R.id.fab_fav);
+
         progressBar = findViewById(R.id.information_progressBar);
         coordinatorLayout = findViewById(R.id.information_coordinatorLayout);
+
+        appBarLayout = findViewById(R.id.informacion_appbarlayout);
 
         title = findViewById(R.id.txtView_title);
         date = findViewById(R.id.txtView_date);
@@ -137,9 +157,12 @@ public class ActivityAnimeInformation extends AppCompatActivity {
 
         viewPager.requestDisallowInterceptTouchEvent(true);
 
+        AppBar();
         setTabs();
 
         getData();
+
+        setupFAB();
 
         toolbar_back.setOnClickListener(v -> {
             Vibrator vi = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -186,6 +209,17 @@ public class ActivityAnimeInformation extends AppCompatActivity {
 
     }
 
+
+    private void AppBar(){
+
+        appBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
+            if (verticalOffset == 0) {
+                fab.show();
+            } else {
+                fab.hide();
+            }
+        });
+    }
 
     @Override
     public void onBackPressed() {
@@ -262,20 +296,25 @@ public class ActivityAnimeInformation extends AppCompatActivity {
                     GenderAdapter genderAdapter = new GenderAdapter(sgenders, this);
                     recyclerViewGenders.setAdapter(genderAdapter);
 
-                    Picasso.get().load(scover).into(new Target() {
+
+                    COVER = scover;
+
+                    Picasso.get().load(scover).into(blurCover);
+                           /* .into(new Target() {
                         @Override
                         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                             blurCover.setImageBitmap(PicassoBlurImage.fastblur(bitmap, 1f, 5));
                         }
                         @Override
                         public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+                            System.out.println(e.getMessage());
                         }
 
                         @Override
                         public void onPrepareLoad(Drawable placeHolderDrawable) {
 
                         }
-                    });
+                    });*/
                     Picasso.get().load(scover).into(cover);
                     title.setText(stitle);
                     intent.putExtra("sinopsis",sdescription);
@@ -292,6 +331,17 @@ public class ActivityAnimeInformation extends AppCompatActivity {
                 });
             }).start();
 
+    }
+
+    private void setupFAB(){
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NotificationsBuilder notificationsBuilder = new NotificationsBuilder();
+                notificationsBuilder.createToast("Proximamente ;p", Toast.LENGTH_SHORT);
+            }
+
+        });
     }
 
     private void retrofitIsReady(){
