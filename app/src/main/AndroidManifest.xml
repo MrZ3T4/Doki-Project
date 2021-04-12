@@ -17,8 +17,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Doki">
         <activity android:name=".Downloads" />
-        <activity android:name=".ActivityAnimeInformation" />
-        <activity android:name=".SearchActivity"/>
+        <activity android:name=".ActivityAnimeInformation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".SearchActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".Reproductor"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:immersive="true"
