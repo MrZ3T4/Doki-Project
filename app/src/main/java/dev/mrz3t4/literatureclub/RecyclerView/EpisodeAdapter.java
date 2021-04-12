@@ -1,28 +1,22 @@
 package dev.mrz3t4.literatureclub.RecyclerView;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.browser.customtabs.CustomTabsIntent;
-import androidx.cardview.widget.CardView;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;
 
-import dev.mrz3t4.literatureclub.Jsoup.GetEpisodeServer;
+import dev.mrz3t4.literatureclub.Jsoup.GetLinksFromEpisode;
 import dev.mrz3t4.literatureclub.R;
-import saschpe.android.customtabs.CustomTabsHelper;
-import saschpe.android.customtabs.WebViewFallback;
+
+import static dev.mrz3t4.literatureclub.Utils.Constants.MODE_EPISODE;
 
 
 public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.MyViewHolder> {
@@ -51,8 +45,13 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.MyViewHo
 
         holder.cardView.setOnClickListener(v -> {
 
-            GetEpisodeServer getEpisodeServer = new GetEpisodeServer(ctx, episodeArrayList.get(position).getLink());
-            getEpisodeServer.getServers();
+            GetLinksFromEpisode getLinksFromEpisode = new GetLinksFromEpisode();
+            getLinksFromEpisode.getLinks(
+                    episodeArrayList.get(position).getLink(),
+                    episodeArrayList.get(position).getTitle(),
+                    ctx,
+                    MODE_EPISODE);
+
 
 
             /*Toast.makeText(ctx, "Preparando streaming...", Toast.LENGTH_SHORT).show();

@@ -19,4 +19,5 @@ public class GenericContext extends Application {
     public static Context getContext(){
         return mContext;
     }
+
 }

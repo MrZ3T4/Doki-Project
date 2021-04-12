@@ -1,6 +1,8 @@
 package dev.mrz3t4.literatureclub.Jsoup;
 
 import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
 import android.os.VibrationEffect;
@@ -9,6 +11,9 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.json.JSONArray;
@@ -25,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import dev.mrz3t4.literatureclub.R;
 import dev.mrz3t4.literatureclub.RecyclerView.Anime;
 import dev.mrz3t4.literatureclub.RecyclerView.AnimeAdapter;
 import dev.mrz3t4.literatureclub.Utils.GenericContext;
@@ -48,6 +54,7 @@ public class GetAnime {
     private final ArrayList<Anime> animeArrayList = new ArrayList<>();
 
     private final Activity activity;
+    private final Context context;
     private final RecyclerView recyclerView;
     private final ProgressBar progressBar;
 
@@ -58,6 +65,7 @@ public class GetAnime {
 
     public GetAnime(Activity activity, RecyclerView recyclerView, ProgressBar progressBar) {
         this.activity = activity;
+        this.context = activity;
         this.recyclerView = recyclerView;
         this.progressBar = progressBar;
 
@@ -71,7 +79,15 @@ public class GetAnime {
         if (PAGE_NUMBER!=1) { VARIABLE_URL = VARIABLE_URL + PAGE_URI + PAGE_NUMBER; }
 
         if (isDirectory(mode) ){
-            notificationsBuilder.createNotification("Actualizando Directorio...", "Pagina ", PAGE_NUMBER);
+
+            String notification_text = "Pagina " + PAGE_NUMBER;
+            notificationsBuilder.createNotification(
+                    "Actualizando Directorio...",
+                    notification_text,
+                    NotificationManager.IMPORTANCE_LOW,
+                    "DIRECTORY",
+                    "RELOAD",
+                    1);
         }
 
         new Thread(() -> { // Background

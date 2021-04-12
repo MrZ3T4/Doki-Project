@@ -19,6 +19,10 @@ public class Constants {
 
     public static String episode = GenericContext.getContext().getResources().getString(R.string.episode);
 
+    public static Integer MODE_EPISODE = 1;
+    public static Integer MODE_EPISODES = 0;
+
+
     public static String BASE_URL = "https://monoschinos2.com/animes";
     public static String EMISION_URL = "https://monoschinos2.com/emision";
     public static String BROADCAST_URL = "https://monoschinos2.com/";

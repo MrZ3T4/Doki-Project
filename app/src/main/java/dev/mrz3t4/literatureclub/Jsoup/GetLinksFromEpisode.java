@@ -1,11 +1,15 @@
 package dev.mrz3t4.literatureclub.Jsoup;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.widget.Toast;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -17,59 +21,66 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import dev.mrz3t4.literatureclub.R;
 import dev.mrz3t4.literatureclub.Utils.GenericContext;
+import dev.mrz3t4.literatureclub.Utils.WebViewBuilder;
+import dev.mrz3t4.literatureclub.Utils.xGetterVideo;
+
+import static dev.mrz3t4.literatureclub.Utils.Constants.MODE_EPISODE;
 
 public class GetLinksFromEpisode {
 
+    private String first_server, details_url, final_link;
+    private ArrayList<String> other_servers;
 
-    private ArrayList<String> links;
-    private String FIRST_SERVER;
-    private String DETAILS_URL;
-
-    private String finalURI;
-
-    public void getLinks(String VARIABLE_URL, String TITLE, Context context, int mode) {
+    public void getLinks(String variable_url, String title, Context context, int mode) {
 
         if (mode == 2) // From Season or Explore
         {
                 Intent intent2 = new Intent("Information");
-                intent2.putExtra("url", VARIABLE_URL);
+                intent2.putExtra("url", variable_url);
                 LocalBroadcastManager.getInstance(context).sendBroadcast(intent2);
         }
-        else { // From Broadcast
+
+        // <-- From Broadcast -->
+        else {
+
             new Thread(() -> {
 
                 try {
-                    Document document = Jsoup.connect(VARIABLE_URL).userAgent("Mozilla").get();
-                    Elements doc = document.select("div[class=TPlayer mt-3 mb-3]");
+                    Document document = Jsoup.connect(variable_url).userAgent("Mozilla").get();
+                    Elements serverClass = document.select("div[class=row justify-content-center]");
 
-                    //DETAILS_URL = getDetailsLink(VARIABLE_URL);
+                    // Get first stream server & others
 
-                    FIRST_SERVER = doc.select("iframe[class=embed-responsive-item]").attr("src");
-                    links = pullLinks(doc.text(), FIRST_SERVER);
-
-                    Elements d = document.select("div[class=mt-1 mb-4]");
-
-                    DETAILS_URL = d.select("a[class=btnWeb green Current]").attr("href");
+                    first_server = serverClass.select("iframe[class=embed-responsive-item]").attr("src");
+                    other_servers = extractLinks(serverClass.text(), first_server);
 
 
-                    for (int i = 0; i < links.size(); i++) {
-                        System.out.println("URL: " + links.get(i));
+                    for (int pos = 0; pos < other_servers.size(); pos++) {
+                        System.out.println("Stream Server " + pos + " " + other_servers.get(pos));
                     }
+
+                    // Get anime details url
+
+                    Elements detailsClass = document.select("div[class=mt-1 mb-4]");
+                    details_url = detailsClass.select("a[class=btnWeb green Current]").attr("href");
 
                 } catch (IOException e) { e.printStackTrace(); }
 
-                ((Activity) context).runOnUiThread(() -> {// OnPostExecute stuff here
+                // <-- On Post Execute -->
+
+                ((Activity) context).runOnUiThread(() -> {
 
                     switch (mode) {
 
-                        case 1: // Stream episode
-                            finalURI = links.get(0);
+                        case 1: // MODE_EPISODE
+                            createDialog(other_servers, context);
                             break;
-                        case 0: // Go to information
+                        case 0: // MODE_INFORMATION
                             Intent intent = new Intent("Information");
-                            intent.putExtra("url", DETAILS_URL);
-                            intent.putExtra("title", TITLE);
+                            intent.putExtra("url", details_url);
+                            intent.putExtra("title", title);
                             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                             break;
 
@@ -80,9 +91,54 @@ public class GetLinksFromEpisode {
         }
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private void createDialog(ArrayList<String> servers_array, Context context) {
 
-    // Get Links
-    public ArrayList<String> pullLinks(String text, String firstURL) {
+        CharSequence[] servers = servers_array.toArray(new CharSequence[servers_array.size()]);
+
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
+
+            builder.setTitle("ELIGE UN SERVIDOR")
+                    .setBackground(context.getResources().getDrawable(R.drawable.corner_dialog, context.getTheme()))
+                    .setSingleChoiceItems(servers, 0, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            final_link = servers_array.get(which);
+                        }
+                    })
+                    .setPositiveButton("Nativo", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            if (final_link == null){
+                                final_link = servers_array.get(0);
+                            }
+                            System.out.println("Stream server selected is: " + final_link);
+
+                            xGetterVideo video = new xGetterVideo(final_link);
+                            video.getXGetterUrl();
+
+
+                        }
+                    })
+                    .setNegativeButton("Web", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (final_link == null){
+                                final_link = servers_array.get(0);
+                            }
+                            System.out.println("Stream server selected is: " + final_link);
+                            WebViewBuilder webViewBuilder = new WebViewBuilder();
+                            webViewBuilder.webView(final_link, context);
+
+                        }
+                    })
+                    .setNeutralButton("Cancelar", (dialog, which) -> dialog.dismiss())
+                    .show();
+
+    }
+
+    public ArrayList<String> extractLinks(String text, String firstServer) {
         ArrayList<String> linksArrayList = new ArrayList<>();
 
         String regex = "\\(?\\b(https?://|www[.]|ftp://)[-A-Za-z0-9+&@#/%?=~_()|!:,.;]*[-A-Za-z0-9+&@#/%=~_()|]";
@@ -90,9 +146,9 @@ public class GetLinksFromEpisode {
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(text);
 
-        if (firstURL!=null && !firstURL.contains("monoschinos2")) {
-            FIRST_SERVER = formatLink(firstURL);
-            linksArrayList.add(FIRST_SERVER);
+        if (firstServer!=null && !firstServer.contains("monoschinos2")) {
+            first_server = formatLink(firstServer);
+            linksArrayList.add(first_server);
         }
 
         while(m.find())
@@ -116,12 +172,6 @@ public class GetLinksFromEpisode {
     private String formatLink(String urlStr) {
         String rawUrl = urlStr.replace("%3A", ":").replace("%2F", "/").replace(".html", "");
         return rawUrl.substring(rawUrl.lastIndexOf("http"), rawUrl.lastIndexOf("&"));
-    }
-
-    private String getDetailsLink(String urlStr){
-        return urlStr.replaceFirst("ver", "anime")
-                .substring(0, urlStr.lastIndexOf("-"))
-                .replace("episod", "sub-espanol");
     }
 
 }

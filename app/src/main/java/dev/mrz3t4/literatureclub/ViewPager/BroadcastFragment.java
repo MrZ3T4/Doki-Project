@@ -83,7 +83,7 @@ public class BroadcastFragment extends Fragment {
                 // OnPostExecute stuff here
 
                 progressBar.setVisibility(View.GONE);
-                BroadcastAdapter broadcastAdapter = new BroadcastAdapter(broadcastArrayList, getContext());
+                BroadcastAdapter broadcastAdapter = new BroadcastAdapter(broadcastArrayList, getActivity());
 
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 recyclerView.setHasFixedSize(true);
