@@ -69,6 +69,7 @@ import dev.mrz3t4.literatureclub.UI.AnimeViewPager;
 import dev.mrz3t4.literatureclub.Utils.NotificationsBuilder;
 import dev.mrz3t4.literatureclub.Utils.PicassoBlurImage;
 import dev.mrz3t4.literatureclub.ViewPager.InformationFragment;
+import dev.mrz3t4.literatureclub.ViewPager.StaffFragment;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -79,6 +80,7 @@ import static dev.mrz3t4.literatureclub.Utils.Constants.broadcast;
 import static dev.mrz3t4.literatureclub.Utils.Constants.episodes;
 import static dev.mrz3t4.literatureclub.Utils.Constants.information;
 import static dev.mrz3t4.literatureclub.Utils.Constants.season;
+import static dev.mrz3t4.literatureclub.Utils.Constants.staff;
 
 public class ActivityAnimeInformation extends AppCompatActivity {
 
@@ -189,8 +191,15 @@ public class ActivityAnimeInformation extends AppCompatActivity {
 
         InformationFragment animeInformationFragment = new InformationFragment();
         AnimeEpisodesFragment animeEpisodesFragment = new AnimeEpisodesFragment();
+        StaffFragment staffFragment = new StaffFragment();
 
-        animeViewPager.setupViewPager(viewPager, animeInformationFragment, animeEpisodesFragment, getSupportFragmentManager() , getLifecycle());
+        animeViewPager.setupViewPager(
+                viewPager,
+                animeInformationFragment,
+                animeEpisodesFragment,
+                staffFragment,
+                getSupportFragmentManager() ,
+                getLifecycle());
 
         new TabLayoutMediator(tabLayout, viewPager,
                 (tab, position) -> {
@@ -201,6 +210,8 @@ public class ActivityAnimeInformation extends AppCompatActivity {
                         case 1:
                             tab.setText(episodes);
                             break;
+                        case 2:
+                            tab.setText(staff);
                     }
                 }).attach();
 
@@ -328,6 +339,11 @@ public class ActivityAnimeInformation extends AppCompatActivity {
 
 
                     status.setText(sstatus);
+
+
+                    progressBar.setVisibility(View.GONE);
+                    coordinatorLayout.animate().alpha(1f).setDuration(300).start();
+
                 });
             }).start();
 
@@ -347,8 +363,6 @@ public class ActivityAnimeInformation extends AppCompatActivity {
     private void retrofitIsReady(){
 
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-        progressBar.setVisibility(View.GONE);
-        coordinatorLayout.animate().alpha(1f).setDuration(300).start();
         isReadyRetrofit = true; }
 
     private void getMAL(String titulo){

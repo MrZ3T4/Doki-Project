@@ -39,7 +39,7 @@ public class RecentsFragment extends Fragment {
         tabLayout = view.findViewById(R.id.tablayout);
         viewPager = view.findViewById(R.id.viewpager);
 
-        animeViewPager.setupViewPager(viewPager, broadcastFragment, seasonFragment, getChildFragmentManager(), getLifecycle());
+        animeViewPager.setupViewPager(viewPager, broadcastFragment, seasonFragment, null, getChildFragmentManager(), getLifecycle());
 
         new TabLayoutMediator(tabLayout, viewPager,
                 (tab, position) -> {

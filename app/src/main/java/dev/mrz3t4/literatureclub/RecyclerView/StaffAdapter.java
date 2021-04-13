@@ -2,6 +2,7 @@ package dev.mrz3t4.literatureclub.RecyclerView;
 
 import android.content.Context;
 import android.net.Uri;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +46,7 @@ public class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.MyViewHolder
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(ctx).inflate(R.layout.staff_modelo, parent, false);
+        View view = LayoutInflater.from(ctx).inflate(R.layout.recyclerview_staff, parent, false);
         MyViewHolder holder = new MyViewHolder(view);
         return holder;
     }
@@ -54,7 +55,6 @@ public class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.MyViewHolder
     public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
 
         holder.mStaff.setOnClickListener(view -> {
-
             WebViewBuilder webViewBuilder = new WebViewBuilder();
             webViewBuilder.webView(character.get(position).getUrl(), ctx);
         });
@@ -62,12 +62,12 @@ public class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.MyViewHolder
 
 
 
-        if (character.get(position).getRole().equalsIgnoreCase("Main")) {
+   /*     if (character.get(position).getRole().equalsIgnoreCase("Main")) {
             holder.mRol.setText("Principal");
         } else if (character.get(position).getRole().equalsIgnoreCase("Supporting")){
             holder.mRol.setText("Secundario");
         }
-
+*/
        holder.mNombre.setText(character.get(position).getName());
         holder.mNombre.setSelected(true);
 
@@ -85,13 +85,15 @@ public class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.MyViewHolder
         if (seiyuus.get(position).getSeiyuu() != null){
             holder.mNombreSeiyuu.setSelected(true);
             holder.mNombreSeiyuu.setText(seiyuus.get(position).getSeiyuu());
-            holder.mNombreSeiyuu.setOnClickListener(view -> {
+            holder.mImagenSeiyuu.setOnClickListener(view -> {
 
                 WebViewBuilder webViewBuilder = new WebViewBuilder();
                 webViewBuilder.webView(seiyuus.get(position).getSeiyuuUrl(), ctx);
 
             });
-        } else { holder.mNombreSeiyuu.setVisibility(GONE);}
+        } else {
+            holder.mNombreSeiyuu.setVisibility(GONE);
+        }
 
         if (seiyuus.get(position).getSeiyuuImagen() != null) {
             if (seiyuus.get(position).getSeiyuuImagen().contains("questionmark")){
@@ -128,10 +130,10 @@ public class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.MyViewHolder
             mStaff = itemView.findViewById(R.id.staff_cardview);
             mImagen = itemView.findViewById(R.id.staff_image);
             mNombre = itemView.findViewById(R.id.staff_nombre);
-            mRol = itemView.findViewById(R.id.staff_desc);
+          //  mRol = itemView.findViewById(R.id.staff_desc);
             mImagenSeiyuu = itemView.findViewById(R.id.staff_s_image);
             mNombreSeiyuu = itemView.findViewById(R.id.staff_s_nombre);
-            mNacionalidad = itemView.findViewById(R.id.staff_s_nacionalidad);
+          //  mNacionalidad = itemView.findViewById(R.id.staff_s_nacionalidad);
 
         }
     }

@@ -41,6 +41,7 @@ import dev.mrz3t4.literatureclub.Retrofit.InterfaceStaff;
 import dev.mrz3t4.literatureclub.Retrofit.Personas;
 import dev.mrz3t4.literatureclub.Retrofit.Seiyuu;
 import dev.mrz3t4.literatureclub.Retrofit.VoiceActor;
+import dev.mrz3t4.literatureclub.Utils.WebViewBuilder;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -53,15 +54,10 @@ import static android.view.View.GONE;
 
 public class InformationFragment extends Fragment {
 
-
-    @BindView(R.id.recyclerview_staff)
-    RecyclerView recyclerViewStaff;
-
     @BindView(R.id.sinopsis)
     ExpandableTextView tvSinopsis;
 
     @BindView(R.id.titulo_completo) TextView tvTituloCompleto;
-    @BindView(R.id.text_Actores) TextView tvActores;
     @BindView(R.id.episodios_anime) TextView tvEpisodios;
     @BindView(R.id.episodios_title) TextView tvEpisodiosTitle;
     @BindView(R.id.clasificacion_title) TextView tvClasificacionTitle;
@@ -69,7 +65,7 @@ public class InformationFragment extends Fragment {
     @BindView(R.id.emitido_anime) TextView tvEmitido;
     @BindView(R.id.id_anime) TextView tvID;
     @BindView(R.id.mal_anime) TextView tvMAL;
-    @BindView(R.id.progressbar_MAL) ProgressBar progressBar;
+    @BindView(R.id.progressbar_details) ProgressBar progressBar;
   //  @BindView(R.id.detalles_expandablelayout) ExpandableLayout expandableLayout;
     @BindView(R.id.detalles_linearlayout) LinearLayout linearLayout;
     @BindView(R.id.detalles_cardview)
@@ -89,9 +85,9 @@ public class InformationFragment extends Fragment {
     private String ALTERNATIVO;
     private String URL_MAL;
 
-    private Boolean isExpanded = false;
+    @BindView(R.id.layout_details) LinearLayout linearLayout_details;
 
-    private Retrofit retrofit;
+    private Boolean isExpanded = false;
 
 
     @Override
@@ -106,42 +102,6 @@ public class InformationFragment extends Fragment {
         View view = inflater.inflate(R.layout.detalles_anime_informacion_fm, container, false);
 
         ButterKnife.bind(this, view);
-
-        recyclerViewStaff.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-        recyclerViewStaff.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-            int lastX = 0;
-            @Override
-            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-                switch (e.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        lastX = (int) e.getX();
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        boolean isScrollingRight = e.getX() < lastX;
-                        if ((isScrollingRight && ((LinearLayoutManager) recyclerViewStaff.getLayoutManager()).findLastCompletelyVisibleItemPosition() == recyclerViewStaff.getAdapter().getItemCount() - 1) ||
-                                (!isScrollingRight && ((LinearLayoutManager) recyclerViewStaff.getLayoutManager()).findFirstCompletelyVisibleItemPosition() == 0)) {
-                            ((ActivityAnimeInformation) getActivity()).nestedScrollViewPagerOn();
-                        } else {
-                            ((ActivityAnimeInformation) getActivity()).nestedScrollViewPagerOff();
-                        }
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        lastX = 0;
-                        ((ActivityAnimeInformation) getActivity()).nestedScrollViewPagerOn();
-                        break;
-                }
-                return false;
-            }
-
-            @Override
-            public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-            }
-
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-            }
-        });
 
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(setData,
                 new IntentFilter("data"));
@@ -172,29 +132,18 @@ public class InformationFragment extends Fragment {
             tvClasificacion.setVisibility(GONE);
             tvClasificacionTitle.setVisibility(GONE);
             } else {
-            tvClasificacion.setText(RATED); }
+            tvClasificacion.setText(RATED);
+            }
 
             if (EPISODES.contains("0")) {
                 tvEpisodios.setVisibility(GONE);
                 tvEpisodiosTitle.setVisibility(GONE);
             } else {
-                tvEpisodios.setText(EPISODES);}
+                tvEpisodios.setText(EPISODES);
+            }
 
 
-            String text = "<a href='" + URL_MAL + "'>" + tituloCompleto + "</a>";
-            tvMAL.setText(Html.fromHtml(text));
-            tvMAL.setOnClickListener(view -> {
-                CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder()
-                        .addDefaultShareMenuItem()
-                        .setToolbarColor(getActivity().getResources().getColor(R.color.black))
-                        .setShowTitle(true)
-                        .build();
-                CustomTabsHelper.addKeepAliveExtra(getActivity(), customTabsIntent.intent);
-                CustomTabsHelper.openCustomTab(getActivity(), customTabsIntent,
-                        Uri.parse(URL_MAL),
-                        new WebViewFallback());});
-
-            if (sinopsis != null && sinopsis.length() > 260){
+            if (sinopsis != null && sinopsis.length() > 260) {
                 btnShowHide.setVisibility(View.VISIBLE);
             } else {
                 btnShowHide.setVisibility(GONE);
@@ -204,92 +153,26 @@ public class InformationFragment extends Fragment {
             tvTituloCompleto.setText(tituloCompleto);
             tvEmitido.setText(fecha);
             tvID.setText(mal_id);
-            getMALStaff(mal_id);
+
+            String text = "<a href='" + URL_MAL + "'>" + tituloCompleto + "</a>";
+            tvMAL.setText(Html.fromHtml(text));
+            tvMAL.setOnClickListener(v -> {
+
+                WebViewBuilder webViewBuilder = new WebViewBuilder();
+                webViewBuilder.webView(URL_MAL, getActivity());
+            });
+
+
+
+            linearLayout_details.animate().alpha(1f).setDuration(300).start();
+            progressBar.setVisibility(GONE);
 
         }
+
+
     };
 
 
-    private void getMALStaff(String mal_id) {
-
-        ANIME_URL = BASE_URL.concat("anime/").concat(mal_id).concat("/characters_staff");
-
-        System.out.println("MAL_STAFF: " + ANIME_URL);
-
-        retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        InterfaceStaff interfaceStaff = retrofit.create(InterfaceStaff.class);
-
-        interfaceStaff.getPersonas(ANIME_URL).enqueue(new Callback<Personas>() {
-            @Override
-            public void onResponse(Call<Personas> call, Response<Personas> response) {
-
-
-                    System.out.println("MAL_STAFF RESPONSE: " + response.code());
-
-                    if (response.body().getCharacters().isEmpty()){
-                        tvActores.setVisibility(GONE);
-                        recyclerViewStaff.setVisibility(GONE);
-                    } else {
-                    tvActores.setVisibility(View.VISIBLE);
-                    recyclerViewStaff.setVisibility(View.VISIBLE);
-                    progressBar.setVisibility(GONE);
-                    }
-
-                    List<Character> charactersList = response.body().getCharacters();
-
-                    ArrayList<Seiyuu> seiyuuArrayList = new ArrayList<>();
-
-                        for (Character c : charactersList){
-
-                            Seiyuu seiyuu = new Seiyuu();
-
-                            List<VoiceActor> voiceActors = c.getVoiceActors();
-
-                            String voice, imagen, url;
-
-                            if (voiceActors.size() == 0){
-                                voice = null;
-                                imagen = null;
-
-                                seiyuu.setSeiyuu(voice);
-                                seiyuu.setSeiyuuImagen(imagen);
-                                seiyuuArrayList.add(seiyuu);
-
-
-                            } else {
-
-                                voice = voiceActors.get(0).getName();
-                                imagen = voiceActors.get(0).getImageUrl();
-                                url = voiceActors.get(0).getUrl();
-
-                                System.out.println("AAA: " + url);
-
-                                seiyuu.setSeiyuu(voice);
-                                seiyuu.setSeiyuuImagen(imagen);
-                                seiyuu.setSeiyuuUrl(url);
-                                seiyuuArrayList.add(seiyuu);
-
-                            }
-
-                        }
-
-                        StaffAdapter staffAdapter = new StaffAdapter((ArrayList<Character>) charactersList, seiyuuArrayList, getActivity());
-                        recyclerViewStaff.setAdapter(staffAdapter);
-
-
-                }
-
-            @Override
-            public void onFailure(Call<Personas> call, Throwable t) {
-            }
-        });
-
-
-    }
 
     @Override
     public void onDestroy() {

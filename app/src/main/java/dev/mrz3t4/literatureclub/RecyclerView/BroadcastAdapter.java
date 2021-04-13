@@ -38,7 +38,7 @@ public class BroadcastAdapter extends RecyclerView.Adapter<BroadcastAdapter.View
     @Override
     public BroadcastAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(context).inflate(R.layout.recycleriew_broadcast, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.recyclerview_broadcast, parent, false);
         return new ViewHolder(view);
     }
 

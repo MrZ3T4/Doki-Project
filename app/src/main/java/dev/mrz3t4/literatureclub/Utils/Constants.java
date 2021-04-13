@@ -11,6 +11,7 @@ public class Constants {
     public static String season = GenericContext.getContext().getResources().getString(R.string.season);
     public static String information = GenericContext.getContext().getResources().getString(R.string.anime_data);
     public static String episodes = GenericContext.getContext().getResources().getString(R.string.episodes);
+    public static String staff = GenericContext.getContext().getResources().getString(R.string.staff);
 
     public static String recents = GenericContext.getContext().getResources().getString(R.string.recents_toolbar);
     public static String collections = GenericContext.getContext().getResources().getString(R.string.collections_toolbar);
