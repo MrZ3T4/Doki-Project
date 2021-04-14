@@ -262,6 +262,10 @@ public class GetAnime {
                 String str = doc.substring(doc.lastIndexOf(title));
                 String str2 = str.substring(0, str.indexOf("#"));
 
+                String theme_title = str2.substring(str2.indexOf("\""), str2.lastIndexOf("\"")).substring(1);
+
+                System.out.println("URL: " + theme_title);
+
                 GetLinksFromEpisode getLinksFromEpisode = new GetLinksFromEpisode();
 
                 ArrayList<String> arraylist = getLinksFromEpisode.extractLinks(str2, null, 1);
