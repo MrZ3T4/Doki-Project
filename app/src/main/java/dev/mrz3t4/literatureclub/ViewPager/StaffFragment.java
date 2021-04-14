@@ -138,8 +138,6 @@ public class StaffFragment extends Fragment {
                                 imagen = voiceActors.get(0).getImageUrl();
                                 url = voiceActors.get(0).getUrl();
 
-                                System.out.println("AAA: " + url);
-
                                 seiyuu.setSeiyuu(voice);
                                 seiyuu.setSeiyuuImagen(imagen);
                                 seiyuu.setSeiyuuUrl(url);

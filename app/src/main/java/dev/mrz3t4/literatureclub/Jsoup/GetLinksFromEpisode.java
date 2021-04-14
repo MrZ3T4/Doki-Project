@@ -40,6 +40,7 @@ public class GetLinksFromEpisode {
         {
                 Intent intent2 = new Intent("Information");
                 intent2.putExtra("url", variable_url);
+                intent2.putExtra("title", title);
                 LocalBroadcastManager.getInstance(context).sendBroadcast(intent2);
         }
 
@@ -55,7 +56,7 @@ public class GetLinksFromEpisode {
                     // Get first stream server & others
 
                     first_server = serverClass.select("iframe[class=embed-responsive-item]").attr("src");
-                    other_servers = extractLinks(serverClass.text(), first_server);
+                    other_servers = extractLinks(serverClass.text(), first_server, 0);
 
 
                     for (int pos = 0; pos < other_servers.size(); pos++) {
@@ -175,7 +176,7 @@ public class GetLinksFromEpisode {
 
     }
 
-    public ArrayList<String> extractLinks(String text, String firstServer) {
+    public ArrayList<String> extractLinks(String text, String firstServer, int mode) {
         ArrayList<String> linksArrayList = new ArrayList<>();
 
         String regex = "\\(?\\b(https?://|www[.]|ftp://)[-A-Za-z0-9+&@#/%?=~_()|!:,.;]*[-A-Za-z0-9+&@#/%=~_()|]";
@@ -195,10 +196,17 @@ public class GetLinksFromEpisode {
             if (urlStr.startsWith("(") && urlStr.endsWith(")"))
             { urlStr = urlStr.substring(1, urlStr.length() - 1); }
 
-            String urlFinal = formatLink(urlStr);
+            if (mode == 0) {
+                String urlFinal = formatLink(urlStr);
 
-            if (!urlFinal.contains("monoschinos2")){
-                linksArrayList.add(urlFinal);
+                if (!urlFinal.contains("monoschinos2")){
+                    linksArrayList.add(urlFinal);
+                }
+            } else {
+                if (!urlStr.contains("myanimelist")){
+                    String url_semifinal = urlStr.substring(1, urlStr.indexOf(")"));
+                    linksArrayList.add(url_semifinal);
+                }
             }
 
         }

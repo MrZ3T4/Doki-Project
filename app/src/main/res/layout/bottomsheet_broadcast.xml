@@ -111,7 +111,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardCornerRadius="0dp"
-        android:clickable="true"
+        android:clickable="false"
         android:focusable="true"
         android:background="@drawable/ripple"
         app:cardBackgroundColor="?attr/colorPrimaryVariant">

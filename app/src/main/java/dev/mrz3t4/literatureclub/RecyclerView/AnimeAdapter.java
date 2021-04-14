@@ -129,7 +129,7 @@ public class AnimeAdapter extends RecyclerView.Adapter<AnimeAdapter.ViewHolder> 
             cardView.setOnClickListener(v -> {
 
                 GetLinksFromEpisode getDataFromEpisode = new GetLinksFromEpisode();
-                getDataFromEpisode.getLinks(anime.url, null, context, 2);
+                getDataFromEpisode.getLinks(anime.getUrl(), anime.getTitle(), context, 2);
 
             });
 

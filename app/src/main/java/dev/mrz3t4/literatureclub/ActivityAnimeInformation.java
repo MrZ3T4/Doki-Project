@@ -56,6 +56,7 @@ import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
 
+import dev.mrz3t4.literatureclub.Jsoup.GetAnime;
 import dev.mrz3t4.literatureclub.RecyclerView.Anime;
 import dev.mrz3t4.literatureclub.RecyclerView.AnimeAdapter;
 import dev.mrz3t4.literatureclub.RecyclerView.Episode;
@@ -134,6 +135,9 @@ public class ActivityAnimeInformation extends AppCompatActivity {
             URI = b.getString("url");
             TITULO = b.getString("title");
         }
+
+        GetAnime getAnime = new GetAnime(ActivityAnimeInformation.this, null, null);
+        getAnime.getThemes(TITULO);
 
         fab = findViewById(R.id.fab_fav);
 
@@ -240,10 +244,6 @@ public class ActivityAnimeInformation extends AppCompatActivity {
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private void getData() {
-
-
-        System.out.println("XDDDDDDDDDDDDDDDDDDDD"+TITULO);
-        System.out.println("AAAAAAAAAAAAAAA"+URI);
 
             new Thread(() -> {
                 try {

@@ -58,6 +58,8 @@ public class GetAnime {
     private final RecyclerView recyclerView;
     private final ProgressBar progressBar;
 
+    private String final_url;
+
     private final NotificationsBuilder notificationsBuilder = new NotificationsBuilder();
     private final JsonTools jsonTools = new JsonTools();
     private final Sort sort = new Sort();
@@ -209,6 +211,92 @@ public class GetAnime {
         } catch (Exception e){ e.printStackTrace(); }
 
         setRecyclerView(animeArrayList);
+
+    }
+
+    public void getThemes(String title){
+
+        String URL = "https://old.reddit.com/r/AnimeThemes/wiki/anime_index/";
+
+        new Thread(() -> { // Background
+
+            try {
+
+                Document document = Jsoup.connect(URL).userAgent("Mozilla").get();
+                Elements elements = document.select("a");
+
+                for (Element e: elements){
+
+                    if (e.text().contains(title)){
+                        final_url = "https://old.reddit.com" + e.attr("href");
+                        getVideos(final_url, title);
+                    }
+                }
+
+
+
+            } catch (IOException e) { e.printStackTrace(); }
+
+            activity.runOnUiThread(()-> { // Do Next...
+
+
+
+
+            });
+
+        }).start();
+
+
+    }
+
+    private void getVideos(String url, String title) {
+
+        new Thread(() -> { // Background
+
+            try {
+
+                Document document = Jsoup.connect(url).userAgent("Mozilla").get();
+
+                String doc = document.body().toString();
+
+                String str = doc.substring(doc.lastIndexOf(title));
+                String str2 = str.substring(0, str.indexOf("#"));
+
+                GetLinksFromEpisode getLinksFromEpisode = new GetLinksFromEpisode();
+
+                ArrayList<String> arraylist = getLinksFromEpisode.extractLinks(str2, null, 1);
+
+                ArrayList<String> openingsArrayList = new ArrayList<>();
+                ArrayList<String> endingsArrayList = new ArrayList<>();
+
+                for (int i = 0; i < arraylist.size(); i++){
+                    String video = arraylist.get(i);
+                    if (video.contains("OP")){
+                        System.out.println("OP: " + video);
+                        openingsArrayList.add(video);
+                    } else {
+                        System.out.println("ED: " + video);
+                        endingsArrayList.add(video);
+                    }
+
+                }
+
+
+
+
+
+
+            } catch (IOException e) { e.printStackTrace(); }
+
+            activity.runOnUiThread(()-> { // Do Next...
+
+
+
+
+            });
+
+        }).start();
+
 
     }
 
