@@ -18,7 +18,7 @@ import com.google.android.material.textview.MaterialTextView;
 
 import java.util.ArrayList;
 
-import dev.mrz3t4.literatureclub.Jsoup.GetLinksFromEpisode;
+import dev.mrz3t4.literatureclub.Jsoup.GetLinks;
 import dev.mrz3t4.literatureclub.R;
 
 import static dev.mrz3t4.literatureclub.Utils.Constants.MODE_EPISODE;
@@ -79,8 +79,6 @@ public class BroadcastAdapter extends RecyclerView.Adapter<BroadcastAdapter.View
                 @Override
                 public void onClick(View v) {
 
-                    System.out.println("Title (From Broadcast Adapter): "+broadcast.title);
-
                     LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     View view = li.inflate(R.layout.bottomsheet_broadcast, null);
 
@@ -88,7 +86,7 @@ public class BroadcastAdapter extends RecyclerView.Adapter<BroadcastAdapter.View
                     dialog.setContentView(view);
                     dialog.show();
 
-                    GetLinksFromEpisode getVideoURL = new GetLinksFromEpisode();
+                    GetLinks getVideoURL = new GetLinks();
 
                     MaterialCardView stream, information;
 
@@ -99,7 +97,6 @@ public class BroadcastAdapter extends RecyclerView.Adapter<BroadcastAdapter.View
                     information.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            System.out.println(broadcast.url);
                             getVideoURL.getLinks(broadcast.url, broadcast.title, context, 0);
                             dialog.dismiss();
                         }

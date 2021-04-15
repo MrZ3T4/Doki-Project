@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -29,7 +30,7 @@ import dev.mrz3t4.literatureclub.Utils.xGetterVideo;
 
 import static dev.mrz3t4.literatureclub.Utils.Constants.MODE_EPISODE;
 
-public class GetLinksFromEpisode {
+public class GetLinks {
 
     private String first_server, details_url, final_link;
     private ArrayList<String> other_servers;
@@ -57,11 +58,6 @@ public class GetLinksFromEpisode {
 
                     first_server = serverClass.select("iframe[class=embed-responsive-item]").attr("src");
                     other_servers = extractLinks(serverClass.text(), first_server, 0);
-
-
-                    for (int pos = 0; pos < other_servers.size(); pos++) {
-                        System.out.println("Stream Server " + pos + " " + other_servers.get(pos));
-                    }
 
                     // Get anime details url
 
@@ -148,7 +144,7 @@ public class GetLinksFromEpisode {
                             if (final_link == null){
                                 final_link = servers_array.get(0);
                             }
-                            System.out.println("Stream server selected is: " + final_link);
+                            Log.d("Stream","Stream server selected is: " + final_link);
 
                             NotificationsBuilder notificationsBuilder = new NotificationsBuilder();
                             notificationsBuilder.createToast("Preparando streaming...", Toast.LENGTH_SHORT);
@@ -165,7 +161,6 @@ public class GetLinksFromEpisode {
                             if (final_link == null){
                                 final_link = servers_array.get(0);
                             }
-                            System.out.println("Stream server selected is: " + final_link);
                             WebViewBuilder webViewBuilder = new WebViewBuilder();
                             webViewBuilder.webView(final_link, context);
 
@@ -176,10 +171,32 @@ public class GetLinksFromEpisode {
 
     }
 
+    public ArrayList<String> extractNamesFromTheme(String text){
+
+        ArrayList<String> namesArrayList = new ArrayList<>();
+
+        Pattern pa = Pattern.compile("\"([^\"]*)\"");
+        Matcher ma = pa.matcher(text);
+        while (ma.find()) {
+            namesArrayList.add(ma.group(1));
+        }
+        return namesArrayList;
+    }
+
     public ArrayList<String> extractLinks(String text, String firstServer, int mode) {
         ArrayList<String> linksArrayList = new ArrayList<>();
 
         String regex = "\\(?\\b(https?://|www[.]|ftp://)[-A-Za-z0-9+&@#/%?=~_()|!:,.;]*[-A-Za-z0-9+&@#/%=~_()|]";
+
+        if (mode != 0){
+            Pattern pa = Pattern.compile("\"([^\"]*)\"");
+            Matcher ma = pa.matcher(text);
+            while (ma.find()) {
+                System.out.println("Theme "+ ma.group(1));
+            }
+
+        }
+
 
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(text);
@@ -204,8 +221,11 @@ public class GetLinksFromEpisode {
                 }
             } else {
                 if (!urlStr.contains("myanimelist")){
-                    String url_semifinal = urlStr.substring(1, urlStr.indexOf(")"));
-                    linksArrayList.add(url_semifinal);
+                    if (!urlStr.contains("NC")) {
+                        String url_semifinal = urlStr.substring(1, urlStr.indexOf(")"));
+                        linksArrayList.add(url_semifinal);
+                    }
+
                 }
             }
 

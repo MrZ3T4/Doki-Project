@@ -15,25 +15,26 @@ import java.util.ArrayList;
 
 import dev.mrz3t4.literatureclub.Jsoup.GetLinks;
 import dev.mrz3t4.literatureclub.R;
+import dev.mrz3t4.literatureclub.Utils.xGetterVideo;
 
 import static dev.mrz3t4.literatureclub.Utils.Constants.MODE_EPISODE;
 
 
-public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.MyViewHolder> {
+public class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.MyViewHolder> {
 
-    private ArrayList<Episode> episodeArrayList;
+    private ArrayList<Theme> themeArrayList;
 
     private Context ctx;
 
-    public EpisodeAdapter(ArrayList<Episode> episodeArrayList, Context ctx) {
-        this.episodeArrayList = episodeArrayList;
+    public ThemeAdapter(ArrayList<Theme> themeArrayList, Context ctx) {
+        this.themeArrayList = themeArrayList;
         this.ctx = ctx;
     }
 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(ctx).inflate(R.layout.recyclerview_episodes, parent, false);
+        View view = LayoutInflater.from(ctx).inflate(R.layout.recyclerview_theme, parent, false);
         MyViewHolder holder = new MyViewHolder(view);
         return holder;
     }
@@ -41,18 +42,13 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.MyViewHo
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
 
-        holder.title.setText(episodeArrayList.get(position).getTitle());
+        holder.title.setText(themeArrayList.get(position).getTitle());
+        holder.type.setText(themeArrayList.get(position).getType());
 
         holder.cardView.setOnClickListener(v -> {
 
-            GetLinks getLinks = new GetLinks();
-            getLinks.getLinks(
-                    episodeArrayList.get(position).getLink(),
-                    episodeArrayList.get(position).getTitle(),
-                    ctx,
-                    MODE_EPISODE);
-
-
+            xGetterVideo video = new xGetterVideo(themeArrayList.get(position).getUrl());
+            video.startPlay();
 
             /*Toast.makeText(ctx, "Preparando streaming...", Toast.LENGTH_SHORT).show();
             Intent streaming = new Intent("streaming");
@@ -65,21 +61,22 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.MyViewHo
 
     @Override
     public int getItemCount() {
-        return episodeArrayList.size();
+        return themeArrayList.size();
     }
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         MaterialCardView cardView;
-        TextView title;
+        TextView title, type;
 
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            cardView =  itemView.findViewById(R.id.cardView_episodes);
-            title = itemView.findViewById(R.id.txtView_episode);
+            cardView =  itemView.findViewById(R.id.theme_cardview);
+            title = itemView.findViewById(R.id.title_theme_textview);
+            type = itemView.findViewById(R.id.type_theme_textview);
         }
     }
 }

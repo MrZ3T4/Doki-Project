@@ -1,19 +1,19 @@
 package dev.mrz3t4.literatureclub.Jsoup;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.content.ContextCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.json.JSONArray;
@@ -30,9 +30,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import dev.mrz3t4.literatureclub.R;
 import dev.mrz3t4.literatureclub.RecyclerView.Anime;
 import dev.mrz3t4.literatureclub.RecyclerView.AnimeAdapter;
+import dev.mrz3t4.literatureclub.RecyclerView.Theme;
+import dev.mrz3t4.literatureclub.RecyclerView.ThemeAdapter;
 import dev.mrz3t4.literatureclub.Utils.GenericContext;
 import dev.mrz3t4.literatureclub.Utils.JsonTools;
 import dev.mrz3t4.literatureclub.Utils.NotificationsBuilder;
@@ -52,9 +53,9 @@ public class GetAnime {
     private String VARIABLE_URL;
 
     private final ArrayList<Anime> animeArrayList = new ArrayList<>();
+    private final ArrayList<Theme> openingsEndingsArrayList = new ArrayList<>();
 
     private final Activity activity;
-    private final Context context;
     private final RecyclerView recyclerView;
     private final ProgressBar progressBar;
 
@@ -67,12 +68,13 @@ public class GetAnime {
 
     public GetAnime(Activity activity, RecyclerView recyclerView, ProgressBar progressBar) {
         this.activity = activity;
-        this.context = activity;
         this.recyclerView = recyclerView;
         this.progressBar = progressBar;
 
     }
 
+
+    @SuppressLint("InlinedApi")
     public void getDirectoryFromWeb(int mode) {
 
         if (isDirectory(mode)) { VARIABLE_URL = BASE_URL; }
@@ -145,7 +147,7 @@ public class GetAnime {
                     }
 
                     sort.getArrayListByTitle(animeArrayList);
-                    setRecyclerView(animeArrayList);
+                    setRecyclerView(animeArrayList, null);
 
                 }
             });
@@ -210,38 +212,60 @@ public class GetAnime {
 
         } catch (Exception e){ e.printStackTrace(); }
 
-        setRecyclerView(animeArrayList);
+        setRecyclerView(animeArrayList, null);
 
     }
 
-    public void getThemes(String title){
+    public void getThemes(String title2){
 
-        String URL = "https://old.reddit.com/r/AnimeThemes/wiki/anime_index/";
+        String title;
+
+        if (title2.equalsIgnoreCase("Gotoubun no Hanayome 2")){
+            title = title2.replace("2", "∬");
+        } else {
+            title = title2;
+        }
+
+        String base = "https://old.reddit.com";
+        String diccionary = "/r/AnimeThemes/wiki/anime_index/";
 
         new Thread(() -> { // Background
 
             try {
 
-                Document document = Jsoup.connect(URL).userAgent("Mozilla").get();
+                Document document = Jsoup.connect(base.concat(diccionary)).userAgent("Mozilla").get();
                 Elements elements = document.select("a");
 
                 for (Element e: elements){
 
                     if (e.text().contains(title)){
-                        final_url = "https://old.reddit.com" + e.attr("href");
-                        getVideos(final_url, title);
+                        if (title.equalsIgnoreCase("No Game No Life")){
+                            String semi_url =  base.concat(e.attr("href"));
+                            final_url = semi_url.replace(".3A_zero", "").replace("7", "4");
+                        } else if (title.equalsIgnoreCase("Gotoubun no Hanayome")) {
+                            String semi_url = base.concat(e.attr("href"));
+                            final_url = semi_url.replace("_.222C", "").replace("21", "19");
+                        } else {
+                        final_url = base.concat(e.attr("href"));
+                        }
                     }
                 }
 
 
 
-            } catch (IOException e) { e.printStackTrace(); }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             activity.runOnUiThread(()-> { // Do Next...
+                if (final_url != null){
+                    System.out.println(final_url);
+               getVideos(final_url, title);
 
-
-
-
+                } else {
+                    // hacer algo
+                    setRecyclerView(null, null);
+                }
             });
 
         }).start();
@@ -262,38 +286,41 @@ public class GetAnime {
                 String str = doc.substring(doc.lastIndexOf(title));
                 String str2 = str.substring(0, str.indexOf("#"));
 
-                String theme_title = str2.substring(str2.indexOf("\""), str2.lastIndexOf("\"")).substring(1);
+                GetLinks getLinks = new GetLinks();
 
-                System.out.println("URL: " + theme_title);
+                ArrayList<String> arraylist = getLinks.extractLinks(str2, null, 1);
+                ArrayList<String> titlesArrayList = getLinks.extractNamesFromTheme(str2);
 
-                GetLinksFromEpisode getLinksFromEpisode = new GetLinksFromEpisode();
 
-                ArrayList<String> arraylist = getLinksFromEpisode.extractLinks(str2, null, 1);
+                for (int i = 0; i < titlesArrayList.size(); i++){
 
-                ArrayList<String> openingsArrayList = new ArrayList<>();
-                ArrayList<String> endingsArrayList = new ArrayList<>();
+                    Theme theme = new Theme();
 
-                for (int i = 0; i < arraylist.size(); i++){
-                    String video = arraylist.get(i);
-                    if (video.contains("OP")){
-                        System.out.println("OP: " + video);
-                        openingsArrayList.add(video);
+                    String url_theme = arraylist.get(i);
+                    String title_theme = titlesArrayList.get(i);
+                    theme.setTitle(title_theme);
+                    theme.setUrl(url_theme);
+
+                    String type_theme;
+
+                    if (url_theme.contains("OP")){
+                        Log.d("Openings", "OP: " + url);
+                        type_theme = "Opening";
                     } else {
-                        System.out.println("ED: " + video);
-                        endingsArrayList.add(video);
+                        Log.d("Endings", "ED: " + url);
+                        type_theme = "Ending";
                     }
+                    theme.setType(type_theme);
+
+                    openingsEndingsArrayList.add(theme);
 
                 }
-
-
-
-
-
 
             } catch (IOException e) { e.printStackTrace(); }
 
             activity.runOnUiThread(()-> { // Do Next...
 
+                setRecyclerView(null, openingsEndingsArrayList);
 
 
 
@@ -331,19 +358,28 @@ public class GetAnime {
 
     private boolean isDirectory(int mode){ return mode == 1; }
 
-    private void setRecyclerView(ArrayList<Anime> animeArrayList) {
+    private void setRecyclerView(ArrayList<Anime> animeArrayList, ArrayList<Theme> themeArrayList) {
 
-        AnimeAdapter animeAdapter = new AnimeAdapter(animeArrayList, activity);
 
         if (progressBar != null) { progressBar.setVisibility(View.GONE); }
 
-        recyclerView.setItemViewCacheSize(30);
-        recyclerView.setDrawingCacheEnabled(true);
-        recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
-        recyclerView.setHasFixedSize(true);
-
-        recyclerView.setAdapter(animeAdapter);
-        animeAdapter.notifyDataSetChanged();
+        if (themeArrayList == null && animeArrayList != null) {
+            recyclerView.setItemViewCacheSize(30);
+            recyclerView.setDrawingCacheEnabled(true);
+            recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+            recyclerView.setHasFixedSize(true);
+            AnimeAdapter animeAdapter = new AnimeAdapter(animeArrayList, activity);
+            recyclerView.setAdapter(animeAdapter);
+            animeAdapter.notifyDataSetChanged();
+        } else if (animeArrayList == null && themeArrayList != null){
+            Intent episodes = new Intent("theme");
+            episodes.putParcelableArrayListExtra("arraylist", themeArrayList);
+            LocalBroadcastManager.getInstance(activity).sendBroadcast(episodes);
+        } else {
+            Intent episodes = new Intent("theme");
+            episodes.putParcelableArrayListExtra("arraylist", null);
+            LocalBroadcastManager.getInstance(activity).sendBroadcast(episodes);
+        }
 
 
     }

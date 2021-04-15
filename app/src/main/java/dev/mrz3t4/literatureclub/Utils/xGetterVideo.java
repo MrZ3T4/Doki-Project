@@ -30,10 +30,7 @@ public class xGetterVideo {
                 URL = vidURL.get(0).getUrl();
                 System.out.println(URL);
 
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setDataAndType(Uri.parse(URL), "video/mp4");
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                GenericContext.getContext().startActivity(intent);
+                startPlay();
 
             }
 
@@ -45,6 +42,13 @@ public class xGetterVideo {
         });
 
         xGetter.find(URL);
+    }
+
+    public void startPlay() {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(Uri.parse(URL), "video/mp4");
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        GenericContext.getContext().startActivity(intent);
     }
 
 

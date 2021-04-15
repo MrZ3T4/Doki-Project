@@ -91,7 +91,7 @@ public class StaffFragment extends Fragment {
 
             ANIME_URL = BASE_URL.concat("anime/").concat(id).concat("/characters_staff");
 
-            System.out.println("MAL_STAFF: " + ANIME_URL);
+            System.out.println("URL_STAFF: " + ANIME_URL);
 
                 Retrofit retrofit = new Retrofit.Builder()
                         .baseUrl(BASE_URL)
@@ -107,9 +107,9 @@ public class StaffFragment extends Fragment {
 
                         System.out.println("RESPONSE: " + response.code());
 
-                        if (response.body() != null) {
-                            call.cancel();
+                        if (response.body() != null && recyclerView.getAlpha() == 0) {
                             progressBar.setVisibility(GONE);
+
 
                         List<Character> charactersList = response.body().getCharacters();
 
@@ -150,11 +150,12 @@ public class StaffFragment extends Fragment {
                         recyclerView.setAdapter(staffAdapter);
                         recyclerView.animate().alpha(1f).setDuration(300).start();
 
+                            call.cancel();
+
                         } else {
                             // recyclerView.setVisibility(View.VISIBLE);
                             // progressBar.setVisibility(GONE);
-                            getStaff(id);
-                            System.out.println("Algo salio mal xd");
+                            call.cancel();
                         }
 
 
@@ -162,7 +163,6 @@ public class StaffFragment extends Fragment {
 
                     @Override
                     public void onFailure(Call<Personas> call, Throwable t) {
-
                         call.cancel();
                         System.out.println("Algo salio mal");
 

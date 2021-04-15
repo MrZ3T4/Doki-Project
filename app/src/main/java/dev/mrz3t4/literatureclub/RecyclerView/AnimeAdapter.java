@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import dev.mrz3t4.literatureclub.Jsoup.GetLinksFromEpisode;
+import dev.mrz3t4.literatureclub.Jsoup.GetLinks;
 import dev.mrz3t4.literatureclub.R;
 import dev.mrz3t4.literatureclub.Utils.PicassoOnScrollListener;
 
@@ -128,7 +128,7 @@ public class AnimeAdapter extends RecyclerView.Adapter<AnimeAdapter.ViewHolder> 
 
             cardView.setOnClickListener(v -> {
 
-                GetLinksFromEpisode getDataFromEpisode = new GetLinksFromEpisode();
+                GetLinks getDataFromEpisode = new GetLinks();
                 getDataFromEpisode.getLinks(anime.getUrl(), anime.getTitle(), context, 2);
 
             });

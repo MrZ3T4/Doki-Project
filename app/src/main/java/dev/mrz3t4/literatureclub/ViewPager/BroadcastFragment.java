@@ -72,8 +72,6 @@ public class BroadcastFragment extends Fragment {
                     String url = body.select("a").attr("href");
                     String type = body.select("span[class=vista2]").text();
 
-                    System.out.println(title);
-
                     broadcastArrayList.add(new Broadcast(title, episode,img,url,type));
                 }
 

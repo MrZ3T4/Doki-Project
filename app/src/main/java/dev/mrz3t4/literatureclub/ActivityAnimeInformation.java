@@ -71,6 +71,7 @@ import dev.mrz3t4.literatureclub.Utils.NotificationsBuilder;
 import dev.mrz3t4.literatureclub.Utils.PicassoBlurImage;
 import dev.mrz3t4.literatureclub.ViewPager.InformationFragment;
 import dev.mrz3t4.literatureclub.ViewPager.StaffFragment;
+import dev.mrz3t4.literatureclub.ViewPager.ThemesFragment;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -82,6 +83,7 @@ import static dev.mrz3t4.literatureclub.Utils.Constants.episodes;
 import static dev.mrz3t4.literatureclub.Utils.Constants.information;
 import static dev.mrz3t4.literatureclub.Utils.Constants.season;
 import static dev.mrz3t4.literatureclub.Utils.Constants.staff;
+import static dev.mrz3t4.literatureclub.Utils.Constants.themes;
 
 public class ActivityAnimeInformation extends AppCompatActivity {
 
@@ -136,8 +138,11 @@ public class ActivityAnimeInformation extends AppCompatActivity {
             TITULO = b.getString("title");
         }
 
+        System.out.println(TITULO + "AAAAAAAAAAAAAAAA");
+
         GetAnime getAnime = new GetAnime(ActivityAnimeInformation.this, null, null);
         getAnime.getThemes(TITULO);
+
 
         fab = findViewById(R.id.fab_fav);
 
@@ -196,12 +201,14 @@ public class ActivityAnimeInformation extends AppCompatActivity {
         InformationFragment animeInformationFragment = new InformationFragment();
         AnimeEpisodesFragment animeEpisodesFragment = new AnimeEpisodesFragment();
         StaffFragment staffFragment = new StaffFragment();
+        ThemesFragment themesFragment = new ThemesFragment();
 
         animeViewPager.setupViewPager(
                 viewPager,
                 animeInformationFragment,
                 animeEpisodesFragment,
                 staffFragment,
+                themesFragment,
                 getSupportFragmentManager() ,
                 getLifecycle());
 
@@ -216,6 +223,10 @@ public class ActivityAnimeInformation extends AppCompatActivity {
                             break;
                         case 2:
                             tab.setText(staff);
+                            break;
+                        case 3:
+                            tab.setText(themes);
+                            break;
                     }
                 }).attach();
 
