@@ -60,6 +60,7 @@ public class StaffFragment extends Fragment {
     private String ANIME_URL;
 
     private View view;
+    private int count = 0;
 
     @Nullable
     @Override
@@ -150,12 +151,15 @@ public class StaffFragment extends Fragment {
                         recyclerView.setAdapter(staffAdapter);
                         recyclerView.animate().alpha(1f).setDuration(300).start();
 
-                            call.cancel();
-
                         } else {
-                            // recyclerView.setVisibility(View.VISIBLE);
-                            // progressBar.setVisibility(GONE);
-                            call.cancel();
+                            if (count > 10) {
+                                call.cancel();
+                                System.out.println("Cancelando...");
+                            } else {
+                                count++;
+                                getStaff(id);
+                                System.out.println("Reiniciando...");
+                            }
                         }
 
 

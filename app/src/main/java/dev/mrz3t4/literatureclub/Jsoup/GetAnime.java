@@ -61,6 +61,8 @@ public class GetAnime {
 
     private String final_url;
 
+    private boolean isSearchable;
+
     private final NotificationsBuilder notificationsBuilder = new NotificationsBuilder();
     private final JsonTools jsonTools = new JsonTools();
     private final Sort sort = new Sort();
@@ -218,17 +220,26 @@ public class GetAnime {
 
     public void getThemes(String title2, String id){
 
+
         String title;
         String mal = "https://myanimelist.net/anime/" + id + "/";
 
-        System.out.println("CSMSMSMSMSMSMSMSMSMSMSM: "  + mal);
+        System.out.println("CSMSMSMSMSMSMSMSMSMSMSM: "  + title2);
 
         if (title2.equalsIgnoreCase("Gotoubun no Hanayome 2")){
             title = title2.replace("2", "∬");
+        } else if (title2.contains("Naruto Shippuden")){
+          title = "Naruto: Shippuuden";
+            isSearchable = false;
+        }  else if (title2.contains("Fairy Tail Segunda Temporada")){
+            title = "Fairy Tail";
+            isSearchable = true;
         } else {
             title = title2;
+            isSearchable = true;
         }
 
+        System.out.println("CSMSMSMSMSMSMSMSMSMSMSM: "  + title);
         String base = "https://old.reddit.com";
         String diccionary = "/r/AnimeThemes/wiki/anime_index/";
 
@@ -241,26 +252,22 @@ public class GetAnime {
 
                 for (Element e: elements){
 
-                    String name = e.text().replaceAll("\\(.*\\)", "");
-                    String text = name.replaceFirst(".$","");
+                    String name;
+                    String text;
 
-                   // System.out.println("WAWWAWAAWWAAWAWA: " + text + " Length: " + text.length());
+                    if (isSearchable) {
+                        name = e.text().replaceAll("\\(.*\\)", "");
+                        text = name.replaceFirst(".$", "");
+                    } else {
+                        text = e.text();
+                    }
+
                     if (text.equalsIgnoreCase(title)){
+
                         final_url = base.concat(e.attr("href"));
                         System.out.println("TESTEOOOO: " + final_url);
                     }
 
-           /*         if (e.text().contains(title)){
-                        if (title.equalsIgnoreCase("No Game No Life")){
-                            String semi_url =  base.concat(e.attr("href"));
-                            final_url = semi_url.replace(".3A_zero", "").replace("7", "4");
-                        } else if (title.equalsIgnoreCase("Gotoubun no Hanayome")) {
-                            String semi_url = base.concat(e.attr("href"));
-                            final_url = semi_url.replace("_.222C", "").replace("21", "19");
-                        } else {
-                        final_url = base.concat(e.attr("href"));
-                        }
-                    }*/
                 }
 
 
@@ -294,6 +301,7 @@ public class GetAnime {
 
                 String doc = document.body().toString();
 
+
                 String str = doc.substring(doc.lastIndexOf(title));
                 String str2 = str.substring(0, str.indexOf("#"));
 
@@ -315,10 +323,12 @@ public class GetAnime {
                     String version = url_theme.substring(url_theme.length() -7).replace(".webm", "");
                     String if_version = url_theme.substring(url_theme.length() -6).replace(".webm", "");
 
+                    System.out.println("if ver = " + if_version + " ver= " + version);
+
 
                     theme.setTitle(title_theme);
                     theme.setUrl(url_theme);
-                        System.out.println(title_theme + " ===> "+ url_theme);
+                        //System.out.println(title_theme + " ===> "+ url_theme);
 
                     String type_theme;
 
@@ -330,7 +340,8 @@ public class GetAnime {
                                 type_theme = "Opening v" + if_version;
 
                             } else {
-                                type_theme = "Opening " + if_version;
+                                String num = version.replaceAll("[a-zA-Z]", "");
+                                type_theme = "Opening " + num;
                             }
 
                             System.out.println(if_version);
@@ -344,8 +355,10 @@ public class GetAnime {
                             if (version.contains("v")){
                                 type_theme = "Ending v" + if_version;
 
-                            } else {
-                                type_theme = "Ending " + if_version;
+                            }
+                            else {
+                                String num = version.replaceAll("[a-zA-Z]", "");
+                                type_theme = "Ending " + num;
                             }
 
                         }
