@@ -107,7 +107,7 @@ public class StaffFragment extends Fragment {
 
                         System.out.println("RESPONSE: " + response.code());
 
-                        if (response.body() != null && recyclerView.getAlpha() == 0) {
+                        if (response.isSuccessful()) {
                             progressBar.setVisibility(GONE);
 
 

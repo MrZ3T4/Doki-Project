@@ -216,9 +216,12 @@ public class GetAnime {
 
     }
 
-    public void getThemes(String title2){
+    public void getThemes(String title2, String id){
 
         String title;
+        String mal = "https://myanimelist.net/anime/" + id + "/";
+
+        System.out.println("CSMSMSMSMSMSMSMSMSMSMSM: "  + mal);
 
         if (title2.equalsIgnoreCase("Gotoubun no Hanayome 2")){
             title = title2.replace("2", "∬");
@@ -238,7 +241,16 @@ public class GetAnime {
 
                 for (Element e: elements){
 
-                    if (e.text().contains(title)){
+                    String name = e.text().replaceAll("\\(.*\\)", "");
+                    String text = name.replaceFirst(".$","");
+
+                   // System.out.println("WAWWAWAAWWAAWAWA: " + text + " Length: " + text.length());
+                    if (text.equalsIgnoreCase(title)){
+                        final_url = base.concat(e.attr("href"));
+                        System.out.println("TESTEOOOO: " + final_url);
+                    }
+
+           /*         if (e.text().contains(title)){
                         if (title.equalsIgnoreCase("No Game No Life")){
                             String semi_url =  base.concat(e.attr("href"));
                             final_url = semi_url.replace(".3A_zero", "").replace("7", "4");
@@ -248,7 +260,7 @@ public class GetAnime {
                         } else {
                         final_url = base.concat(e.attr("href"));
                         }
-                    }
+                    }*/
                 }
 
 
@@ -285,6 +297,8 @@ public class GetAnime {
 
                 String str = doc.substring(doc.lastIndexOf(title));
                 String str2 = str.substring(0, str.indexOf("#"));
+
+                System.out.println(str2);
 
                 GetLinks getLinks = new GetLinks();
 

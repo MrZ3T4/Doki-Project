@@ -179,6 +179,7 @@
                 android:layout_gravity="bottom"
                 android:background="@drawable/tab_divider"
                 app:tabContentStart="25dp"
+                app:tabMode="auto"
                 />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>

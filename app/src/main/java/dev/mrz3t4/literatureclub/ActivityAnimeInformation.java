@@ -140,9 +140,6 @@ public class ActivityAnimeInformation extends AppCompatActivity {
 
         System.out.println(TITULO + "AAAAAAAAAAAAAAAA");
 
-        GetAnime getAnime = new GetAnime(ActivityAnimeInformation.this, null, null);
-        getAnime.getThemes(TITULO);
-
 
         fab = findViewById(R.id.fab_fav);
 
@@ -424,11 +421,12 @@ public class ActivityAnimeInformation extends AppCompatActivity {
 
                     }
 
+                    GetAnime getAnime = new GetAnime(ActivityAnimeInformation.this, null, null);
+                    getAnime.getThemes(TITULO, ID);
 
                     intent.putExtra("ID", ID);
                     intent.putExtra("RATED", RATED);
                     intent.putExtra("EPISODES", EPISODES);
-                    // intent.putExtra("ORIGINAL", TITULO_ORIGINAL);
                     intent.putExtra("MAL", URL_MAL);
 
 
