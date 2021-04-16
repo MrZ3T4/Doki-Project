@@ -188,16 +188,6 @@ public class GetLinks {
 
         String regex = "\\(?\\b(https?://|www[.]|ftp://)[-A-Za-z0-9+&@#/%?=~_()|!:,.;]*[-A-Za-z0-9+&@#/%=~_()|]";
 
-        if (mode != 0){
-            Pattern pa = Pattern.compile("\"([^\"]*)\"");
-            Matcher ma = pa.matcher(text);
-            while (ma.find()) {
-                System.out.println("Theme "+ ma.group(1));
-            }
-
-        }
-
-
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(text);
 
@@ -221,7 +211,8 @@ public class GetLinks {
                 }
             } else {
                 if (!urlStr.contains("myanimelist")){
-                    if (!urlStr.contains("NC")) {
+                    if (!urlStr.contains("NC") && !urlStr.contains("1080")
+                            && !urlStr.contains("Lyrics") && !urlStr.contains("BD")) {
                         String url_semifinal = urlStr.substring(1, urlStr.indexOf(")"));
                         linksArrayList.add(url_semifinal);
                     }

@@ -271,7 +271,6 @@ public class GetAnime {
 
             activity.runOnUiThread(()-> { // Do Next...
                 if (final_url != null){
-                    System.out.println(final_url);
                getVideos(final_url, title);
 
                 } else {
@@ -312,17 +311,44 @@ public class GetAnime {
 
                     String url_theme = arraylist.get(i);
                     String title_theme = titlesArrayList.get(i);
+
+                    String version = url_theme.substring(url_theme.length() -7).replace(".webm", "");
+                    String if_version = url_theme.substring(url_theme.length() -6).replace(".webm", "");
+
+
                     theme.setTitle(title_theme);
                     theme.setUrl(url_theme);
+                        System.out.println(title_theme + " ===> "+ url_theme);
 
                     String type_theme;
 
                     if (url_theme.contains("OP")){
-                        Log.d("Openings", "OP: " + url);
-                        type_theme = "Opening";
+                        if (url_theme.contains("OP1.webm")){
+                            type_theme = "Opening";
+                        } else {
+                            if (version.contains("v")){
+                                type_theme = "Opening v" + if_version;
+
+                            } else {
+                                type_theme = "Opening " + if_version;
+                            }
+
+                            System.out.println(if_version);
+                        }
                     } else {
-                        Log.d("Endings", "ED: " + url);
-                        type_theme = "Ending";
+
+                        if (url_theme.contains("ED1.webm")){
+                            type_theme = "Ending";
+                        } else {
+
+                            if (version.contains("v")){
+                                type_theme = "Ending v" + if_version;
+
+                            } else {
+                                type_theme = "Ending " + if_version;
+                            }
+
+                        }
                     }
                     theme.setType(type_theme);
 

@@ -69,7 +69,7 @@ public class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.MyViewHolder
         }
 */
        holder.mNombre.setText(character.get(position).getName());
-        holder.mNombre.setSelected(true);
+       holder.mNombre.setSelected(true);
 
         if (character.get(position).getImageUrl() != null) {
 
