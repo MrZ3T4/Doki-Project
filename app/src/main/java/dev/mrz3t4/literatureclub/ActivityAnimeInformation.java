@@ -338,6 +338,7 @@ public class ActivityAnimeInformation extends AppCompatActivity {
                     title.setText(stitle);
                     intent.putExtra("sinopsis",sdescription);
                     intent.putExtra("titulo", stitle);
+                    intent.putExtra("date", sdate);
 
                     if (TITULO == null){
                     getMAL(stitle);
@@ -422,7 +423,7 @@ public class ActivityAnimeInformation extends AppCompatActivity {
                     }
 
                     GetAnime getAnime = new GetAnime(ActivityAnimeInformation.this, null, null);
-                    getAnime.getThemes(TITULO, ID);
+                    getAnime.getThemes(TITULO, ID, sdate);
 
                     intent.putExtra("ID", ID);
                     intent.putExtra("RATED", RATED);

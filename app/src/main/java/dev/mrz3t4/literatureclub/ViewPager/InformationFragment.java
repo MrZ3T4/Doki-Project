@@ -82,7 +82,7 @@ public class InformationFragment extends Fragment {
     private String RATED;
     private String EPISODES;
     private String ORIGINAL;
-    private String ALTERNATIVO;
+    private String date;
     private String URL_MAL;
 
     @BindView(R.id.layout_details) LinearLayout linearLayout_details;
@@ -122,7 +122,8 @@ public class InformationFragment extends Fragment {
             mal_id = intent.getStringExtra("ID");
             RATED = intent.getStringExtra("RATED");
             EPISODES = intent.getStringExtra("EPISODES");
-            ALTERNATIVO = intent.getStringExtra("SINONIMOS");
+            date = intent.getStringExtra("date");
+
 //            ORIGINAL = intent.getStringExtra("ORIGINAL").replace(" ", "");
             URL_MAL = intent.getStringExtra("MAL");
 

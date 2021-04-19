@@ -34,6 +34,7 @@ import dev.mrz3t4.literatureclub.RecyclerView.Anime;
 import dev.mrz3t4.literatureclub.RecyclerView.AnimeAdapter;
 import dev.mrz3t4.literatureclub.RecyclerView.Theme;
 import dev.mrz3t4.literatureclub.RecyclerView.ThemeAdapter;
+import dev.mrz3t4.literatureclub.UI.GetSimilarity;
 import dev.mrz3t4.literatureclub.Utils.GenericContext;
 import dev.mrz3t4.literatureclub.Utils.JsonTools;
 import dev.mrz3t4.literatureclub.Utils.NotificationsBuilder;
@@ -59,7 +60,7 @@ public class GetAnime {
     private final RecyclerView recyclerView;
     private final ProgressBar progressBar;
 
-    private String final_url;
+    private String final_url, final_title;
 
     private boolean isSearchable;
 
@@ -218,26 +219,13 @@ public class GetAnime {
 
     }
 
-    public void getThemes(String title2, String id){
+    public void getThemes(String title, String id, String date){
 
+        String date_from_anime = date.substring(0,4);
 
-        String title;
+        System.out.println("anime date: " + date_from_anime);
+
         String mal = "https://myanimelist.net/anime/" + id + "/";
-
-        System.out.println("CSMSMSMSMSMSMSMSMSMSMSM: "  + title2);
-
-        if (title2.equalsIgnoreCase("Gotoubun no Hanayome 2")){
-            title = title2.replace("2", "∬");
-        } else if (title2.contains("Naruto Shippuden")){
-          title = "Naruto: Shippuuden";
-            isSearchable = false;
-        }  else if (title2.contains("Fairy Tail Segunda Temporada")){
-            title = "Fairy Tail";
-            isSearchable = true;
-        } else {
-            title = title2;
-            isSearchable = true;
-        }
 
         System.out.println("CSMSMSMSMSMSMSMSMSMSMSM: "  + title);
         String base = "https://old.reddit.com";
@@ -252,10 +240,28 @@ public class GetAnime {
 
                 for (Element e: elements){
 
-                    String name;
-                    String text;
+                    String name = e.text().replaceAll("\\(.*\\)", "");
+                    String text = name.replaceFirst(".$", "");
 
-                    if (isSearchable) {
+                    String title_from_database = e.text().replaceAll("[()]", "");
+                    String date_from_database = title_from_database.replaceAll("\\D+","").replace(" ", "");
+
+                    GetSimilarity getSimilarity = new GetSimilarity();
+                    boolean isSimilar = getSimilarity.isSimilar(title, text, date_from_anime, date_from_database);
+
+                    if (isSimilar){
+                        final_title = text;
+                        final_url = base.concat(e.attr("href"));
+                        System.out.println( final_title + " AQUI ESTAAAAA---- " + final_url);
+                        System.out.println(id);
+                    }
+
+
+
+
+
+
+               /*     if (isSearchable) {
                         name = e.text().replaceAll("\\(.*\\)", "");
                         text = name.replaceFirst(".$", "");
                     } else {
@@ -267,7 +273,7 @@ public class GetAnime {
                         final_url = base.concat(e.attr("href"));
                         System.out.println("TESTEOOOO: " + final_url);
                     }
-
+*/
                 }
 
 
@@ -278,7 +284,7 @@ public class GetAnime {
 
             activity.runOnUiThread(()-> { // Do Next...
                 if (final_url != null){
-               getVideos(final_url, title);
+                getVideos(final_url, final_title, id);
 
                 } else {
                     // hacer algo
@@ -291,7 +297,10 @@ public class GetAnime {
 
     }
 
-    private void getVideos(String url, String title) {
+    private void getVideos(String url, String title, String id) {
+
+
+        String test = "[" + title + "]";
 
         new Thread(() -> { // Background
 
@@ -299,10 +308,11 @@ public class GetAnime {
 
                 Document document = Jsoup.connect(url).userAgent("Mozilla").get();
 
-                String doc = document.body().toString();
+                String doc = document.text();
 
+                System.out.println(doc);
 
-                String str = doc.substring(doc.lastIndexOf(title));
+                String str = doc.substring(doc.indexOf(test));
                 String str2 = str.substring(0, str.indexOf("#"));
 
                 System.out.println(str2);

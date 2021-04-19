@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
             setupBottomNavigationBar();
             setupAppBarLayout();
             setupFAB();
+
             LocalBroadcastManager.getInstance(this).registerReceiver(informationReceiver,
                     new IntentFilter("Information"));
 
@@ -150,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
+
 
     private void setupAppBarLayout() {
         appBarLayout = findViewById(R.id.app_bar_layout);
