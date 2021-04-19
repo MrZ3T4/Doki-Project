@@ -221,7 +221,7 @@ public class GetAnime {
 
     public void getThemes(String title, String id, String date){
 
-        String date_from_anime = date.substring(0,4);
+        String date_from_anime = date.substring(0, 4);
 
         System.out.println("anime date: " + date_from_anime);
 
@@ -310,12 +310,9 @@ public class GetAnime {
 
                 String doc = document.text();
 
-                System.out.println(doc);
-
                 String str = doc.substring(doc.indexOf(test));
                 String str2 = str.substring(0, str.indexOf("#"));
 
-                System.out.println(str2);
 
                 GetLinks getLinks = new GetLinks();
 
@@ -332,8 +329,6 @@ public class GetAnime {
 
                     String version = url_theme.substring(url_theme.length() -7).replace(".webm", "");
                     String if_version = url_theme.substring(url_theme.length() -6).replace(".webm", "");
-
-                    System.out.println("if ver = " + if_version + " ver= " + version);
 
 
                     theme.setTitle(title_theme);

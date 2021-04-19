@@ -67,6 +67,7 @@ import dev.mrz3t4.literatureclub.Retrofit.ResultID;
 import dev.mrz3t4.literatureclub.UI.AnimeEpisodesFragment;
 import dev.mrz3t4.literatureclub.UI.AnimeInformationFragment;
 import dev.mrz3t4.literatureclub.UI.AnimeViewPager;
+import dev.mrz3t4.literatureclub.UI.GetSimilarity;
 import dev.mrz3t4.literatureclub.Utils.NotificationsBuilder;
 import dev.mrz3t4.literatureclub.Utils.PicassoBlurImage;
 import dev.mrz3t4.literatureclub.ViewPager.InformationFragment;
@@ -137,8 +138,6 @@ public class ActivityAnimeInformation extends AppCompatActivity {
             URI = b.getString("url");
             TITULO = b.getString("title");
         }
-
-        System.out.println(TITULO + "AAAAAAAAAAAAAAAA");
 
 
         fab = findViewById(R.id.fab_fav);
@@ -381,7 +380,7 @@ public class ActivityAnimeInformation extends AppCompatActivity {
             System.out.println("JIKAN: " + titulo);
 
         String ANIME_URL = JIKANURL.concat("search/anime?q=")
-                .concat(titulo.replaceAll(" ", "%20")).concat("&limit=1");
+                .concat(titulo.replaceAll(" ", "%20")).concat("&limit=10");
 
         System.out.println("MAL_ID: "+ ANIME_URL);
 
@@ -408,12 +407,21 @@ public class ActivityAnimeInformation extends AppCompatActivity {
                         int id = result.getMalId();
                         int episodes = result.getEpisodes();
                         double score = result.getScore();
+                        String title_anime = result.getTitle();
 
-                        SCORE = String.valueOf(score);
-                        ID = String.valueOf(id);
-                        RATED = result.getRated();
-                        EPISODES = String.valueOf(episodes);
-                        URL_MAL = result.getUrl();
+                        System.out.println(title_anime);
+                        String start_date = result.getStartDate().substring(0,10).replace("-", "/");
+                        GetSimilarity getSimilarity = new GetSimilarity();
+                        if (getSimilarity.isSimilar(titulo, title_anime, sdate, start_date)){
+                            System.out.println("Es similar_"+title_anime);
+                            TITULO = title_anime;
+                            SCORE = String.valueOf(score);
+                            ID = String.valueOf(id);
+                            RATED = result.getRated();
+                            EPISODES = String.valueOf(episodes);
+                            URL_MAL = result.getUrl();
+                        }
+
 
 
                         intent.putExtra("fecha", SCORE);

@@ -108,6 +108,7 @@ public class StaffFragment extends Fragment {
 
                         System.out.println("RESPONSE: " + response.code());
 
+
                         if (response.isSuccessful()) {
                             progressBar.setVisibility(GONE);
 

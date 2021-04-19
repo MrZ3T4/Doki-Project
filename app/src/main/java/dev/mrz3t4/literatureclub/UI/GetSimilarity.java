@@ -72,9 +72,30 @@ public class GetSimilarity {
 
 
     }
+    public boolean isSimilarStaff(String s, String t, String d, String d2) {
+//        System.out.println(String.format(
+//                "%.3f es la similitud entre \"%s\" and \"%s\"", similarity(s, t), s, t));
 
-    public double max(double a, int b) {
-        return Math.max(a, b);
+
+        if (similarity(s, t) > 0.340 && d.contains(d2)){
+            String s1 = s.substring(0, 1);
+            String s2 = t.substring(0,1);
+
+            if (s1.equalsIgnoreCase(s2)){
+                System.out.println("s1: " + s1 + " s2: " + s2);
+                System.out.println("--------------------es similar");
+                System.out.println("Similitud entre: " + s + " y " + t + " es de: " + similarity(s,t));
+                return true;
+            } else {
+                return false;
+            }
+
+        } else {
+            return false;
+        }
+
+
+
     }
 
 }
