@@ -136,11 +136,11 @@ public class InformationFragment extends Fragment {
             tvClasificacion.setText(RATED);
             }
 
-            if (EPISODES.contains("0")) {
+            if (EPISODES != null) {
+                tvEpisodios.setText(EPISODES);
+            } else {
                 tvEpisodios.setVisibility(GONE);
                 tvEpisodiosTitle.setVisibility(GONE);
-            } else {
-                tvEpisodios.setText(EPISODES);
             }
 
 

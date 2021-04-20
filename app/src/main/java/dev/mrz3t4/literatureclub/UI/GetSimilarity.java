@@ -5,10 +5,13 @@ public class GetSimilarity {
     public double similarity(String s1, String s2) {
         String longer = s1, shorter = s2;
         if (s1.length() < s2.length()) { // longer should always have greater length
-            longer = s2; shorter = s1;
+            longer = s2;
+            shorter = s1;
         }
         int longerLength = longer.length();
-        if (longerLength == 0) { return 1.0; /* both strings are zero length */ }
+        if (longerLength == 0) {
+            return 1.0; /* both strings are zero length */
+        }
     /* // If you have Apache Commons Text, you can use it to calculate the edit distance:
     LevenshteinDistance levenshteinDistance = new LevenshteinDistance();
     return (longerLength - levenshteinDistance.apply(longer, shorter)) / (double) longerLength; */
@@ -49,22 +52,21 @@ public class GetSimilarity {
 //        System.out.println(String.format(
 //                "%.3f es la similitud entre \"%s\" and \"%s\"", similarity(s, t), s, t));
 
-        if (similarity(s,t) == 1.0){
+        if (similarity(s, t) == 1.0 || similarity(s, t) > 0.85) {
             System.out.println("--------------------es similar");
-            System.out.println("Similitud entre: " + s + " y " + t + " es de: " + similarity(s,t));
+            System.out.println("Similitud entre: " + s + " y " + t + " es de: " + similarity(s, t));
             System.out.println("Año from database: " + d2);
             System.out.println("Año from monoschinos: " + d);
-
+           
             return true;
         } else {
-            if (similarity(s, t) > 0.340 && d.contains(d2)){
+            if (similarity(s, t) > 0.350 && d.equalsIgnoreCase(d2)) {
                 String s1 = s.substring(0, 1);
-                String s2 = t.substring(0,1);
+                String s2 = t.substring(0, 1);
 
-                if (s1.equalsIgnoreCase(s2)){
-                    System.out.println("s1: " + s1 + " s2: " + s2);
+                if (s1.equalsIgnoreCase(s2)) {
                     System.out.println("--------------------es similar");
-                    System.out.println("Similitud entre: " + s + " y " + t + " es de: " + similarity(s,t));
+                    System.out.println("Similitud entre: " + s + " y " + t + " es de: " + similarity(s, t));
                     System.out.println("Año from database: " + d2);
                     System.out.println("Año from monoschinos: " + d);
                     return true;
@@ -72,12 +74,11 @@ public class GetSimilarity {
                     return false;
                 }
 
-            } else {
-                return false;
             }
         }
 
 
+        return false;
 
 
     }

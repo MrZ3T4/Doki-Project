@@ -137,6 +137,16 @@ public class ActivityAnimeInformation extends AppCompatActivity {
         if (!b.isEmpty()){
             URI = b.getString("url");
             TITULO = b.getString("title");
+
+        }
+
+        if (TITULO.contains("Español")){
+            TITULO_ORIGINAL =
+                TITULO.replace("Español", "")
+                        .replace("Latino","");
+
+        } else {
+            TITULO_ORIGINAL = TITULO;
         }
 
 
@@ -340,9 +350,16 @@ public class ActivityAnimeInformation extends AppCompatActivity {
                     intent.putExtra("date", sdate);
 
                     if (TITULO == null){
-                    getMAL(stitle);
+                        if (stitle.contains("Español")) {
+                            TITULO_ORIGINAL = stitle.replace("Latino", "")
+                                    .replace("Español", "");
+                        } else {
+                            TITULO_ORIGINAL = stitle;
+                        }
+
+                    getMAL(TITULO_ORIGINAL);
                     } else {
-                        getMAL(TITULO);
+                        getMAL(TITULO_ORIGINAL);
                     }
 
 
@@ -374,6 +391,7 @@ public class ActivityAnimeInformation extends AppCompatActivity {
         isReadyRetrofit = true; }
 
     private void getMAL(String titulo){
+
 
         String JIKANURL = "https://api.jikan.moe/v3/";
 
