@@ -72,7 +72,17 @@ public class GetSimilarity {
     public boolean startWithSameWord(String word, String toCompare){
         String word1 = word.substring(0,1);
         String word2 = toCompare.substring(0,1);
-        return  word1.equalsIgnoreCase(word2);
+        System.out.println("word 1 is: "+word1);
+        System.out.println("word 2 is: "+word2);
+        return word1.equalsIgnoreCase(word2);
+    }
+
+    public boolean endWithSameWord(String word, String toCompare){
+        String word1 = word.substring(word.length() - 1);
+        String word2 = toCompare.substring(toCompare.length() - 1);
+        System.out.println("word 1 is: "+word1);
+        System.out.println("word 2 is: "+word2);
+        return word1.equalsIgnoreCase(word2);
     }
 
     public boolean isSimilar(String s, String t, String d, String d2) {
@@ -81,12 +91,12 @@ public class GetSimilarity {
 //                "%.3f es la similitud entre \"%s\" and \"%s\"", similarity(s, t), s, t));
 
 
-        /*if (similarity(s, t) == 1.0 || similarity(s, t) > 0.85) {
+        if (similarity(s, t) == 1.0 || similarity(s, t) > 0.85) {
             System.out.println("--------------------es similar");
             System.out.println("Similitud entre: " + s + " y " + t + " es de: " + similarity(s, t));
             System.out.println("Año from database: " + d2);
             System.out.println("Año from monoschinos: " + d);
-           
+
             return true;
         } else {
             if (similarity(s, t) > 0.350 && d.equalsIgnoreCase(d2)) {
@@ -105,12 +115,6 @@ public class GetSimilarity {
 
             }
         }
-
-
-
-         */
         return false;
-
-
     }
 }

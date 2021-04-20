@@ -35,7 +35,21 @@ public class GetLinks {
     private String first_server, details_url, final_link;
     private ArrayList<String> other_servers;
 
-    public void getLinks(String variable_url, String title, Context context, int mode) {
+    public void getLinks(String variable_url, String title, Context context, int modes) {
+
+
+        int mode;
+
+        if (variable_url.contains("/anime/")){
+
+            if (modes == MODE_EPISODE) {
+                NotificationsBuilder notificationsBuilder = new NotificationsBuilder();
+                notificationsBuilder.createToast("Video no encontrado, probablemente se encuentre en su información. Redirigiendo...", Toast.LENGTH_SHORT);
+            }
+            mode = 2;
+        } else {
+            mode = modes;
+        }
 
         if (mode == 2) // From Season or Explore
         {

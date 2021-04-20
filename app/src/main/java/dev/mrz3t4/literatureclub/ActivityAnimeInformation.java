@@ -122,7 +122,7 @@ public class ActivityAnimeInformation extends AppCompatActivity {
     private String URL_MAL;
 
     private int bingoCount = 0;
-    private int nothingCount = 0;
+    private int nothingCount = 1;
 
     private FloatingActionButton fab;
     private AppBarLayout appBarLayout;
@@ -145,9 +145,11 @@ public class ActivityAnimeInformation extends AppCompatActivity {
         }
 
         if (TITULO.contains("Español")){
-            TITULO_ORIGINAL =
+            String substring =
                 TITULO.replace("Español", "")
                         .replace("Latino","");
+
+            TITULO_ORIGINAL = substring.substring(0, substring.length() -2);
 
         } else {
             TITULO_ORIGINAL = TITULO;
@@ -462,17 +464,9 @@ public class ActivityAnimeInformation extends AppCompatActivity {
                     }
                     Collections.sort(accuracyArrayList, Collections.reverseOrder());
 
-                    String title_from_anime;
+                    String title_from_anime = titulo;
 
-                    if (titulo.contains("Español") || titulo.contains("Latino") ){
-                        title_from_anime = titulo
-                                .replace("Español", "")
-                                . replace("Latino", "");
-                    } else if (titulo.contains("Castellano")){
-                        title_from_anime = titulo.replace("Castellano", "");
-                    } else {
-                        title_from_anime = titulo;
-                    }
+                    System.out.println(title_from_anime.length()+"|||||"+titulo.length());
 
                     for (int i = 0; i < accuracyArrayList.size(); i++){
                         System.out.println(accuracyArrayList.get(i));
@@ -481,57 +475,80 @@ public class ActivityAnimeInformation extends AppCompatActivity {
                         String start_date = malIDList.get(i).getStartDate()
                                 .substring(0,10)
                                 .replace("-", "/");
+                        int id = malIDList.get(i).getMalId();
+                        int episodes = malIDList.get(i).getEpisodes();
+                        double score = malIDList.get(i).getScore();
 
                         if (getSimilarity.itsSame(title_from_anime, title) && bingoCount == 0){
                             System.out.println("It´s Same: " + title);
-
-                            if (getSimilarity.isDateSimilar(sdate, start_date)){
-                                System.out.println("It´s Same: " + start_date);
-
-                                if (getSimilarity.startWithSameWord(title_from_anime, title)){
-                                    bingo();
-                                } else {
-                                    nothing();
-                                    System.out.println("Nop... no starts with");
-                                }
-                            } else {
-                                nothing();
-                                System.out.println("Nop... not similar date ");
-                            }
-
+                            bingo();
+                            TITULO = title;
+                            SCORE = String.valueOf(score);
+                            ID = String.valueOf(id);
+                            RATED = malIDList.get(i).getRated();
+                            EPISODES = String.valueOf(episodes);
+                            URL_MAL = malIDList.get(i).getUrl();
                         } else if (getSimilarity.isMostSmilar(title_from_anime, title) && bingoCount == 0){
                             System.out.println("Most Similar: " + title);
                             if (getSimilarity.isDateSimilar(sdate, start_date)){
                                 System.out.println("Is Same: " + start_date);
                                 if (getSimilarity.startWithSameWord(title_from_anime, title)){
                                     bingo();
+                                    TITULO = title;
+                                    SCORE = String.valueOf(score);
+                                    ID = String.valueOf(id);
+                                    RATED = malIDList.get(i).getRated();
+                                    EPISODES = String.valueOf(episodes);
+                                    URL_MAL = malIDList.get(i).getUrl();
                                 } else {
                                     nothing();
                                     System.out.println("Nop... no starts with");
                                 }
                             } else {
+                                if (getSimilarity.endWithSameWord(title_from_anime, title)){
+                                    bingo();
+                                    TITULO = title;
+                                    SCORE = String.valueOf(score);
+                                    ID = String.valueOf(id);
+                                    RATED = malIDList.get(i).getRated();
+                                    EPISODES = String.valueOf(episodes);
+                                    URL_MAL = malIDList.get(i).getUrl();
+                                } else {
                                 nothing();
                                 System.out.println("Nop... not similar date ");
+                                }
                             }
                         } else if (getSimilarity.isProbablySimilar(title_from_anime, title) && bingoCount == 0){
                             System.out.println("Probably Similar: " + title);
                             if (getSimilarity.isDateSimilar(sdate, start_date)){
                                 System.out.println("Is Same: " + start_date);
                                 if (getSimilarity.startWithSameWord(title_from_anime, title)){
+                                    TITULO = title;
+                                    SCORE = String.valueOf(score);
+                                    ID = String.valueOf(id);
+                                    RATED = malIDList.get(i).getRated();
+                                    EPISODES = String.valueOf(episodes);
+                                    URL_MAL = malIDList.get(i).getUrl();
                                     bingo();
                                 } else {
                                     nothing();
                                     System.out.println("Nop... no starts with");
                                 }
                             } else {
-                                nothing();
-                                System.out.println("Nop... not similar date ");
+                                if (getSimilarity.endWithSameWord(title_from_anime, title)){
+                                    bingo();
+                                    TITULO = title;
+                                    SCORE = String.valueOf(score);
+                                    ID = String.valueOf(id);
+                                    RATED = malIDList.get(i).getRated();
+                                    EPISODES = String.valueOf(episodes);
+                                    URL_MAL = malIDList.get(i).getUrl();
+                                } else {
+                                    nothing();
+                                    System.out.println("Nop... not similar date ");
+                                }
                             }
 
-                        } else if (nothingCount == accuracyArrayList.size()){
-                            System.out.println("Nop... Nothing, will use the first...");
-                            System.out.println(malIDList.get(0).getTitle());
-                            bingo();
                         }
 
                         else {
@@ -540,19 +557,20 @@ public class ActivityAnimeInformation extends AppCompatActivity {
                         }
 
 
+                        intent.putExtra("fecha", SCORE);
+
+                        retrofitIsReady();
 
                     }
 
-
-
-  /*                  GetAnime getAnime = new GetAnime(ActivityAnimeInformation.this, null, null);
+                    GetAnime getAnime = new GetAnime(ActivityAnimeInformation.this, null, null);
                     getAnime.getThemes(TITULO, ID, sdate);
 
                     intent.putExtra("ID", ID);
                     intent.putExtra("RATED", RATED);
                     intent.putExtra("EPISODES", EPISODES);
                     intent.putExtra("MAL", URL_MAL);
-*/
+
 
                 }
 
