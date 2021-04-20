@@ -53,6 +53,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EventListener;
 import java.util.List;
 
@@ -119,6 +120,9 @@ public class ActivityAnimeInformation extends AppCompatActivity {
     private String TITULO_ORIGINAL;
     private String COVER;
     private String URL_MAL;
+
+    private int bingoCount = 0;
+    private int nothingCount = 0;
 
     private FloatingActionButton fab;
     private AppBarLayout appBarLayout;
@@ -392,6 +396,7 @@ public class ActivityAnimeInformation extends AppCompatActivity {
 
     private void getMAL(String titulo){
 
+        GetSimilarity getSimilarity = new GetSimilarity();
 
         String JIKANURL = "https://api.jikan.moe/v3/";
 
@@ -420,6 +425,8 @@ public class ActivityAnimeInformation extends AppCompatActivity {
 
                     List<ResultID> malIDList = response.body().getResults();
 
+                    ArrayList<Double> accuracyArrayList = new ArrayList<>();
+
                     for (ResultID result : malIDList){
 
                         int id = result.getMalId();
@@ -427,9 +434,15 @@ public class ActivityAnimeInformation extends AppCompatActivity {
                         double score = result.getScore();
                         String title_anime = result.getTitle();
 
-                        System.out.println(title_anime);
-                        String start_date = result.getStartDate().substring(0,10).replace("-", "/");
-                        GetSimilarity getSimilarity = new GetSimilarity();
+                        double similarity = getSimilarity.getSimilarityBetweenWords(titulo,title_anime);
+
+                        System.out.println("Similarity is: " + similarity + " between: " + title_anime + " and " + titulo);
+
+                        accuracyArrayList.add(similarity);
+
+              /*          System.out.println(title_anime);
+
+
                         if (getSimilarity.isSimilar(titulo, title_anime, sdate, start_date)){
                             System.out.println("Es similar_"+title_anime);
                             TITULO = title_anime;
@@ -445,17 +458,101 @@ public class ActivityAnimeInformation extends AppCompatActivity {
                         intent.putExtra("fecha", SCORE);
 
                         retrofitIsReady();
+*/
+                    }
+                    Collections.sort(accuracyArrayList, Collections.reverseOrder());
+
+                    String title_from_anime;
+
+                    if (titulo.contains("Español") || titulo.contains("Latino") ){
+                        title_from_anime = titulo
+                                .replace("Español", "")
+                                . replace("Latino", "");
+                    } else if (titulo.contains("Castellano")){
+                        title_from_anime = titulo.replace("Castellano", "");
+                    } else {
+                        title_from_anime = titulo;
+                    }
+
+                    for (int i = 0; i < accuracyArrayList.size(); i++){
+                        System.out.println(accuracyArrayList.get(i));
+
+                        String title = malIDList.get(i).getTitle();
+                        String start_date = malIDList.get(i).getStartDate()
+                                .substring(0,10)
+                                .replace("-", "/");
+
+                        if (getSimilarity.itsSame(title_from_anime, title) && bingoCount == 0){
+                            System.out.println("It´s Same: " + title);
+
+                            if (getSimilarity.isDateSimilar(sdate, start_date)){
+                                System.out.println("It´s Same: " + start_date);
+
+                                if (getSimilarity.startWithSameWord(title_from_anime, title)){
+                                    bingo();
+                                } else {
+                                    nothing();
+                                    System.out.println("Nop... no starts with");
+                                }
+                            } else {
+                                nothing();
+                                System.out.println("Nop... not similar date ");
+                            }
+
+                        } else if (getSimilarity.isMostSmilar(title_from_anime, title) && bingoCount == 0){
+                            System.out.println("Most Similar: " + title);
+                            if (getSimilarity.isDateSimilar(sdate, start_date)){
+                                System.out.println("Is Same: " + start_date);
+                                if (getSimilarity.startWithSameWord(title_from_anime, title)){
+                                    bingo();
+                                } else {
+                                    nothing();
+                                    System.out.println("Nop... no starts with");
+                                }
+                            } else {
+                                nothing();
+                                System.out.println("Nop... not similar date ");
+                            }
+                        } else if (getSimilarity.isProbablySimilar(title_from_anime, title) && bingoCount == 0){
+                            System.out.println("Probably Similar: " + title);
+                            if (getSimilarity.isDateSimilar(sdate, start_date)){
+                                System.out.println("Is Same: " + start_date);
+                                if (getSimilarity.startWithSameWord(title_from_anime, title)){
+                                    bingo();
+                                } else {
+                                    nothing();
+                                    System.out.println("Nop... no starts with");
+                                }
+                            } else {
+                                nothing();
+                                System.out.println("Nop... not similar date ");
+                            }
+
+                        } else if (nothingCount == accuracyArrayList.size()){
+                            System.out.println("Nop... Nothing, will use the first...");
+                            System.out.println(malIDList.get(0).getTitle());
+                            bingo();
+                        }
+
+                        else {
+                            System.out.println("Nop... Nothing");
+
+                        }
+
+
 
                     }
 
-                    GetAnime getAnime = new GetAnime(ActivityAnimeInformation.this, null, null);
+
+
+  /*                  GetAnime getAnime = new GetAnime(ActivityAnimeInformation.this, null, null);
                     getAnime.getThemes(TITULO, ID, sdate);
 
                     intent.putExtra("ID", ID);
                     intent.putExtra("RATED", RATED);
                     intent.putExtra("EPISODES", EPISODES);
                     intent.putExtra("MAL", URL_MAL);
-
+*/
 
                 }
 
@@ -464,6 +561,16 @@ public class ActivityAnimeInformation extends AppCompatActivity {
             public void onFailure(Call<MalID> call, Throwable t) { }
         });
 
+    }
+
+    private void bingo(){
+        System.out.println("BINGO! FOUND IT");
+        bingoCount++;
+    }
+
+    private void nothing(){
+        System.out.println("Nothing...XD: " + nothingCount);
+        nothingCount++;
     }
 
 
