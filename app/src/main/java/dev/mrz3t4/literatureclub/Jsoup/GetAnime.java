@@ -60,7 +60,7 @@ public class GetAnime {
     private final RecyclerView recyclerView;
     private final ProgressBar progressBar;
 
-    private String final_url, final_title;
+    private String final_url, final_title, doc;
 
     private boolean isSearchable;
 
@@ -306,9 +306,9 @@ public class GetAnime {
 
             try {
 
-                Document document = Jsoup.connect(url).userAgent("Mozilla").get();
+                Document document = Jsoup.connect(url).userAgent("Mozilla").maxBodySize(0).get();
 
-                String doc = document.text();
+                doc = document.text();
 
                 String str = doc.substring(doc.indexOf(test));
                 String str2 = str.substring(0, str.indexOf("#"));
@@ -316,63 +316,11 @@ public class GetAnime {
 
                 GetLinks getLinks = new GetLinks();
 
+
                 ArrayList<String> arraylist = getLinks.extractLinks(str2, null, 1);
                 ArrayList<String> titlesArrayList = getLinks.extractNamesFromTheme(str2);
 
-
-                for (int i = 0; i < titlesArrayList.size(); i++){
-
-                    Theme theme = new Theme();
-
-                    String url_theme = arraylist.get(i);
-                    String title_theme = titlesArrayList.get(i);
-
-                    String version = url_theme.substring(url_theme.length() -7).replace(".webm", "");
-                    String if_version = url_theme.substring(url_theme.length() -6).replace(".webm", "");
-
-
-                    theme.setTitle(title_theme);
-                    theme.setUrl(url_theme);
-                        //System.out.println(title_theme + " ===> "+ url_theme);
-
-                    String type_theme;
-
-                    if (url_theme.contains("OP")){
-                        if (url_theme.contains("OP1.webm")){
-                            type_theme = "Opening";
-                        } else {
-                            if (version.contains("v")){
-                                type_theme = "Opening v" + if_version;
-
-                            } else {
-                                String num = version.replaceAll("[a-zA-Z]", "");
-                                type_theme = "Opening " + num;
-                            }
-
-                            System.out.println(if_version);
-                        }
-                    } else {
-
-                        if (url_theme.contains("ED1.webm")){
-                            type_theme = "Ending";
-                        } else {
-
-                            if (version.contains("v")){
-                                type_theme = "Ending v" + if_version;
-
-                            }
-                            else {
-                                String num = version.replaceAll("[a-zA-Z]", "");
-                                type_theme = "Ending " + num;
-                            }
-
-                        }
-                    }
-                    theme.setType(type_theme);
-
-                    openingsEndingsArrayList.add(theme);
-
-                }
+                addOpendings(arraylist, titlesArrayList);
 
             } catch (IOException e) { e.printStackTrace(); }
 
@@ -386,6 +334,68 @@ public class GetAnime {
 
         }).start();
 
+
+    }
+
+    private void addOpendings(ArrayList<String> arraylist, ArrayList<String> titlesArrayList) {
+
+        for (int i = 0; i < titlesArrayList.size(); i++){
+
+            Theme theme = new Theme();
+
+            System.out.println(i + " WTFFF?? size " + titlesArrayList.size()) ;
+            System.out.println(titlesArrayList.get(i) + " WTFFF?? size " + arraylist.get(i)) ;
+
+
+            String title_theme = titlesArrayList.get(i);
+            String url_theme = arraylist.get(i);
+
+            String version = url_theme.substring(url_theme.length() -7).replace(".webm", "");
+            String if_version = url_theme.substring(url_theme.length() -6).replace(".webm", "");
+
+
+            theme.setTitle(title_theme);
+            System.out.println(title_theme + " ===> "+ url_theme);
+
+            String type_theme;
+
+            if (url_theme.contains("OP")){
+                theme.setUrl(url_theme);
+                if (url_theme.contains("OP1.webm")){
+                    type_theme = "Opening";
+                } else {
+                    if (version.contains("v")){
+                        type_theme = "Opening v" + if_version;
+
+                    } else {
+                        String num = version.replaceAll("[a-zA-Z]", "");
+                        type_theme = "Opening " + num;
+                    }
+
+                    System.out.println(if_version);
+                }
+            } else {
+                theme.setUrl(url_theme);
+                if (url_theme.contains("ED1.webm")){
+                    type_theme = "Ending";
+                } else {
+
+                    if (version.contains("v")){
+                        type_theme = "Ending v" + if_version;
+
+                    }
+                    else {
+                        String num = version.replaceAll("[a-zA-Z]", "");
+                        type_theme = "Ending " + num;
+                    }
+
+                }
+            }
+            theme.setType(type_theme);
+
+            openingsEndingsArrayList.add(theme);
+
+        }
 
     }
 

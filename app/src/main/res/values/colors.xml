@@ -4,10 +4,9 @@
     <color name="white">#FFFFFFFF</color>
     <color name="dark_gray">#212121</color>
 
-    // CUSTOM
 
-    <color name="orange_400">#ff7043</color>
     <color name="orange_700">#e64a19</color>
+    <color name="orange_400">#ff7043</color>
 
     <color name="white_gray">#CCE6E6E6</color>
     <color name="transparent_gray">#4D404040</color>

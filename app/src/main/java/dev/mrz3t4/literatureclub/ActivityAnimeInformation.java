@@ -247,7 +247,6 @@ public class ActivityAnimeInformation extends AppCompatActivity {
 
     }
 
-
     private void AppBar(){
 
         appBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
@@ -442,25 +441,8 @@ public class ActivityAnimeInformation extends AppCompatActivity {
 
                         accuracyArrayList.add(similarity);
 
-              /*          System.out.println(title_anime);
-
-
-                        if (getSimilarity.isSimilar(titulo, title_anime, sdate, start_date)){
-                            System.out.println("Es similar_"+title_anime);
-                            TITULO = title_anime;
-                            SCORE = String.valueOf(score);
-                            ID = String.valueOf(id);
-                            RATED = result.getRated();
-                            EPISODES = String.valueOf(episodes);
-                            URL_MAL = result.getUrl();
-                        }
-
-
-
                         intent.putExtra("fecha", SCORE);
 
-                        retrofitIsReady();
-*/
                     }
                     Collections.sort(accuracyArrayList, Collections.reverseOrder());
 
@@ -471,10 +453,13 @@ public class ActivityAnimeInformation extends AppCompatActivity {
                     for (int i = 0; i < accuracyArrayList.size(); i++){
                         System.out.println(accuracyArrayList.get(i));
 
+                        String start_date = null;
                         String title = malIDList.get(i).getTitle();
-                        String start_date = malIDList.get(i).getStartDate()
+                        if (malIDList.get(i).getStartDate() != null){
+                        start_date = malIDList.get(i).getStartDate()
                                 .substring(0,10)
                                 .replace("-", "/");
+                        }
                         int id = malIDList.get(i).getMalId();
                         int episodes = malIDList.get(i).getEpisodes();
                         double score = malIDList.get(i).getScore();
@@ -490,8 +475,37 @@ public class ActivityAnimeInformation extends AppCompatActivity {
                             URL_MAL = malIDList.get(i).getUrl();
                         } else if (getSimilarity.isMostSmilar(title_from_anime, title) && bingoCount == 0){
                             System.out.println("Most Similar: " + title);
-                            if (getSimilarity.isDateSimilar(sdate, start_date)){
-                                System.out.println("Is Same: " + start_date);
+
+                            if (start_date!=null){
+                                if (getSimilarity.isDateSimilar(sdate, start_date)){
+                                    System.out.println("Is Same: " + start_date);
+                                    if (getSimilarity.startWithSameWord(title_from_anime, title)){
+                                        bingo();
+                                        TITULO = title;
+                                        SCORE = String.valueOf(score);
+                                        ID = String.valueOf(id);
+                                        RATED = malIDList.get(i).getRated();
+                                        EPISODES = String.valueOf(episodes);
+                                        URL_MAL = malIDList.get(i).getUrl();
+                                    } else {
+                                        nothing();
+                                        System.out.println("Nop... no starts with");
+                                    }
+                                } else {
+                                    if (getSimilarity.endWithSameWord(title_from_anime, title)){
+                                        bingo();
+                                        TITULO = title;
+                                        SCORE = String.valueOf(score);
+                                        ID = String.valueOf(id);
+                                        RATED = malIDList.get(i).getRated();
+                                        EPISODES = String.valueOf(episodes);
+                                        URL_MAL = malIDList.get(i).getUrl();
+                                    } else {
+                                        nothing();
+                                        System.out.println("Nop... not similar date ");
+                                    }
+                                }
+                            } else {
                                 if (getSimilarity.startWithSameWord(title_from_anime, title)){
                                     bingo();
                                     TITULO = title;
@@ -503,49 +517,53 @@ public class ActivityAnimeInformation extends AppCompatActivity {
                                 } else {
                                     nothing();
                                     System.out.println("Nop... no starts with");
-                                }
-                            } else {
-                                if (getSimilarity.endWithSameWord(title_from_anime, title)){
-                                    bingo();
-                                    TITULO = title;
-                                    SCORE = String.valueOf(score);
-                                    ID = String.valueOf(id);
-                                    RATED = malIDList.get(i).getRated();
-                                    EPISODES = String.valueOf(episodes);
-                                    URL_MAL = malIDList.get(i).getUrl();
-                                } else {
-                                nothing();
-                                System.out.println("Nop... not similar date ");
                                 }
                             }
+
+
                         } else if (getSimilarity.isProbablySimilar(title_from_anime, title) && bingoCount == 0){
                             System.out.println("Probably Similar: " + title);
-                            if (getSimilarity.isDateSimilar(sdate, start_date)){
-                                System.out.println("Is Same: " + start_date);
+                            if (start_date!=null){
+                                if (getSimilarity.isDateSimilar(sdate, start_date)){
+                                    System.out.println("Is Same: " + start_date);
+                                    if (getSimilarity.startWithSameWord(title_from_anime, title)){
+                                        bingo();
+                                        TITULO = title;
+                                        SCORE = String.valueOf(score);
+                                        ID = String.valueOf(id);
+                                        RATED = malIDList.get(i).getRated();
+                                        EPISODES = String.valueOf(episodes);
+                                        URL_MAL = malIDList.get(i).getUrl();
+                                    } else {
+                                        nothing();
+                                        System.out.println("Nop... no starts with");
+                                    }
+                                } else {
+                                    if (getSimilarity.endWithSameWord(title_from_anime, title)){
+                                        bingo();
+                                        TITULO = title;
+                                        SCORE = String.valueOf(score);
+                                        ID = String.valueOf(id);
+                                        RATED = malIDList.get(i).getRated();
+                                        EPISODES = String.valueOf(episodes);
+                                        URL_MAL = malIDList.get(i).getUrl();
+                                    } else {
+                                        nothing();
+                                        System.out.println("Nop... not similar date ");
+                                    }
+                                }
+                            } else {
                                 if (getSimilarity.startWithSameWord(title_from_anime, title)){
+                                    bingo();
                                     TITULO = title;
                                     SCORE = String.valueOf(score);
                                     ID = String.valueOf(id);
                                     RATED = malIDList.get(i).getRated();
                                     EPISODES = String.valueOf(episodes);
                                     URL_MAL = malIDList.get(i).getUrl();
-                                    bingo();
                                 } else {
                                     nothing();
                                     System.out.println("Nop... no starts with");
-                                }
-                            } else {
-                                if (getSimilarity.endWithSameWord(title_from_anime, title)){
-                                    bingo();
-                                    TITULO = title;
-                                    SCORE = String.valueOf(score);
-                                    ID = String.valueOf(id);
-                                    RATED = malIDList.get(i).getRated();
-                                    EPISODES = String.valueOf(episodes);
-                                    URL_MAL = malIDList.get(i).getUrl();
-                                } else {
-                                    nothing();
-                                    System.out.println("Nop... not similar date ");
                                 }
                             }
 
@@ -558,10 +576,9 @@ public class ActivityAnimeInformation extends AppCompatActivity {
 
 
                         intent.putExtra("fecha", SCORE);
-
-                        retrofitIsReady();
-
                     }
+
+
 
                     GetAnime getAnime = new GetAnime(ActivityAnimeInformation.this, null, null);
                     getAnime.getThemes(TITULO, ID, sdate);
@@ -570,6 +587,8 @@ public class ActivityAnimeInformation extends AppCompatActivity {
                     intent.putExtra("RATED", RATED);
                     intent.putExtra("EPISODES", EPISODES);
                     intent.putExtra("MAL", URL_MAL);
+
+                    retrofitIsReady();
 
 
                 }

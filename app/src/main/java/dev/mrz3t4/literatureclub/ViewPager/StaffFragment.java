@@ -61,6 +61,7 @@ public class StaffFragment extends Fragment {
 
     private View view;
     private int count = 0;
+    private boolean bingo = false;
 
     @Nullable
     @Override
@@ -80,15 +81,21 @@ public class StaffFragment extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
 
+
             String id = intent.getStringExtra("ID");
 
-            getStaff(id);
-
+            if (!bingo) {
+                bingo = true;
+                getStaff(id);
+            }
         }
     };
 
 
+
     private void getStaff(String id){
+
+        System.out.println("BINGOOOO is " + bingo);
 
             ANIME_URL = BASE_URL.concat("anime/").concat(id).concat("/characters_staff");
 
@@ -109,62 +116,57 @@ public class StaffFragment extends Fragment {
                         System.out.println("RESPONSE: " + response.code());
 
 
-                        if (response.isSuccessful()) {
-                            progressBar.setVisibility(GONE);
+                        if (response.code() == 200) {
+
+                                progressBar.setVisibility(GONE);
+
+                                List<Character> charactersList = response.body().getCharacters();
+
+                                ArrayList<Seiyuu> seiyuuArrayList = new ArrayList<>();
+
+                                for (Character c : charactersList) {
+
+                                    Seiyuu seiyuu = new Seiyuu();
+
+                                    List<VoiceActor> voiceActors = c.getVoiceActors();
+
+                                    String voice, imagen, url;
+
+                                    if (voiceActors.size() == 0) {
+                                        voice = null;
+                                        imagen = null;
+
+                                        seiyuu.setSeiyuu(voice);
+                                        seiyuu.setSeiyuuImagen(imagen);
+                                        seiyuuArrayList.add(seiyuu);
 
 
-                        List<Character> charactersList = response.body().getCharacters();
+                                    } else {
 
-                        ArrayList<Seiyuu> seiyuuArrayList = new ArrayList<>();
+                                        voice = voiceActors.get(0).getName();
+                                        imagen = voiceActors.get(0).getImageUrl();
+                                        url = voiceActors.get(0).getUrl();
 
-                        for (Character c : charactersList) {
+                                        seiyuu.setSeiyuu(voice);
+                                        seiyuu.setSeiyuuImagen(imagen);
+                                        seiyuu.setSeiyuuUrl(url);
+                                        seiyuuArrayList.add(seiyuu);
 
-                            Seiyuu seiyuu = new Seiyuu();
+                                    }
 
-                            List<VoiceActor> voiceActors = c.getVoiceActors();
+                                    bingo = true;
+                                    call.cancel();
 
-                            String voice, imagen, url;
+                                }
 
-                            if (voiceActors.size() == 0) {
-                                voice = null;
-                                imagen = null;
-
-                                seiyuu.setSeiyuu(voice);
-                                seiyuu.setSeiyuuImagen(imagen);
-                                seiyuuArrayList.add(seiyuu);
-
+                                StaffAdapter staffAdapter = new StaffAdapter((ArrayList<Character>) charactersList, seiyuuArrayList, getActivity());
+                                recyclerView.setAdapter(staffAdapter);
+                                recyclerView.animate().alpha(1f).setDuration(300).start();
 
                             } else {
-
-                                voice = voiceActors.get(0).getName();
-                                imagen = voiceActors.get(0).getImageUrl();
-                                url = voiceActors.get(0).getUrl();
-
-                                seiyuu.setSeiyuu(voice);
-                                seiyuu.setSeiyuuImagen(imagen);
-                                seiyuu.setSeiyuuUrl(url);
-                                seiyuuArrayList.add(seiyuu);
-
-                            }
-                        }
-
-                        StaffAdapter staffAdapter = new StaffAdapter((ArrayList<Character>) charactersList, seiyuuArrayList, getActivity());
-                        recyclerView.setAdapter(staffAdapter);
-                        recyclerView.animate().alpha(1f).setDuration(300).start();
-
-                        } else {
-                            if (count > 10) {
                                 call.cancel();
-                                System.out.println("Cancelando...");
-                            } else {
-                                count++;
-                                getStaff(id);
-                                System.out.println("Reiniciando...");
                             }
                         }
-
-
-                    }
 
                     @Override
                     public void onFailure(Call<Personas> call, Throwable t) {
