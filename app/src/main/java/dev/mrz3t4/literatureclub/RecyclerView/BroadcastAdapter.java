@@ -15,6 +15,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -73,7 +74,7 @@ public class BroadcastAdapter extends RecyclerView.Adapter<BroadcastAdapter.View
             titleTextView.setText(broadcast.getTitle());
             episodeTextView.setText(broadcast.getEpisode());
             typeTextView.setText(broadcast.getType());
-            Glide.with(itemView).load(broadcast.getImg()).into(coverImageView);
+            Picasso.get().load(broadcast.getImg()).into(coverImageView);
 
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override

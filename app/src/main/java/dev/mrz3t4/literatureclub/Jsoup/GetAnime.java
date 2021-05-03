@@ -14,6 +14,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.json.JSONArray;
@@ -39,6 +41,7 @@ import dev.mrz3t4.literatureclub.Utils.GenericContext;
 import dev.mrz3t4.literatureclub.Utils.JsonTools;
 import dev.mrz3t4.literatureclub.Utils.NotificationsBuilder;
 import dev.mrz3t4.literatureclub.Utils.Sort;
+import dev.mrz3t4.literatureclub.Utils.WrapGridLayoutManager;
 
 import static dev.mrz3t4.literatureclub.Utils.Constants.BASE_URL;
 import static dev.mrz3t4.literatureclub.Utils.Constants.EMISION_URL;
@@ -62,8 +65,6 @@ public class GetAnime {
 
     private String final_url, final_title, doc;
 
-    private boolean isSearchable;
-
     private final NotificationsBuilder notificationsBuilder = new NotificationsBuilder();
     private final JsonTools jsonTools = new JsonTools();
     private final Sort sort = new Sort();
@@ -80,10 +81,13 @@ public class GetAnime {
     @SuppressLint("InlinedApi")
     public void getDirectoryFromWeb(int mode) {
 
-        if (isDirectory(mode)) { VARIABLE_URL = BASE_URL; }
+        if (isDirectory(mode)) {
+            VARIABLE_URL = BASE_URL;
+        }
         else { VARIABLE_URL = EMISION_URL; }
 
-        if (PAGE_NUMBER!=1) { VARIABLE_URL = VARIABLE_URL + PAGE_URI + PAGE_NUMBER; }
+        if (PAGE_NUMBER!=1)
+            VARIABLE_URL = VARIABLE_URL + PAGE_URI + PAGE_NUMBER;
 
         if (isDirectory(mode) ){
 
@@ -146,7 +150,6 @@ public class GetAnime {
                         jsonTools.createJSONFileDirectory(animeArrayList);
                         notificationsBuilder.createToast("Directorio actualizado", Toast.LENGTH_SHORT);
                         notificationsBuilder.cancelNotification(1);
-
                     }
 
                     sort.getArrayListByTitle(animeArrayList);
@@ -225,9 +228,6 @@ public class GetAnime {
 
         System.out.println("anime date: " + date_from_anime);
 
-        String mal = "https://myanimelist.net/anime/" + id + "/";
-
-        System.out.println("CSMSMSMSMSMSMSMSMSMSMSM: "  + title);
         String base = "https://old.reddit.com";
         String diccionary = "/r/AnimeThemes/wiki/anime_index/";
 
@@ -256,24 +256,6 @@ public class GetAnime {
                         System.out.println(id);
                     }
 
-
-
-
-
-
-               /*     if (isSearchable) {
-                        name = e.text().replaceAll("\\(.*\\)", "");
-                        text = name.replaceFirst(".$", "");
-                    } else {
-                        text = e.text();
-                    }
-
-                    if (text.equalsIgnoreCase(title)){
-
-                        final_url = base.concat(e.attr("href"));
-                        System.out.println("TESTEOOOO: " + final_url);
-                    }
-*/
                 }
 
 
@@ -432,6 +414,7 @@ public class GetAnime {
         if (progressBar != null) { progressBar.setVisibility(View.GONE); }
 
         if (themeArrayList == null && animeArrayList != null) {
+
             recyclerView.setItemViewCacheSize(30);
             recyclerView.setDrawingCacheEnabled(true);
             recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
