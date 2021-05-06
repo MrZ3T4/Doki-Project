@@ -72,16 +72,16 @@ public class GetSimilarity {
     public boolean startWithSameWord(String word, String toCompare){
         String word1 = word.substring(0,1);
         String word2 = toCompare.substring(0,1);
-        System.out.println("word 1 is: "+word1);
-        System.out.println("word 2 is: "+word2);
+        System.out.println("word 1 startsWith: "+word1);
+        System.out.println("word 2 startsWith: "+word2);
         return word1.equalsIgnoreCase(word2);
     }
 
     public boolean endWithSameWord(String word, String toCompare){
         String word1 = word.substring(word.length() - 1);
         String word2 = toCompare.substring(toCompare.length() - 1);
-        System.out.println("word 1 is: "+word1);
-        System.out.println("word 2 is: "+word2);
+        System.out.println("word 1 endsWith: "+word1);
+        System.out.println("word 2 endsWith: "+word2);
         return word1.equalsIgnoreCase(word2);
     }
 

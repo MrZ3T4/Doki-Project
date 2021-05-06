@@ -133,7 +133,7 @@ public class GetLinks {
             } else if (servers_array.get(pos).contains("mediafire")){
                 server = "Mediafire";
             } else {
-                server = "Otro";
+                server = "Servidor";
             }
 
             name_servers.add(server);
@@ -180,7 +180,7 @@ public class GetLinks {
 
                         }
                     })
-                    .setNeutralButton("Cancelar", (dialog, which) -> dialog.dismiss())
+                    .setNeutralButton("Descargar", (dialog, which) -> dialog.dismiss())
                     .show();
 
     }
@@ -188,13 +188,33 @@ public class GetLinks {
     public ArrayList<String> extractNamesFromTheme(String text){
 
         ArrayList<String> namesArrayList = new ArrayList<>();
+        ArrayList<String> typesArrayList = new ArrayList<>();
 
+        Pattern p = Pattern.compile("([a-zA-Z0-9]*)\\s\"([^\"]*)\"");
+        Matcher m = p.matcher(text);
         Pattern pa = Pattern.compile("\"([^\"]*)\"");
         Matcher ma = pa.matcher(text);
-        while (ma.find()) {
-            namesArrayList.add(ma.group(1));
+
+        while (m.find()){
+             typesArrayList.add(m.group(1));
+            Log.d("THEMETYPE", m.group(1));
         }
-        return namesArrayList;
+
+        while (ma.find()) {
+                namesArrayList.add(ma.group(1));
+                Log.d("THEMETITLE", ma.group(1));
+        }
+
+        ArrayList<String> finalNamesArrayList = new ArrayList<>();
+
+        for (int pos = 0; pos < namesArrayList.size(); pos++){
+            String title = typesArrayList.get(pos) + " " + namesArrayList.get(pos);
+            System.out.println("FINAL NAME --> " + title );
+            finalNamesArrayList.add(title);
+        }
+
+
+        return finalNamesArrayList;
     }
 
     public ArrayList<String> extractLinks(String text, String firstServer, int mode) {
@@ -228,7 +248,14 @@ public class GetLinks {
                     if (!urlStr.contains("NC") && !urlStr.contains("1080")
                             && !urlStr.contains("Lyrics") && !urlStr.contains("BD")) {
                         String url_semifinal = urlStr.substring(1, urlStr.indexOf(")"));
-                        linksArrayList.add(url_semifinal);
+
+                        Pattern pattern = Pattern.compile("v[0-9]");
+                        Matcher matcher = pattern.matcher(url_semifinal);
+                        boolean isVersion = matcher.find();
+                        if (!isVersion) {
+                            linksArrayList.add(url_semifinal);
+                        Log.d("THEMEURL", url_semifinal +  " --> " + isVersion);
+                        }
                     }
 
                 }

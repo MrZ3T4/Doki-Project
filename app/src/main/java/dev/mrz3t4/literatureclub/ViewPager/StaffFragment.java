@@ -95,86 +95,94 @@ public class StaffFragment extends Fragment {
 
     private void getStaff(String id){
 
-        System.out.println("BINGOOOO is " + bingo);
+        System.out.println("BINGOOOO from staff is " + bingo);
 
+        try {
             ANIME_URL = BASE_URL.concat("anime/").concat(id).concat("/characters_staff");
 
             System.out.println("URL_STAFF: " + ANIME_URL);
 
-                Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl(BASE_URL)
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build();
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
 
-                InterfaceStaff interfaceStaff = retrofit.create(InterfaceStaff.class);
+            InterfaceStaff interfaceStaff = retrofit.create(InterfaceStaff.class);
 
-                interfaceStaff.getPersonas(ANIME_URL).enqueue(new Callback<Personas>() {
-                    @Override
-                    public void onResponse(Call<Personas> call, Response<Personas> response) {
-
-
-                        System.out.println("RESPONSE: " + response.code());
+            interfaceStaff.getPersonas(ANIME_URL).enqueue(new Callback<Personas>() {
+                @Override
+                public void onResponse(Call<Personas> call, Response<Personas> response) {
 
 
-                        if (response.code() == 200) {
-
-                                progressBar.setVisibility(GONE);
-
-                                List<Character> charactersList = response.body().getCharacters();
-
-                                ArrayList<Seiyuu> seiyuuArrayList = new ArrayList<>();
-
-                                for (Character c : charactersList) {
-
-                                    Seiyuu seiyuu = new Seiyuu();
-
-                                    List<VoiceActor> voiceActors = c.getVoiceActors();
-
-                                    String voice, imagen, url;
-
-                                    if (voiceActors.size() == 0) {
-                                        voice = null;
-                                        imagen = null;
-
-                                        seiyuu.setSeiyuu(voice);
-                                        seiyuu.setSeiyuuImagen(imagen);
-                                        seiyuuArrayList.add(seiyuu);
+                    System.out.println("RESPONSE: " + response.code());
 
 
-                                    } else {
+                    if (response.code() == 200) {
 
-                                        voice = voiceActors.get(0).getName();
-                                        imagen = voiceActors.get(0).getImageUrl();
-                                        url = voiceActors.get(0).getUrl();
+                        progressBar.setVisibility(GONE);
 
-                                        seiyuu.setSeiyuu(voice);
-                                        seiyuu.setSeiyuuImagen(imagen);
-                                        seiyuu.setSeiyuuUrl(url);
-                                        seiyuuArrayList.add(seiyuu);
+                        List<Character> charactersList = response.body().getCharacters();
 
-                                    }
+                        ArrayList<Seiyuu> seiyuuArrayList = new ArrayList<>();
 
-                                    bingo = true;
-                                    call.cancel();
+                        for (Character c : charactersList) {
 
-                                }
+                            Seiyuu seiyuu = new Seiyuu();
 
-                                StaffAdapter staffAdapter = new StaffAdapter((ArrayList<Character>) charactersList, seiyuuArrayList, getActivity());
-                                recyclerView.setAdapter(staffAdapter);
-                                recyclerView.animate().alpha(1f).setDuration(300).start();
+                            List<VoiceActor> voiceActors = c.getVoiceActors();
+
+                            String voice, imagen, url;
+
+                            if (voiceActors.size() == 0) {
+                                voice = null;
+                                imagen = null;
+
+                                seiyuu.setSeiyuu(voice);
+                                seiyuu.setSeiyuuImagen(imagen);
+                                seiyuuArrayList.add(seiyuu);
+
 
                             } else {
-                                call.cancel();
+
+                                voice = voiceActors.get(0).getName();
+                                imagen = voiceActors.get(0).getImageUrl();
+                                url = voiceActors.get(0).getUrl();
+
+                                seiyuu.setSeiyuu(voice);
+                                seiyuu.setSeiyuuImagen(imagen);
+                                seiyuu.setSeiyuuUrl(url);
+                                seiyuuArrayList.add(seiyuu);
+
                             }
+
+                            bingo = true;
+                            call.cancel();
+
                         }
 
-                    @Override
-                    public void onFailure(Call<Personas> call, Throwable t) {
-                        call.cancel();
-                        System.out.println("Algo salio mal");
+                        StaffAdapter staffAdapter = new StaffAdapter((ArrayList<Character>) charactersList, seiyuuArrayList, getActivity());
+                        recyclerView.setAdapter(staffAdapter);
+                        recyclerView.animate().alpha(1f).setDuration(300).start();
 
+                    } else {
+                        call.cancel();
                     }
-                });
+                }
+
+                @Override
+                public void onFailure(Call<Personas> call, Throwable t) {
+                    call.cancel();
+                    System.out.println("Algo salio mal");
+
+                }
+            });
+        } catch (Exception e){
+            progressBar.setVisibility(GONE);
+            NotificationsBuilder Builder = new NotificationsBuilder();
+            Builder.createToast("Personajes no encontrados", Toast.LENGTH_SHORT);
+        }
+
+
 
 
     }

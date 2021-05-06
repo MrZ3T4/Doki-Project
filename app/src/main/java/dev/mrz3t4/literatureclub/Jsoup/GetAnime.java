@@ -14,8 +14,6 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.json.JSONArray;
@@ -35,13 +33,11 @@ import java.util.ArrayList;
 import dev.mrz3t4.literatureclub.RecyclerView.Anime;
 import dev.mrz3t4.literatureclub.RecyclerView.AnimeAdapter;
 import dev.mrz3t4.literatureclub.RecyclerView.Theme;
-import dev.mrz3t4.literatureclub.RecyclerView.ThemeAdapter;
 import dev.mrz3t4.literatureclub.UI.GetSimilarity;
 import dev.mrz3t4.literatureclub.Utils.GenericContext;
 import dev.mrz3t4.literatureclub.Utils.JsonTools;
 import dev.mrz3t4.literatureclub.Utils.NotificationsBuilder;
 import dev.mrz3t4.literatureclub.Utils.Sort;
-import dev.mrz3t4.literatureclub.Utils.WrapGridLayoutManager;
 
 import static dev.mrz3t4.literatureclub.Utils.Constants.BASE_URL;
 import static dev.mrz3t4.literatureclub.Utils.Constants.EMISION_URL;
@@ -282,7 +278,7 @@ public class GetAnime {
     private void getVideos(String url, String title, String id) {
 
 
-        String test = "[" + title + "]";
+        String test = "[" + title;
 
         new Thread(() -> { // Background
 
@@ -302,7 +298,29 @@ public class GetAnime {
                 ArrayList<String> arraylist = getLinks.extractLinks(str2, null, 1);
                 ArrayList<String> titlesArrayList = getLinks.extractNamesFromTheme(str2);
 
-                addOpendings(arraylist, titlesArrayList);
+                ArrayList<String> finalTitlesArrayList = new ArrayList<>();
+
+                String lastText;
+
+                for (int pos = 0; pos < titlesArrayList.size(); pos++){
+
+                    if (pos == 0){
+                        lastText = "Laweaqueseaxd";
+                    } else {
+                        lastText = titlesArrayList.get(pos-1);
+                    }
+
+                    String posText = titlesArrayList.get(pos);
+                    if (!lastText.equalsIgnoreCase(posText)){
+                        finalTitlesArrayList.add(posText);
+                        Log.d("TITLE", "Current Text --> " + posText + " Last Text --> " + lastText);
+                    }
+
+
+
+                }
+
+                addOpendings(arraylist, finalTitlesArrayList);
 
             } catch (IOException e) { e.printStackTrace(); }
 
@@ -325,36 +343,27 @@ public class GetAnime {
 
             Theme theme = new Theme();
 
-            System.out.println(i + " WTFFF?? size " + titlesArrayList.size()) ;
-            System.out.println(titlesArrayList.get(i) + " WTFFF?? size " + arraylist.get(i)) ;
-
 
             String title_theme = titlesArrayList.get(i);
             String url_theme = arraylist.get(i);
 
             String version = url_theme.substring(url_theme.length() -7).replace(".webm", "");
-            String if_version = url_theme.substring(url_theme.length() -6).replace(".webm", "");
-
 
             theme.setTitle(title_theme);
             System.out.println(title_theme + " ===> "+ url_theme);
 
-            String type_theme;
+            String type_theme, num = null;
 
             if (url_theme.contains("OP")){
                 theme.setUrl(url_theme);
                 if (url_theme.contains("OP1.webm")){
-                    type_theme = "Opening";
+                    type_theme = "Opening 1";
+                    num = "1";
+                    System.out.println(type_theme);
                 } else {
-                    if (version.contains("v")){
-                        type_theme = "Opening v" + if_version;
-
-                    } else {
-                        String num = version.replaceAll("[a-zA-Z]", "");
+                       num = version.replaceAll("[a-zA-Z]", "");
                         type_theme = "Opening " + num;
-                    }
-
-                    System.out.println(if_version);
+                    System.out.println(type_theme);
                 }
             } else {
                 theme.setUrl(url_theme);
@@ -362,20 +371,32 @@ public class GetAnime {
                     type_theme = "Ending";
                 } else {
 
-                    if (version.contains("v")){
-                        type_theme = "Ending v" + if_version;
-
-                    }
-                    else {
-                        String num = version.replaceAll("[a-zA-Z]", "");
+                        num = version.replaceAll("[a-zA-Z]", "");
                         type_theme = "Ending " + num;
-                    }
+                        System.out.println(type_theme);
 
                 }
             }
-            theme.setType(type_theme);
 
-            openingsEndingsArrayList.add(theme);
+            String opending_type = titlesArrayList.get(i).substring(0,4);
+            String opending_number = opending_type.replaceAll("[a-zA-Z\\s]*", "");
+            System.out.println("OPENDING NUMBER " + opending_number);
+
+            if (!arraylist.get(i).contains(opending_number)){
+                titlesArrayList.remove(i);
+                System.out.println("filter --> " + titlesArrayList.get(i));
+                openingsEndingsArrayList.clear();
+                i = 0;
+
+            } else {
+                theme.setUrl(arraylist.get(i));
+                theme.setTitle(titlesArrayList.get(i).substring(4));
+                theme.setType(type_theme);
+                openingsEndingsArrayList.add(theme);
+                System.out.println("---OK---");
+            }
+
+
 
         }
 

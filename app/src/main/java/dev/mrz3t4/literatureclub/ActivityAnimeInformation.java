@@ -80,6 +80,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static android.view.View.GONE;
 import static dev.mrz3t4.literatureclub.Utils.Constants.broadcast;
 import static dev.mrz3t4.literatureclub.Utils.Constants.episodes;
 import static dev.mrz3t4.literatureclub.Utils.Constants.information;
@@ -419,7 +420,6 @@ public class ActivityAnimeInformation extends AppCompatActivity {
             @Override
             public void onResponse(Call<MalID> call, Response<MalID> response) {
 
-
                 if (response.isSuccessful()){
 
                     System.out.println("MAL_ID RESPONSE: " + response.code());
@@ -571,10 +571,7 @@ public class ActivityAnimeInformation extends AppCompatActivity {
 
                         else {
                             System.out.println("Nop... Nothing");
-
                         }
-
-
                         intent.putExtra("fecha", SCORE);
                     }
 

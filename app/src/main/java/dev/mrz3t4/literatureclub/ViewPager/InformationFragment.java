@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -67,8 +68,9 @@ public class InformationFragment extends Fragment {
     @BindView(R.id.mal_anime) TextView tvMAL;
     @BindView(R.id.progressbar_details) ProgressBar progressBar;
   //  @BindView(R.id.detalles_expandablelayout) ExpandableLayout expandableLayout;
-    @BindView(R.id.detalles_linearlayout) LinearLayout linearLayout;
-    @BindView(R.id.detalles_cardview)
+    @BindView(R.id.details_relative_layout)
+  RelativeLayout relativeLayout;
+    @BindView(R.id.details_cardview)
     CardView cardView;
     @BindView(R.id.show_hide_more_btn)
     MaterialButton btnShowHide;
@@ -128,42 +130,47 @@ public class InformationFragment extends Fragment {
             URL_MAL = intent.getStringExtra("MAL");
 
 
-
-            if (RATED == null) {
-            tvClasificacion.setVisibility(GONE);
-            tvClasificacionTitle.setVisibility(GONE);
+            if (mal_id == null){
+                tvSinopsis.setText(sinopsis);
+                relativeLayout.setVisibility(GONE);
+                cardView.setVisibility(GONE);
             } else {
-            tvClasificacion.setText(RATED);
+
+                if (RATED == null) {
+                    tvClasificacion.setVisibility(GONE);
+                    tvClasificacionTitle.setVisibility(GONE);
+                } else {
+                    tvClasificacion.setText(RATED);
+                }
+
+                if (EPISODES != null) {
+                    tvEpisodios.setText(EPISODES);
+                } else {
+                    tvEpisodios.setVisibility(GONE);
+                    tvEpisodiosTitle.setVisibility(GONE);
+                }
+
+
+                if (sinopsis != null && sinopsis.length() > 260) {
+                    btnShowHide.setVisibility(View.VISIBLE);
+                } else {
+                    btnShowHide.setVisibility(GONE);
+                }
+
+                tvSinopsis.setText(sinopsis);
+                tvTituloCompleto.setText(tituloCompleto);
+                tvEmitido.setText(fecha);
+                tvID.setText(mal_id);
+
+                String text = "<a href='" + URL_MAL + "'>" + tituloCompleto + "</a>";
+                tvMAL.setText(Html.fromHtml(text));
+                tvMAL.setOnClickListener(v -> {
+
+                    WebViewBuilder webViewBuilder = new WebViewBuilder();
+                    webViewBuilder.webView(URL_MAL, getActivity());
+                });
+
             }
-
-            if (EPISODES != null) {
-                tvEpisodios.setText(EPISODES);
-            } else {
-                tvEpisodios.setVisibility(GONE);
-                tvEpisodiosTitle.setVisibility(GONE);
-            }
-
-
-            if (sinopsis != null && sinopsis.length() > 260) {
-                btnShowHide.setVisibility(View.VISIBLE);
-            } else {
-                btnShowHide.setVisibility(GONE);
-            }
-
-            tvSinopsis.setText(sinopsis);
-            tvTituloCompleto.setText(tituloCompleto);
-            tvEmitido.setText(fecha);
-            tvID.setText(mal_id);
-
-            String text = "<a href='" + URL_MAL + "'>" + tituloCompleto + "</a>";
-            tvMAL.setText(Html.fromHtml(text));
-            tvMAL.setOnClickListener(v -> {
-
-                WebViewBuilder webViewBuilder = new WebViewBuilder();
-                webViewBuilder.webView(URL_MAL, getActivity());
-            });
-
-
 
             linearLayout_details.animate().alpha(1f).setDuration(300).start();
             progressBar.setVisibility(GONE);

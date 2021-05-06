@@ -21,7 +21,7 @@
 
     <string name="information">Detalles sobre el anime</string>
     <string name="download_episode">Descargar episodio (Proximamente)</string>
-    <string name="stream_episode">Iniciar streaming</string>
+    <string name="stream_episode">Iniciar Streaming - Descarga</string>
 
     <string name="broadcast">En emisión</string>
     <string name="calendar">Calendario</string>
