@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import dev.mrz3t4.literatureclub.Anime.AnimeWebScrap;
-import dev.mrz3t4.literatureclub.Jsoup.GetAnime;
 import dev.mrz3t4.literatureclub.R;
 import dev.mrz3t4.literatureclub.Utils.NotificationsBuilder;
 import dev.mrz3t4.literatureclub.Utils.PicassoOnScrollListener;

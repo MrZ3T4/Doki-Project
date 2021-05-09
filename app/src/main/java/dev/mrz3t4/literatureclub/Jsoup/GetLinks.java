@@ -23,6 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import dev.mrz3t4.literatureclub.R;
+import dev.mrz3t4.literatureclub.Utils.Format;
 import dev.mrz3t4.literatureclub.Utils.GenericContext;
 import dev.mrz3t4.literatureclub.Utils.NotificationsBuilder;
 import dev.mrz3t4.literatureclub.Utils.WebViewBuilder;
@@ -108,34 +109,11 @@ public class GetLinks {
 
         ArrayList<String> name_servers = new ArrayList<>();
 
-        String server;
-
         System.out.println(servers_array.size());
 
         for (int pos = 0; pos < servers_array.size(); pos++){
             System.out.println("pos: " + pos + " server: " + servers_array.get(pos));
-            if (servers_array.get(pos).contains("fembed")){
-                server = "Fembed (Nativo)";
-            } else if (servers_array.get(pos).contains("ok.ru")){
-                server = "Okru (Nativo)";
-            } else if (servers_array.get(pos).contains("sendvid")){
-                server = "Sendvid (Nativo)";
-            } else if (servers_array.get(pos).contains("mp4upload")){
-                server = "Mp4Upload";
-            } else if (servers_array.get(pos).contains("uqload")){
-                server = "Mp4Upload";
-            } else if (servers_array.get(pos).contains("clip")){
-                server = "ClipWatching";
-            } else if (servers_array.get(pos).contains("streamtape")){
-                server = "Streamtape";
-            } else if (servers_array.get(pos).contains("videobin")){
-                server = "Videobin";
-            } else if (servers_array.get(pos).contains("mediafire")){
-                server = "Mediafire";
-            } else {
-                server = "Servidor";
-            }
-
+            String server = Format.servers(servers_array, pos);
             name_servers.add(server);
         }
 
@@ -185,36 +163,33 @@ public class GetLinks {
 
     }
 
-    public ArrayList<String> extractNamesFromTheme(String text){
-
-        ArrayList<String> namesArrayList = new ArrayList<>();
+    public ArrayList<String> extractTypesFromTheme(String text){
         ArrayList<String> typesArrayList = new ArrayList<>();
 
         Pattern p = Pattern.compile("([a-zA-Z0-9]*)\\s\"([^\"]*)\"");
         Matcher m = p.matcher(text);
+
+        while (m.find()){
+            typesArrayList.add(m.group(1));
+            Log.d("TYPE", m.group(1));
+        }
+
+        return typesArrayList;
+
+    }
+
+    public ArrayList<String> extractNamesFromTheme(String text){
+
+        ArrayList<String> namesArrayList = new ArrayList<>();
         Pattern pa = Pattern.compile("\"([^\"]*)\"");
         Matcher ma = pa.matcher(text);
 
-        while (m.find()){
-             typesArrayList.add(m.group(1));
-            Log.d("THEMETYPE", m.group(1));
-        }
-
         while (ma.find()) {
                 namesArrayList.add(ma.group(1));
-                Log.d("THEMETITLE", ma.group(1));
+                Log.d("TITLE", ma.group(1));
         }
 
-        ArrayList<String> finalNamesArrayList = new ArrayList<>();
-
-        for (int pos = 0; pos < namesArrayList.size(); pos++){
-            String title = typesArrayList.get(pos) + " " + namesArrayList.get(pos);
-            System.out.println("FINAL NAME --> " + title );
-            finalNamesArrayList.add(title);
-        }
-
-
-        return finalNamesArrayList;
+        return namesArrayList;
     }
 
     public ArrayList<String> extractLinks(String text, String firstServer, int mode) {

@@ -66,7 +66,8 @@ public class GetSimilarity {
     }
 
     public boolean isDateSimilar(String date, String toCompare){
-        return similarity(date, toCompare) > 0.8;
+        System.out.println("Porcentaje similar date --> " + similarity(date, toCompare));
+        return similarity(date, toCompare) >= 0.8;
     }
 
     public boolean startWithSameWord(String word, String toCompare){
@@ -78,8 +79,8 @@ public class GetSimilarity {
     }
 
     public boolean endWithSameWord(String word, String toCompare){
-        String word1 = word.substring(word.length() - 1);
-        String word2 = toCompare.substring(toCompare.length() - 1);
+        String word1 = word.substring(word.length() - 2);
+        String word2 = toCompare.substring(toCompare.length() - 2);
         System.out.println("word 1 endsWith: "+word1);
         System.out.println("word 2 endsWith: "+word2);
         return word1.equalsIgnoreCase(word2);

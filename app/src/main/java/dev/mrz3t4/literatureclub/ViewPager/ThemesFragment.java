@@ -36,17 +36,19 @@ public class ThemesFragment extends Fragment {
         progressBar = view.findViewById(R.id.progressbar_themes);
 
 
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(setData,
-                new IntentFilter("theme"));
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver,
+                new IntentFilter("Opendings"));
 
         return view;
     }
 
-    private BroadcastReceiver setData = new BroadcastReceiver() {
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
 
             ArrayList<Theme> themeArrayList = intent.getParcelableArrayListExtra("arraylist");
+
+            System.out.println("THEMS RECEIVED --> " + themeArrayList.size());
 
             if (themeArrayList != null) {
                 setRecyclerView(themeArrayList);

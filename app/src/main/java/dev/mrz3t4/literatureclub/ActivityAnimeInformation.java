@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import dev.mrz3t4.literatureclub.Jsoup.GetAnime;
+import dev.mrz3t4.literatureclub.Anime.OpendingsWebScrap;
 import dev.mrz3t4.literatureclub.RecyclerView.Episode;
 import dev.mrz3t4.literatureclub.RecyclerView.GenderAdapter;
 import dev.mrz3t4.literatureclub.Retrofit.InterfaceMAL;
@@ -378,7 +378,7 @@ public class ActivityAnimeInformation extends AppCompatActivity {
             System.out.println("JIKAN: " + titulo);
 
         String ANIME_URL = JIKANURL.concat("search/anime?q=")
-                .concat(titulo.replaceAll(" ", "%20")).concat("&limit=10");
+                .concat(titulo.replaceAll(" ", "%20")).concat("&limit=15");
 
         System.out.println("MAL_ID: "+ ANIME_URL);
 
@@ -495,7 +495,7 @@ public class ActivityAnimeInformation extends AppCompatActivity {
 
 
                         } else if (getSimilarity.isProbablySimilar(title_from_anime, title) && bingoCount == 0){
-                            System.out.println("Probably Similar: " + title);
+                            System.out.println("Probably Similar: " + title + start_date);
                             if (start_date!=null){
                                 if (getSimilarity.isDateSimilar(sdate, start_date)){
                                     System.out.println("Is Same: " + start_date);
@@ -550,8 +550,12 @@ public class ActivityAnimeInformation extends AppCompatActivity {
 
 
 
-                    GetAnime getAnime = new GetAnime(ActivityAnimeInformation.this, null, null);
-                    getAnime.getThemes(TITULO, ID, sdate);
+                    OpendingsWebScrap opendings = new OpendingsWebScrap(ActivityAnimeInformation.this);
+                    System.out.println("Line 554 --> " + TITULO );
+                    opendings.get(TITULO, ID, sdate);
+
+                    //GetAnime getAnime = new GetAnime(ActivityAnimeInformation.this, null, null);
+                    //getAnime.getThemes(TITULO, ID, sdate);
 
                     intent.putExtra("ID", ID);
                     intent.putExtra("RATED", RATED);

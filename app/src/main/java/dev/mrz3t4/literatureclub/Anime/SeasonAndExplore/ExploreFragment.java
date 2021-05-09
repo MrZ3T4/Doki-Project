@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import dev.mrz3t4.literatureclub.Anime.AnimeWebScrap;
-import dev.mrz3t4.literatureclub.Jsoup.GetAnime;
 import dev.mrz3t4.literatureclub.R;
 import dev.mrz3t4.literatureclub.Utils.JsonTools;
 import dev.mrz3t4.literatureclub.Utils.PicassoOnScrollListener;
@@ -59,7 +58,8 @@ public class ExploreFragment extends Fragment {
                 .registerReceiver(receiver, new IntentFilter("Explore"));
 
         if (JSONTools.jsonExists()){
-            JsonTools.getDirectoryFromJson(getActivity());
+            System.out.println("exist");
+            JSONTools.getDirectoryFromJson(getActivity());
         } else {
             explore.connect(EXPLORE_URL, MODE_EXPLORE);
         }
@@ -71,11 +71,10 @@ public class ExploreFragment extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            Log.v("SeasonReceiver", "Season Received!");
+            Log.v("ExploreReceiver", "Explore Received!");
 
             ArrayList<Anime> animeArrayList = intent.getParcelableArrayListExtra("arraylist");
                 try {
-
                     setRecyclerView(animeArrayList);
                     progressBar.setVisibility(View.GONE);
                 } catch (NullPointerException e){

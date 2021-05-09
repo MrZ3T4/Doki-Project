@@ -35,4 +35,8 @@ public class Constants {
     public static String EXPLORE_URL = "https://monoschinos2.com/animes";
     //Complements
     public static String PAGE_URI = "?page=";
+    //Sountracks
+    public static final int MODE_OPENDINGS = 97465962;
+    public static String OPENDINGS_URL= "https://old.reddit.com/r/AnimeThemes/wiki/anime_index/";
+    public static String OPENDINGS_BASE= "https://old.reddit.com";
 }

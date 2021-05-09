@@ -40,6 +40,7 @@ import dev.mrz3t4.literatureclub.Anime.SeasonAndExplore.Anime;
 import dev.mrz3t4.literatureclub.Anime.SeasonAndExplore.AnimeAdapter;
 import dev.mrz3t4.literatureclub.Utils.GenericContext;
 import dev.mrz3t4.literatureclub.Utils.JsonTools;
+import dev.mrz3t4.literatureclub.Utils.NotificationsBuilder;
 
 public class SearchActivity extends AppCompatActivity {
 
@@ -183,7 +184,8 @@ public class SearchActivity extends AppCompatActivity {
             recyclerView.setAdapter(directorioAdapter);
 
     } else {
-            Toast.makeText(this,"La busqueda estará disponible despues de obtener el directorio, por favor espere...", Toast.LENGTH_LONG).show();
+            NotificationsBuilder builder = new NotificationsBuilder();
+            builder.createToast("La busqueda estará disponible despues de obtener el directorio, por favor dirijase a la pestaña \"Explorar\".", Toast.LENGTH_LONG);
             finish();
         }
 

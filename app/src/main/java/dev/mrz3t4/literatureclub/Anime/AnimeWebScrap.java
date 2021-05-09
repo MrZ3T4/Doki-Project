@@ -23,6 +23,7 @@ import java.util.ArrayList;
 
 import dev.mrz3t4.literatureclub.Anime.Broadcast.Broadcast;
 import dev.mrz3t4.literatureclub.Anime.SeasonAndExplore.Anime;
+import dev.mrz3t4.literatureclub.UI.GetSimilarity;
 import dev.mrz3t4.literatureclub.Utils.Constants;
 import dev.mrz3t4.literatureclub.Utils.Format;
 import dev.mrz3t4.literatureclub.Utils.JsonTools;
@@ -31,6 +32,7 @@ import dev.mrz3t4.literatureclub.Utils.NotificationsBuilder;
 import static dev.mrz3t4.literatureclub.Utils.Constants.EXPLORE_URL;
 import static dev.mrz3t4.literatureclub.Utils.Constants.MODE_BROADCAST;
 import static dev.mrz3t4.literatureclub.Utils.Constants.MODE_EXPLORE;
+import static dev.mrz3t4.literatureclub.Utils.Constants.MODE_OPENDINGS;
 import static dev.mrz3t4.literatureclub.Utils.Constants.MODE_SEASON;
 import static dev.mrz3t4.literatureclub.Utils.Constants.PAGE_URI;
 import static dev.mrz3t4.literatureclub.Utils.Constants.SEASON_URL;
@@ -64,6 +66,7 @@ public class AnimeWebScrap {
                     case MODE_EXPLORE:
                         anime(document, false);
                         break;
+
 
                 }
 
@@ -111,12 +114,10 @@ public class AnimeWebScrap {
     private int page_number = 1;
     private boolean page_empty;
     private JsonTools jsonTools = new JsonTools();
-
     private final ArrayList<Anime> animeArrayList = new ArrayList<>();
 
     @SuppressLint("InlinedApi")
     private void anime (Document document, boolean fromSeason){
-
 
         if (!fromSeason) {
             String notification_page = "Pagina " + page_number;
@@ -205,10 +206,11 @@ public class AnimeWebScrap {
 
     }
 
+
+
     private void sendBroadcast (Intent intent){
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
-
 
     public void reload(){
         if (jsonTools.jsonExists()){

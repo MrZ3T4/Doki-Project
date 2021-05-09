@@ -47,16 +47,10 @@ public class JsonTools {
     }
 
     public boolean jsonExists() {
-
-        if (directory.exists()){
-            return true;
-        } else {
-            return false;
-        }
-
+        return directory.exists();
     }
 
-    public static void getDirectoryFromJson(Context context){
+    public void getDirectoryFromJson(Context context){
 
         ArrayList<Anime> animeArrayList = new ArrayList<>();
 
@@ -72,7 +66,7 @@ public class JsonTools {
 
             JSONArray jsonDirectory = new JSONArray(animesJson);
 
-            for (int pos = 0; pos <= jsonDirectory.length(); pos++) {
+            for (int pos = 0; pos < jsonDirectory.length(); pos++) {
 
                 Anime anime = new Anime();
 
@@ -97,7 +91,7 @@ public class JsonTools {
         } catch (Exception e){ e.printStackTrace(); }
 
         Intent intent = new Intent("Explore");
-        intent.putParcelableArrayListExtra("arrasylist", animeArrayList);
+        intent.putParcelableArrayListExtra("arraylist", animeArrayList);
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
 
     }
