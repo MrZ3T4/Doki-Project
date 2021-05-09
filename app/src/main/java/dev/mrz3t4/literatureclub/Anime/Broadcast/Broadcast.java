@@ -1,4 +1,4 @@
-package dev.mrz3t4.literatureclub.RecyclerView;
+package dev.mrz3t4.literatureclub.Anime.Broadcast;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -12,26 +12,6 @@ public class Broadcast implements Parcelable {
         this.url = url;
         this.type = type;
     }
-
-    protected Broadcast(Parcel in) {
-        title = in.readString();
-        episode = in.readString();
-        img = in.readString();
-        url = in.readString();
-        type = in.readString();
-    }
-
-    public static final Creator<Broadcast> CREATOR = new Creator<Broadcast>() {
-        @Override
-        public Broadcast createFromParcel(Parcel in) {
-            return new Broadcast(in);
-        }
-
-        @Override
-        public Broadcast[] newArray(int size) {
-            return new Broadcast[size];
-        }
-    };
 
     public String getTitle() {
         return title;
@@ -88,4 +68,25 @@ public class Broadcast implements Parcelable {
         dest.writeString(url);
         dest.writeString(type);
     }
+
+    protected Broadcast(Parcel in) {
+        title = in.readString();
+        episode = in.readString();
+        img = in.readString();
+        url = in.readString();
+        type = in.readString();
+    }
+
+    public static final Creator<Broadcast> CREATOR = new Creator<Broadcast>() {
+        @Override
+        public Broadcast createFromParcel(Parcel in) {
+            return new Broadcast(in);
+        }
+
+        @Override
+        public Broadcast[] newArray(int size) {
+            return new Broadcast[size];
+        }
+    };
+
 }

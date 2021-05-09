@@ -1,11 +1,12 @@
-package dev.mrz3t4.literatureclub.RecyclerView;
+package dev.mrz3t4.literatureclub.Anime.SeasonAndExplore;
 
-import android.os.Trace;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Anime {
+public class Anime implements Parcelable {
 
     public String title, img, url, date, type;
 
@@ -68,5 +69,40 @@ public class Anime {
         }
         return jsonObject;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(title);
+        dest.writeString(img);
+        dest.writeString(url);
+        dest.writeString(date);
+        dest.writeString(type);
+    }
+
+
+    public Anime(Parcel in) {
+        title = in.readString();
+        img = in.readString();
+        url = in.readString();
+        date = in.readString();
+        type = in.readString();
+    }
+
+    public static final Creator<Anime> CREATOR = new Creator<Anime>() {
+        @Override
+        public Anime createFromParcel(Parcel in) {
+            return new Anime(in);
+        }
+
+        @Override
+        public Anime[] newArray(int size) {
+            return new Anime[size];
+        }
+    };
 
 }

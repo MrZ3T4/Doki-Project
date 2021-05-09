@@ -15,10 +15,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,7 +31,7 @@ import com.google.android.material.textview.MaterialTextView;
 import java.util.Objects;
 
 import dev.mrz3t4.literatureclub.UI.CollectionsFragment;
-import dev.mrz3t4.literatureclub.UI.ExploreFragment;
+import dev.mrz3t4.literatureclub.Anime.SeasonAndExplore.ExploreFragment;
 import dev.mrz3t4.literatureclub.UI.RecentsFragment;
 import dev.mrz3t4.literatureclub.UI.SettingsFragment;
 
@@ -134,20 +131,15 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_force_update:
-
-                Intent intent = new Intent("FORCE_RELOAD");
-                intent.putExtra("RELOAD", true);
-                sendBroadcast(intent);
-
-                break;
-
-            default:
-                return super.onOptionsItemSelected(item);
-
+        if (item.getItemId() == R.id.menu_force_update) {
+            Intent intent = new Intent("Reload");
+            intent.putExtra("RELOAD", true);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        } else {
+            return super.onOptionsItemSelected(item);
         }
         return true;
     }

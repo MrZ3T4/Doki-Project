@@ -1,4 +1,4 @@
-package dev.mrz3t4.literatureclub.RecyclerView;
+package dev.mrz3t4.literatureclub.Anime.Broadcast;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

@@ -30,8 +30,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import dev.mrz3t4.literatureclub.RecyclerView.Anime;
-import dev.mrz3t4.literatureclub.RecyclerView.AnimeAdapter;
+import dev.mrz3t4.literatureclub.Anime.SeasonAndExplore.Anime;
+import dev.mrz3t4.literatureclub.Anime.SeasonAndExplore.AnimeAdapter;
 import dev.mrz3t4.literatureclub.RecyclerView.Theme;
 import dev.mrz3t4.literatureclub.UI.GetSimilarity;
 import dev.mrz3t4.literatureclub.Utils.GenericContext;
@@ -39,8 +39,9 @@ import dev.mrz3t4.literatureclub.Utils.JsonTools;
 import dev.mrz3t4.literatureclub.Utils.NotificationsBuilder;
 import dev.mrz3t4.literatureclub.Utils.Sort;
 
-import static dev.mrz3t4.literatureclub.Utils.Constants.BASE_URL;
-import static dev.mrz3t4.literatureclub.Utils.Constants.EMISION_URL;
+import static dev.mrz3t4.literatureclub.Utils.Constants.EXPLORE_URL;
+import static dev.mrz3t4.literatureclub.Utils.Constants.EXPLORE_URL;
+import static dev.mrz3t4.literatureclub.Utils.Constants.SEASON_URL;
 import static dev.mrz3t4.literatureclub.Utils.Constants.PAGE_URI;
 
 public class GetAnime {
@@ -77,10 +78,8 @@ public class GetAnime {
     @SuppressLint("InlinedApi")
     public void getDirectoryFromWeb(int mode) {
 
-        if (isDirectory(mode)) {
-            VARIABLE_URL = BASE_URL;
-        }
-        else { VARIABLE_URL = EMISION_URL; }
+        if (isDirectory(mode)) VARIABLE_URL = EXPLORE_URL;
+        else VARIABLE_URL = SEASON_URL;
 
         if (PAGE_NUMBER!=1)
             VARIABLE_URL = VARIABLE_URL + PAGE_URI + PAGE_NUMBER;
@@ -390,7 +389,7 @@ public class GetAnime {
 
             } else {
                 theme.setUrl(arraylist.get(i));
-                theme.setTitle(titlesArrayList.get(i).substring(4));
+                theme.setTitle(titlesArrayList.get(i).substring(3));
                 theme.setType(type_theme);
                 openingsEndingsArrayList.add(theme);
                 System.out.println("---OK---");

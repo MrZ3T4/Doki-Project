@@ -1,4 +1,4 @@
-package dev.mrz3t4.literatureclub.ViewPager;
+package dev.mrz3t4.literatureclub.Anime.Broadcast;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -19,12 +19,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-import dev.mrz3t4.literatureclub.Jsoup.GetBroadcast;
+import dev.mrz3t4.literatureclub.Anime.AnimeWebScrap;
 import dev.mrz3t4.literatureclub.R;
-import dev.mrz3t4.literatureclub.RecyclerView.Broadcast;
-import dev.mrz3t4.literatureclub.RecyclerView.BroadcastAdapter;
 
 import static dev.mrz3t4.literatureclub.Utils.Constants.BROADCAST_URL;
+import static dev.mrz3t4.literatureclub.Utils.Constants.MODE_BROADCAST;
 
 public class BroadcastFragment extends Fragment {
 
@@ -41,12 +40,11 @@ public class BroadcastFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerview_broadcast);
         progressBar = view.findViewById(R.id.broadcast_progressbar);
 
-
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver,
                 new IntentFilter("Simulcast"));
 
-        GetBroadcast getBroadcast = new GetBroadcast(getActivity());
-        getBroadcast.connect(BROADCAST_URL, 0);
+        AnimeWebScrap broadcast = new AnimeWebScrap(getActivity());
+        broadcast.connect(BROADCAST_URL, MODE_BROADCAST);
 
         return view;
     }
@@ -56,13 +54,13 @@ public class BroadcastFragment extends Fragment {
         public void onReceive(Context context, Intent intent) {
             Log.v("BroadcastReceiver", "Simulcast Received!");
             broadcastArrayList = intent.getParcelableArrayListExtra("arraylist");
-            if (!broadcastArrayList.isEmpty()){
-                progressBar.setVisibility(View.GONE);
-                setRecyclerView(broadcastArrayList);
-            } else {
-                Log.e("BroadcastReceiver" ,"Arraylist is empty, size = " + broadcastArrayList.size());
-            }
 
+            try {
+                setRecyclerView(broadcastArrayList);
+                progressBar.setVisibility(View.GONE);
+            } catch (NullPointerException e){
+                e.printStackTrace();
+            }
         }
     };
 

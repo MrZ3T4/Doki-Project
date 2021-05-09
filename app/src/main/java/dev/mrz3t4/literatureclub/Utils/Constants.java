@@ -22,11 +22,17 @@ public class Constants {
     public static String episode = GenericContext.getContext().getResources().getString(R.string.episode);
 
     public static Integer MODE_EPISODE = 1;
-    public static Integer MODE_EPISODES = 0;
 
 
-    public static String BASE_URL = "https://monoschinos2.com/animes";
-    public static String EMISION_URL = "https://monoschinos2.com/emision";
-    public static String BROADCAST_URL = "https://monoschinos2.com/";
+    // Broadcast
+    public static final int MODE_BROADCAST = 65468432;
+    public static final String BROADCAST_URL = "https://monoschinos2.com/";
+    //Season
+    public static final int MODE_SEASON = 35468321;
+    public static String SEASON_URL = "https://monoschinos2.com/emision";
+    //Explore
+    public static final int MODE_EXPLORE = 13221384;
+    public static String EXPLORE_URL = "https://monoschinos2.com/animes";
+    //Complements
     public static String PAGE_URI = "?page=";
 }

@@ -33,8 +33,7 @@ public class NotificationsBuilder {
                 .setOngoing(true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            int importance = importancy;
-            NotificationChannel channel = new NotificationChannel(channelId, name, importance);
+            NotificationChannel channel = new NotificationChannel(channelId, name, importancy);
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
             NotificationManager notificationManager = GenericContext.getContext().getSystemService(NotificationManager.class);

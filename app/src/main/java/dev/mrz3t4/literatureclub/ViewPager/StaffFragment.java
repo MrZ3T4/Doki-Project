@@ -9,36 +9,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
 import dev.mrz3t4.literatureclub.R;
-import dev.mrz3t4.literatureclub.RecyclerView.Broadcast;
-import dev.mrz3t4.literatureclub.RecyclerView.BroadcastAdapter;
+import dev.mrz3t4.literatureclub.Anime.Broadcast.Broadcast;
 import dev.mrz3t4.literatureclub.RecyclerView.StaffAdapter;
 import dev.mrz3t4.literatureclub.Retrofit.Character;
 import dev.mrz3t4.literatureclub.Retrofit.InterfaceStaff;
 import dev.mrz3t4.literatureclub.Retrofit.Personas;
 import dev.mrz3t4.literatureclub.Retrofit.Seiyuu;
 import dev.mrz3t4.literatureclub.Retrofit.VoiceActor;
-import dev.mrz3t4.literatureclub.Utils.Constants;
 import dev.mrz3t4.literatureclub.Utils.NotificationsBuilder;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -47,7 +36,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.view.View.GONE;
-import static dev.mrz3t4.literatureclub.Utils.Constants.BROADCAST_URL;
 
 public class StaffFragment extends Fragment {
 

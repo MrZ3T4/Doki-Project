@@ -14,11 +14,10 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import dev.mrz3t4.literatureclub.R;
-import dev.mrz3t4.literatureclub.ViewPager.BroadcastFragment;
-import dev.mrz3t4.literatureclub.ViewPager.SeasonFragment;
+import dev.mrz3t4.literatureclub.Anime.Broadcast.BroadcastFragment;
+import dev.mrz3t4.literatureclub.Anime.SeasonAndExplore.SeasonFragment;
 
 import static dev.mrz3t4.literatureclub.Utils.Constants.broadcast;
-import static dev.mrz3t4.literatureclub.Utils.Constants.calendar;
 import static dev.mrz3t4.literatureclub.Utils.Constants.season;
 
 public class RecentsFragment extends Fragment {

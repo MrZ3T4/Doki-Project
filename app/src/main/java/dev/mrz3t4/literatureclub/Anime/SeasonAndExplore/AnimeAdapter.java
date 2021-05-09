@@ -1,4 +1,4 @@
-package dev.mrz3t4.literatureclub.RecyclerView;
+package dev.mrz3t4.literatureclub.Anime.SeasonAndExplore;
 
 import android.content.Context;
 import android.view.LayoutInflater;

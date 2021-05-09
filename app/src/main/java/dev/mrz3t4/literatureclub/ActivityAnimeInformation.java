@@ -1,50 +1,31 @@
 package dev.mrz3t4.literatureclub;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.Request;
-import com.bumptech.glide.request.target.SizeReadyCallback;
-import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -54,23 +35,18 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.EventListener;
 import java.util.List;
 
 import dev.mrz3t4.literatureclub.Jsoup.GetAnime;
-import dev.mrz3t4.literatureclub.RecyclerView.Anime;
-import dev.mrz3t4.literatureclub.RecyclerView.AnimeAdapter;
 import dev.mrz3t4.literatureclub.RecyclerView.Episode;
 import dev.mrz3t4.literatureclub.RecyclerView.GenderAdapter;
 import dev.mrz3t4.literatureclub.Retrofit.InterfaceMAL;
 import dev.mrz3t4.literatureclub.Retrofit.MalID;
 import dev.mrz3t4.literatureclub.Retrofit.ResultID;
 import dev.mrz3t4.literatureclub.UI.AnimeEpisodesFragment;
-import dev.mrz3t4.literatureclub.UI.AnimeInformationFragment;
 import dev.mrz3t4.literatureclub.UI.AnimeViewPager;
 import dev.mrz3t4.literatureclub.UI.GetSimilarity;
 import dev.mrz3t4.literatureclub.Utils.NotificationsBuilder;
-import dev.mrz3t4.literatureclub.Utils.PicassoBlurImage;
 import dev.mrz3t4.literatureclub.ViewPager.InformationFragment;
 import dev.mrz3t4.literatureclub.ViewPager.StaffFragment;
 import dev.mrz3t4.literatureclub.ViewPager.ThemesFragment;
@@ -80,11 +56,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static android.view.View.GONE;
-import static dev.mrz3t4.literatureclub.Utils.Constants.broadcast;
 import static dev.mrz3t4.literatureclub.Utils.Constants.episodes;
 import static dev.mrz3t4.literatureclub.Utils.Constants.information;
-import static dev.mrz3t4.literatureclub.Utils.Constants.season;
 import static dev.mrz3t4.literatureclub.Utils.Constants.staff;
 import static dev.mrz3t4.literatureclub.Utils.Constants.themes;
 

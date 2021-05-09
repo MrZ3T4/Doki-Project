@@ -9,9 +9,6 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.ArrayList;
 
-import dev.mrz3t4.literatureclub.ViewPager.BroadcastFragment;
-import dev.mrz3t4.literatureclub.ViewPager.SeasonFragment;
-
 public class AnimeViewPager {
 
     public void setupViewPager(ViewPager2 viewPager,Fragment fragment1, Fragment fragment2, Fragment fragment3, Fragment fragment4, FragmentManager fm, Lifecycle lifecycle){

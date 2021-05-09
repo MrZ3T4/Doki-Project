@@ -18,10 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-import dev.mrz3t4.literatureclub.ActivityAnimeInformation;
-import dev.mrz3t4.literatureclub.Jsoup.GetAnime;
 import dev.mrz3t4.literatureclub.R;
-import dev.mrz3t4.literatureclub.RecyclerView.AnimeAdapter;
 import dev.mrz3t4.literatureclub.RecyclerView.Theme;
 import dev.mrz3t4.literatureclub.RecyclerView.ThemeAdapter;
 

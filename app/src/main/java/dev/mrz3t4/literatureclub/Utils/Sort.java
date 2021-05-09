@@ -3,7 +3,7 @@ package dev.mrz3t4.literatureclub.Utils;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import dev.mrz3t4.literatureclub.RecyclerView.Anime;
+import dev.mrz3t4.literatureclub.Anime.SeasonAndExplore.Anime;
 
 public class Sort {
 

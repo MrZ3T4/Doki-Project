@@ -36,8 +36,8 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import dev.mrz3t4.literatureclub.RecyclerView.Anime;
-import dev.mrz3t4.literatureclub.RecyclerView.AnimeAdapter;
+import dev.mrz3t4.literatureclub.Anime.SeasonAndExplore.Anime;
+import dev.mrz3t4.literatureclub.Anime.SeasonAndExplore.AnimeAdapter;
 import dev.mrz3t4.literatureclub.Utils.GenericContext;
 import dev.mrz3t4.literatureclub.Utils.JsonTools;
 

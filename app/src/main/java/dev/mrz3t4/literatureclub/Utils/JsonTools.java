@@ -1,6 +1,9 @@
 package dev.mrz3t4.literatureclub.Utils;
 
-import android.os.Environment;
+import android.content.Context;
+import android.content.Intent;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -12,13 +15,13 @@ import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import dev.mrz3t4.literatureclub.RecyclerView.Anime;
+import dev.mrz3t4.literatureclub.Anime.SeasonAndExplore.Anime;
 
 
 public class JsonTools {
 
 
-    File directory = new File(GenericContext.getContext().getFilesDir(), "directory.json");
+    public static File directory = new File(GenericContext.getContext().getFilesDir(), "directory.json");
 
     public void createJSONFileDirectory(ArrayList<Anime> animeArrayList) {
 
@@ -50,6 +53,52 @@ public class JsonTools {
         } else {
             return false;
         }
+
+    }
+
+    public static void getDirectoryFromJson(Context context){
+
+        ArrayList<Anime> animeArrayList = new ArrayList<>();
+
+        File directory = new File(GenericContext.getContext().getFilesDir(), "directory.json");
+
+        try {
+
+            FileInputStream fileInputStream = new FileInputStream(directory);
+            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            String animesJson = bufferedReader.readLine();
+
+            JSONArray jsonDirectory = new JSONArray(animesJson);
+
+            for (int pos = 0; pos <= jsonDirectory.length(); pos++) {
+
+                Anime anime = new Anime();
+
+                JSONObject jsonObject = jsonDirectory.getJSONObject(pos);
+
+                String title = jsonObject.getString("Title");
+                String img = jsonObject.getString("Cover");
+                String date = jsonObject.getString("Date");
+                String type = jsonObject.getString("Type");
+                String url = jsonObject.getString("Link");
+
+                anime.setTitle(title);
+                anime.setImg(img);
+                anime.setType(type);
+                anime.setDate(date);
+                anime.setUrl(url);
+
+                animeArrayList.add(anime);
+
+            }
+
+        } catch (Exception e){ e.printStackTrace(); }
+
+        Intent intent = new Intent("Explore");
+        intent.putParcelableArrayListExtra("arrasylist", animeArrayList);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
 
     }
 
