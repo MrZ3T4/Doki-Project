@@ -10,6 +10,7 @@
         android:layout_width="180dp"
         android:layout_height="wrap_content"
         app:cardBackgroundColor="?attr/colorPrimaryVariant"
+        app:cardCornerRadius="15dp"
         app:strokeWidth="1dp"
         app:strokeColor="?attr/colorPrimary"
         android:layout_margin="10dp">
