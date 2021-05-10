@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "dev.mrz3t4.literatureclub"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 30
         versionCode 3
         versionName "1.4.0"

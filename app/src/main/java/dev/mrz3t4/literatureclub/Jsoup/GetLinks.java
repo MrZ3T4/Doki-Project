@@ -6,10 +6,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.jsoup.Jsoup;
@@ -22,7 +26,10 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import dev.mrz3t4.literatureclub.Anime.Server;
 import dev.mrz3t4.literatureclub.R;
+import dev.mrz3t4.literatureclub.RecyclerView.ServersAdapter;
+import dev.mrz3t4.literatureclub.RecyclerView.ThemeAdapter;
 import dev.mrz3t4.literatureclub.Utils.Format;
 import dev.mrz3t4.literatureclub.Utils.GenericContext;
 import dev.mrz3t4.literatureclub.Utils.NotificationsBuilder;
@@ -88,7 +95,8 @@ public class GetLinks {
                     switch (mode) {
 
                         case 1: // MODE_EPISODE
-                            createDialog(other_servers, context);
+                            //createDialog(other_servers, context);
+                            createBottomSheet(other_servers, context);
                             break;
                         case 0: // MODE_INFORMATION
                             Intent intent = new Intent("Information");
@@ -103,6 +111,35 @@ public class GetLinks {
             }).start();
         }
     }
+
+    private void createBottomSheet(ArrayList<String> other_servers, Context context) {
+        LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = li.inflate(R.layout.bottomsheet_options_servers, null);
+
+        BottomSheetDialog dialog = new BottomSheetDialog(context);
+        dialog.setContentView(view);
+        dialog.show();
+
+        ArrayList<Server> serverArrayList = new ArrayList<>();
+
+        for (int pos = 0; pos < other_servers.size(); pos++){
+
+            Server server = new Server();
+
+            System.out.println("pos: " + pos + " server: " + other_servers.get(pos));
+            String server_name = Format.servers(other_servers, pos);
+            server.setTitle(server_name);
+            server.setUrl(other_servers.get(pos));
+            serverArrayList.add(server);
+
+        }
+
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerview_servers);
+        ServersAdapter adapter = new ServersAdapter(serverArrayList, context);
+        recyclerView.setAdapter(adapter);
+
+    }
+
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private void createDialog(ArrayList<String> servers_array, Context context) {

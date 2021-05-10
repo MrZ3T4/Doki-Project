@@ -47,19 +47,19 @@ public class Format {
         } else if (serversArrayList.get(pos).contains("sendvid")){
             server = "Sendvid (Nativo)";
         } else if (serversArrayList.get(pos).contains("mp4upload")){
-            server = "Mp4Upload";
+            server = "Mp4Upload (Web)";
         } else if (serversArrayList.get(pos).contains("uqload")){
-            server = "Mp4Upload";
+            server = "Uqload (Web)";
         } else if (serversArrayList.get(pos).contains("clip")){
-            server = "ClipWatching";
+            server = "ClipWatching (Web)";
         } else if (serversArrayList.get(pos).contains("streamtape")){
-            server = "Streamtape";
+            server = "Streamtape (Web)";
         } else if (serversArrayList.get(pos).contains("videobin")){
-            server = "Videobin";
+            server = "Videobin (Web)";
         } else if (serversArrayList.get(pos).contains("mediafire")){
-            server = "Mediafire";
+            server = "Mediafire (Nativo)";
         } else {
-            server = "Servidor";
+            server = "Servidor (Web)";
         }
 
         return server;
